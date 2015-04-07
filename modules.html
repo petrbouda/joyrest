@@ -1,0 +1,93 @@
+---
+layout: default
+---
+<div class="col-md-3" id="leftCol">
+
+    <div class="well">
+        <ul class="nav nav-stacked" id="sidebar">
+            <li><a href="#core-sec">Core Module</a></li>
+            <li><a href="#di-sec">DI Modules</a></li>
+            <li><a href="#server-sec">Server Modules</a></li>
+        </ul>
+    </div>
+
+    {% include github.html %}
+</div>
+<div class="col-md-9">
+    <h3 id="core-sec">Core Module</h3>
+    This is a standalone module with all needed classes for successful running of JoyRest application. But in most
+    cases core module must be combined with other modules such as DI and server-oriented modules for sake of
+    simplicity.
+
+    <table class="table">
+        <caption></caption>
+        <thead>
+        <tr>
+            <th>Group ID</th>
+            <th>Artifact ID</th>
+            <th>Version</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>org.joyrest</td>
+            <td>joyrest-core</td>
+            <td>0.1-SNAPSHOT</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+    <h3 id="di-sec">Dependency Injection Modules</h3>
+    These modules provide capabilities of an integration with different types of DI frameworks.
+    JoyRest can be very easy extensible for any other framework, as mention in secion <code>Integration</code>.
+
+    <table class="table">
+        <caption></caption>
+        <thead>
+        <tr>
+            <th>Group ID</th>
+            <th>Artifact ID</th>
+            <th>Version</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>org.joyrest</td>
+            <td>joyrest-hk2</td>
+            <td>0.1-SNAPSHOT</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+    <h3 id="server-sec">Server Modules</h3>
+    It is necessary to use any REST Framework with some kind of server. Modules mentioned below allow us very simply
+    integrate <code>HTTP Server</code> or <code>NIO Server</code> with an application which contains JoyRest Framework.
+    How integration any other server with JoyRest is mentioned in section <code>Integration</code>.
+    <table class="table">
+        <caption></caption>
+        <thead>
+        <tr>
+            <th>Group ID</th>
+            <th>Artifact ID</th>
+            <th>Version</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>org.joyrest</td>
+            <td>joyrest-grizzly</td>
+            <td>0.1-SNAPSHOT</td>
+        </tr>
+        <tr>
+            <td>org.joyrest</td>
+            <td>joyrest-servlet</td>
+            <td>0.1-SNAPSHOT</td>
+        </tr>
+        </tbody>
+    </table>
+    <hr>
+</div>

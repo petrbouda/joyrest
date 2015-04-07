@@ -1,0 +1,9 @@
+# Site settings
+title: JoyRest
+email: bouda.petr@gmail.com
+baseurl: ""
+url: "http://www.joyrest.org"
+github_username: petrbouda
+
+# Build settings
+markdown: kramdown

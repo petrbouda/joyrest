@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>JoyRest - REST Framework</title>
+  <meta name="generator" content="JoyRest"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/github-ribbon.css"/>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/prism/prism.css">
+</head>
+
+<body>
+
+<div class="github-fork-ribbon-wrapper right">
+  <div class="github-fork-ribbon">
+    <a href="https://github.com/petrbouda/joyrest">Fork me on GitHub</a>
+  </div>
+</div>
+
+<header class="navbar navbar-default navbar-static-top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">JoyRest - REST Framework</a>
+    </div>
+    <nav class="collapse navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="../index.html">Home</a>
+        </li>
+        <li>
+          <a href="../getstarted.html">Get Started</a>
+        </li>
+        <li>
+          <a href="../tutorial.html">Tutorial</a>
+        </li>
+        <li>
+          <a href="../modules.html">Modules</a>
+        </li>
+        <li>
+          <a href="../integration.html">Integration</a>
+        </li>
+        <li>
+          <a href="../extensions.html">Extensions</a>
+        </li>
+        <li>
+          <a href="#">JavaDoc</a>
+        </li>
+        <li>
+          <a href="../contact.html">Contact</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Begin Body -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" style="text-align: center" role="alert">
+                <span class="alert-link">JoyRest is under the construction! The first release is scheduled for early June.</span>
+            </div>
+        </div>
+        <div class="col-md-3" id="leftCol">
+
+    <div class="well">
+        <ul class="nav nav-stacked" id="sidebar">
+            <li><a href="#github-sec">Clone GitHub</a></li>
+            <li><a href="#maven-sec">Maven Dependencies</a></li>
+            <li><a href="#config-sec">Application Config</a></li>
+            <li><a href="#server-sec">Server Settings</a></li>
+            <li><a href="#route-sec">Route Definition</a></li>
+        </ul>
+    </div>
+
+    <ul class="nav nav-stacked" id="github">
+    <li><a href="http://www.github.com/petrbouda/joyrest"><i class="fa fa-link" style="color: black"></i>&nbsp;&nbsp;GitHub - JoyRest</a></li>
+    <li><a href="https://github.com/petrbouda/joyrest/archive/master.zip"><i class="fa fa-file-text" style="color: black"></i>&nbsp;&nbsp;Download ZIP file</a></li>
+    <li><a href="https://github.com/petrbouda/joyrest/archive/master.tar.gz"><i class="fa fa-file-text" style="color: black"></i>&nbsp;&nbsp;Download TAR.GZ file</a></li>
+</ul>
+</div>
+<div class="col-md-9">
+    <h3 id="github-sec">GitHub Sources</h3>
+    A source code of the framework is able to clone from GitHub: <a href="http://www.github.com/petrbouda/joyrest">http://www.github.com/petrbouda/joyrest</a>
+
+    <hr class="col-md-12">
+
+    <h3 id="maven-sec">Maven Dependency</h3>
+    JoyRest Releases are available on Maven Central Repository
+    <h4>Core</h4>
+<pre><code class="language-markup">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
+    &lt;artifactId&gt;joyrest-core&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+            <h4>Dependency Injection Integration</h4>
+<pre><code class="language-markup">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
+    &lt;artifactId&gt;joyrest-hk2&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+            <h4>Server Integration</h4>
+<pre><code class="language-markup">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
+    &lt;artifactId&gt;joyrest-servlet&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<pre><code class="language-markup">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
+    &lt;artifactId&gt;joyrest-grizzly&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+            <h4>Repository for Releases and Snapshots</h4>
+<pre><code class="language-markup">
+&lt;repository&gt;
+    &lt;id&gt;oss-sonatype&lt;/id&gt;
+    &lt;url&gt;https://oss.sonatype.org/content/groups/public&lt;/url&gt;
+&lt;/repository&gt;
+</code></pre>
+            <hr class="col-md-12">
+
+            <h3 id="config-sec">Application Config</h3>
+<pre><code class="language-java">
+import org.glassfish.hk2.api.TypeLiteral;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.joyrest.routing.ControllerConfiguration;
+import javax.inject.Singleton;
+
+public class ApplicationBinder extends AbstractBinder {
+
+    @Override
+    protected void configure() {
+        bind(JokeServiceImpl.class)
+            .to(new TypeLiteral&lt;JokeService&gt;() { })
+            .in(Singleton.class);
+
+        bind(JokeController.class)
+            .to(ControllerConfiguration.class)
+            .in(Singleton.class);
+    }
+}
+</code></pre>
+            <hr class="col-md-12">
+
+            <h3 id="server-sec">Server Settings</h3>
+<pre><code class="language-java">
+import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.Configurer;
+import org.joyrest.grizzly.GrizzlyServer;
+import org.joyrest.hk2.HK2Configurer;
+
+public class Start {
+
+    public static void main(String... args) throws Exception {
+        Configurer configurer = new HK2Configurer();
+        ApplicationContext applicationContext = configurer.initialize(new ApplicationBinder());
+        GrizzlyServer.start(applicationContext, "/services", 5000);
+    }
+}
+</code></pre>
+
+            <hr class="col-md-12">
+
+            <h3 id="route-sec">Route Definition</h3>
+<pre><code class="language-java">
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.HttpStatus;
+import org.joyrest.model.http.MediaType;
+import org.joyrest.model.request.Request;
+import org.joyrest.model.response.Response;
+import org.joyrest.routing.AbstractControllerConfiguration;
+import javax.inject.Inject;
+import java.util.List;
+
+public class JokeController extends AbstractControllerConfiguration {
+
+    @Inject
+    private JokeService service;
+
+    @Override
+    protected void configure() {
+        setGlobalPath("jokes");
+
+        post((Request request, Response response, Joke joke) -> {
+            Joke savedJoke = service.save(joke);
+                response.entityClass(savedJoke)
+                .status(HttpStatus.CREATED)
+                .header(HeaderName.LOCATION, getEntityLocation(savedJoke.getId(), request.getPath()));
+        }).consumes(MediaType.JSON).produces(MediaType.JSON);
+
+        get((request, response) -> {
+            List&lt;Joke&gt; jokes = service.getAll();
+            response.entityClass(jokes);
+        }).produces(MediaType.JSON, MediaType.XML);
+
+        get(":id", (request, response) -> {
+            Joke joke = service.get(request.getPathParam("id"));
+            response.entityClass(joke);
+        }).produces(MediaType.JSON, MediaType.XML);
+    }
+
+    private String getEntityLocation(String entityId, String path) {
+        return path + "/" + entityId;
+    }
+}</code></pre>
+
+    <hr>
+</div>
+    </div>
+</div>
+
+<!-- script references -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
+<script src="/prism/prism.js"></script>
+</body>
+</html>

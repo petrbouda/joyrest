@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>JoyRest - REST Framework</title>
+  <meta name="generator" content="JoyRest"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/github-ribbon.css"/>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/prism/prism.css">
+</head>
+
+<body>
+
+<div class="github-fork-ribbon-wrapper right">
+  <div class="github-fork-ribbon">
+    <a href="https://github.com/petrbouda/joyrest">Fork me on GitHub</a>
+  </div>
+</div>
+
+<header class="navbar navbar-default navbar-static-top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">JoyRest - REST Framework</a>
+    </div>
+    <nav class="collapse navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="../index.html">Home</a>
+        </li>
+        <li>
+          <a href="../getstarted.html">Get Started</a>
+        </li>
+        <li>
+          <a href="../tutorial.html">Tutorial</a>
+        </li>
+        <li>
+          <a href="../modules.html">Modules</a>
+        </li>
+        <li>
+          <a href="../integration.html">Integration</a>
+        </li>
+        <li>
+          <a href="../extensions.html">Extensions</a>
+        </li>
+        <li>
+          <a href="#">JavaDoc</a>
+        </li>
+        <li>
+          <a href="../contact.html">Contact</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Begin Body -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" style="text-align: center" role="alert">
+                <span class="alert-link">JoyRest is under the construction! The first release is scheduled for early June.</span>
+            </div>
+        </div>
+        <div class="col-md-3" id="leftCol">
+
+    <div class="well">
+        <ul class="nav nav-stacked" id="sidebar">
+            <li><a href="#sec1">About</a></li>
+            <li><a href="#sec2">Examples</a></li>
+            <li><a href="#sec3">Integration - DI</a></li>
+            <li><a href="#sec3">Integration - Servers</a></li>
+        </ul>
+    </div>
+
+    <ul class="nav nav-stacked" id="github">
+    <li><a href="http://www.github.com/petrbouda/joyrest"><i class="fa fa-link" style="color: black"></i>&nbsp;&nbsp;GitHub - JoyRest</a></li>
+    <li><a href="https://github.com/petrbouda/joyrest/archive/master.zip"><i class="fa fa-file-text" style="color: black"></i>&nbsp;&nbsp;Download ZIP file</a></li>
+    <li><a href="https://github.com/petrbouda/joyrest/archive/master.tar.gz"><i class="fa fa-file-text" style="color: black"></i>&nbsp;&nbsp;Download TAR.GZ file</a></li>
+</ul>
+</div>
+<div class="col-md-9">
+    <h3 id="sec1">About</h3>
+    JoyRest is a lightweight and convenient tool for <code>creating REST services</code> by a concise way.
+    The main intention is to provide framework which is simply extensible for different types of DI and servers.
+    JoyRest is purely developed using <code>Java programming language 8 and with lambdas</code>.
+    Thank to this technology the framework is able to provide very clear API which allows you to defined your
+    endpoints through a <code>functional way</code>.
+
+    <hr class="col-md-12">
+
+    <h3 id="sec2">Example</h3>
+<pre><code class="language-java">
+public class CombinedFeedController extends AbstractControllerConfiguration {
+
+    @Inject
+    private CrudService&lt;CombinedFeed&gt; feedService;
+
+    @Override
+    protected void configure() {
+        setGlobalPath("feeds");
+
+        post((Request request, Response response, CombinedFeed feed) -> {
+            CombinedFeed savedFeed = feedService.save(feed);
+            response.entityClass(savedFeed)
+                .status(HttpStatus.CREATED)
+                .header(HeaderName.LOCATION, getEntityLocation(savedFeed.getId(), request.getPath()));
+        }).consumes(MediaType.JSON).produces(MediaType.JSON);
+
+        delete("/:id", (request, response) -> {
+            feedService.delete(request.getPathParam("id"))
+                .orElseThrow(RestException.notFoundSupplier());
+            response.status(HttpStatus.NO_CONTENT);
+        });
+
+        get("/:id/entries", (request, response) -> {
+            CombinedFeed feed = feedService.get(request.getPathParam("id"))
+                .orElseThrow(RestException.notFoundSupplier());
+            response.entityClass(feed);
+        }).produces(MediaType.JSON, MediaType.XML);
+    }
+
+    private String getEntityLocation(String entityId, String path){
+        return path + "/" + entityId;
+    }
+}</code></pre>
+
+    <hr class="col-md-12">
+
+    <h3 id="sec3">Easy Integration</h3>
+    One of the main requirements of this framework is easy integration with other tools such as DI framework or
+    Servers.
+    A clue how to integrate a new DI or Server is covered in a particular section <a href="">Integration</a>.
+    <h4>Dependency Injection Frameworks</h4>
+    Primarily JoyRest was developed using <code>HK2</code> DI but is very easy to integrate JoyRest with
+    whatever
+    dependency framework you want. A support for most famous DI framework such as <code>Spring, Guice,
+    Dagger</code>
+    will be developed implicitly.
+
+    <h4>Servers</h4>
+    A Support for both types of servers <code>HTTP Server and NIO Server</code> is covered and whatever server
+    can be used
+    for running an application with JoyRest framework.
+
+    <hr>
+
+</div>
+    </div>
+</div>
+
+<!-- script references -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
+<script src="/prism/prism.js"></script>
+</body>
+</html>
