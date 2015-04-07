@@ -1,3 +1,4 @@
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -9,16 +10,16 @@
       "License" shall mean the terms and conditions for use, reproduction,
       and distribution as defined by Sections 1 through 9 of this document.
 
-      "Licensor" shall mean the copyright owner or entity authorized by
+      "Licensor" shall mean the copyright owner or entityClass authorized by
       the copyright owner that is granting the License.
 
-      "Legal Entity" shall mean the union of the acting entity and all
+      "Legal Entity" shall mean the union of the acting entityClass and all
       other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
+      control with that entityClass. For the purposes of this definition,
       "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
+      direction or management of such entityClass, whether by contract or
       otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
+      outstanding shares, or (iii) beneficial ownership of such entityClass.
 
       "You" (or "Your") shall mean an individual or Legal Entity
       exercising permissions granted by this License.
@@ -79,7 +80,7 @@
       by such Contributor that are necessarily infringed by their
       Contribution(s) alone or by combination of their Contribution(s)
       with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
+      institute patent litigation against any entityClass (including a
       cross-claim or counterclaim in a lawsuit) alleging that the Work
       or a Contribution incorporated within the Work constitutes direct
       or contributory patent infringement, then any patent licenses
@@ -178,7 +179,7 @@
    APPENDIX: How to apply the Apache License to your work.
 
       To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "{}"
+      boilerplate notice, with the fields enclosed by brackets "[]"
       replaced with your own identifying information. (Don't include
       the brackets!)  The text should be enclosed in the appropriate
       comment syntax for the file format. We also recommend that a
@@ -186,7 +187,7 @@
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright {yyyy} {name of copyright owner}
+   Copyright 2015 Petr Bouda
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -199,4 +200,3 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
