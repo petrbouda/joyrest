@@ -25,8 +25,8 @@ public final class ImmutableRequest implements Request {
     }
 
     @Override
-    public Map<HeaderName, String> getHeaderNames() {
-        return request.getHeaderNames();
+    public Map<HeaderName, String> getHeaders() {
+        return request.getHeaders();
     }
 
     @Override
@@ -35,8 +35,13 @@ public final class ImmutableRequest implements Request {
     }
 
     @Override
-    public String getPathParam(String name) {
+    public Optional<String> getPathParam(String name) {
         return request.getPathParam(name);
+    }
+
+    @Override
+    public Optional<String[]> getQueryParams(String name) {
+        return request.getQueryParams(name);
     }
 
     @Override

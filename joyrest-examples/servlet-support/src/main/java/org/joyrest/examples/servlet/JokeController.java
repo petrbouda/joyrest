@@ -32,7 +32,7 @@ public class JokeController extends AbstractControllerConfiguration {
 		}).produces(MediaType.JSON, MediaType.XML);
 
 		get(":id", (request, response) -> {
-			Joke joke = service.get(request.getPathParam("id"));
+			Joke joke = service.get(request.getPathParam("id").get());
 			response.entity(joke);
 		}).produces(MediaType.JSON, MediaType.XML);
 	}

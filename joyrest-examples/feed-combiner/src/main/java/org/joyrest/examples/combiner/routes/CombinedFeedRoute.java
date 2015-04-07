@@ -29,13 +29,13 @@ public class CombinedFeedRoute extends AbstractControllerConfiguration {
         }).consumes(MediaType.JSON).produces(MediaType.JSON);
 
         delete("/{id}", (request, response) -> {
-            feedService.delete(request.getPathParam("id"))
+            feedService.delete(request.getPathParam("id").get())
                 .orElseThrow(RestException.notFoundSupplier());
             response.status(HttpStatus.NO_CONTENT);
         });
 
         get("/{id}/entries", (request, response) -> {
-            CombinedFeed feed = feedService.get(request.getPathParam("id"))
+            CombinedFeed feed = feedService.get(request.getPathParam("id").get())
                 .orElseThrow(RestException.notFoundSupplier());
             response.entity(feed);
         }).produces(MediaType.JSON, MediaType.XML);
