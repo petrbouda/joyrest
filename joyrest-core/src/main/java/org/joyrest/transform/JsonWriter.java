@@ -2,18 +2,18 @@ package org.joyrest.transform;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joyrest.model.http.MediaType;
-import org.joyrest.model.response.Response;
+import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.Route;
 
 import java.io.IOException;
 import java.util.List;
 
-public class JsonWriter implements Writer {
+public class JsonWriter<T> implements Writer<T> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
-	public void writeTo(Response response) {
+	public void writeTo(InternalResponse<T> response) {
 		try {
 			mapper.writeValue(response.getOutputStream(), response.getEntity().get());
 		} catch (IOException e) {
@@ -23,11 +23,11 @@ public class JsonWriter implements Writer {
 
 	@Override
 	public MediaType[] getMediaTypes() {
-		return new MediaType[] { MediaType.JSON};
+		return new MediaType[]{MediaType.JSON};
 	}
 
 	@Override
-	public boolean test(Route route) {
+	public boolean test(Route<?, T> route) {
 		List<MediaType> produces = route.getProduces();
 		return produces.contains(getMediaTypes());
 	}

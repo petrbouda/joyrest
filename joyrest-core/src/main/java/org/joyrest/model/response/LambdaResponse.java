@@ -1,14 +1,14 @@
 package org.joyrest.model.response;
 
-import static java.util.Objects.requireNonNull;
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.HttpStatus;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.joyrest.model.http.HeaderName;
-import org.joyrest.model.http.HttpStatus;
+import static java.util.Objects.requireNonNull;
 
-public class LambdaResponse extends InternalResponse {
+public class LambdaResponse<E> extends InternalResponse<E> {
 
 	private final BiConsumer<String, String> headerConsumer;
 

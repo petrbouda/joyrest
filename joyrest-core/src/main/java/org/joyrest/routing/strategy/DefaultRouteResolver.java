@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.request.Request;
 import org.joyrest.routing.PathComparator;
 import org.joyrest.routing.Route;
 import org.joyrest.stream.BiStream;
@@ -25,7 +24,7 @@ public class DefaultRouteResolver implements RouteResolver {
 	private final ApplicationContext context;
 
 	/* All routes configures in an application */
-	private final Set<Route> routes;
+	private final Set<Route<?, ?>> routes;
 
 	public DefaultRouteResolver(ApplicationContext context) {
 		this.context = context;
@@ -33,12 +32,12 @@ public class DefaultRouteResolver implements RouteResolver {
 	}
 
 	@Override
-	public OptionalChain<Route> resolveRoute(InternalRequest request) {
-		final List<Route> routes = this.routes.stream()
+	public OptionalChain<Route<?, ?>> resolveRoute(InternalRequest<?> request) {
+		final List<Route<?, ?>> routes = this.routes.stream()
 			.filter(route -> pathComparator.test(route, request.getPathParts()))
 			.collect(Collectors.toList());
 
-		Optional<Route> route = BiStream.of(routes.stream(), request)
+		Optional<Route<?, ?>> route = BiStream.of(routes.stream(), request)
 			.throwFilter(RequestValidator::validateNonEmptyList, notFoundSupplier())
 			.throwFilter(RequestValidator::validateHttpMethod, notFoundSupplier())
 			.throwFilter(RequestValidator::validateContentType, unsupportedMediaTypeSupplier())

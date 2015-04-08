@@ -1,20 +1,17 @@
 package org.joyrest.ittest.routes;
 
-import org.joyrest.ittest.routes.entity.FeedEntry;
 import org.joyrest.ittest.routes.interceptor.TestAspect;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
-import org.joyrest.routing.AbstractControllerConfiguration;
+import org.joyrest.routing.TypedControllerConfiguration;
 
-public class AspectController extends AbstractControllerConfiguration {
+public class AspectController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
 		setGlobalPath("/ittest/aspect");
 
-		post((Request req, Response resp,FeedEntry body) -> {
+		post((req, resp, body) -> {
 			resp.status(HttpStatus.OK);
 		}).consumes(MediaType.JSON).aspect(new TestAspect());
 	}

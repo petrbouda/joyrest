@@ -7,16 +7,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class ImmutableRequest implements Request {
+public final class ImmutableRequest<E> implements Request<E> {
 
-    private final Request request;
+    private final Request<E> request;
 
-    private ImmutableRequest(Request request) {
+    private ImmutableRequest(Request<E> request) {
         this.request = request;
     }
 
-    public static final ImmutableRequest of(Request request) {
-        return new ImmutableRequest(request);
+    public static <T> ImmutableRequest of(Request<T> request) {
+        return new ImmutableRequest<>(request);
     }
 
     @Override
@@ -65,7 +65,7 @@ public final class ImmutableRequest implements Request {
     }
 
     @Override
-    public Optional<Object> getEntity() {
+    public Optional<E> getEntity() {
         return request.getEntity();
     }
 

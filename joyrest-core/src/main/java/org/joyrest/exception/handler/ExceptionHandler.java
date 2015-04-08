@@ -5,6 +5,6 @@ import org.joyrest.model.request.Request;
 import org.joyrest.model.response.Response;
 
 @FunctionalInterface
-public interface ExceptionHandler<T extends Exception> extends TriConsumer<Request, Response, T> {
+public interface ExceptionHandler<T extends Exception> extends TriConsumer<Request<?>, Response<?>, T> {
 
 }

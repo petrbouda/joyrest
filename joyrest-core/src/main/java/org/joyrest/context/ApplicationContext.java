@@ -8,13 +8,11 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.Response;
 import org.joyrest.routing.Route;
-import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 import org.joyrest.transform.WriterRegistrar;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -38,14 +36,14 @@ public interface ApplicationContext {
 	 *
 	 * @param routes set of routes defined in application
 	 */
-	void addRoutes(Set<Route> routes);
+	void addRoutes(Set<Route<?,?>> routes);
 
 	/**
 	 * Returns all instances of {@link org.joyrest.routing.SimpleRoute} that were added into an application
 	 *
 	 * @return collection of {@link org.joyrest.routing.SimpleRoute} configured into an application
 	 */
-	Set<Route> getRoutes();
+	Set<Route<?,?>> getRoutes();
 
 	/**
 	 * Returns all writers registered belongs to the route
@@ -67,5 +65,5 @@ public interface ApplicationContext {
 	 *
 	 * @return map of exception handlers configured into an application
 	 */
-	Map<Class<? extends Exception>, TriConsumer<Request, Response, ? extends Exception>> getExceptionHandlers();
+	Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> getExceptionHandlers();
 }

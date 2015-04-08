@@ -9,10 +9,12 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.response.Response;
 import org.joyrest.model.request.Request;
 import org.joyrest.routing.AbstractControllerConfiguration;
+import org.joyrest.routing.TypedControllerConfiguration;
 
 import javax.inject.Inject;
+import java.util.List;
 
-public class CombinedFeedRoute extends AbstractControllerConfiguration {
+public class CombinedFeedRoute extends TypedControllerConfiguration {
 
     @Inject
     private CrudService<CombinedFeed> feedService;
@@ -21,7 +23,7 @@ public class CombinedFeedRoute extends AbstractControllerConfiguration {
     protected void configure() {
         setGlobalPath("feeds");
 
-        post((Request request, Response response, CombinedFeed insertedFeed) -> {
+        post((Request<CombinedFeed> request, Response<CombinedFeed> response, CombinedFeed insertedFeed) -> {
             CombinedFeed feed = feedService.save(insertedFeed);
             response.entity(feed)
                     .status(HttpStatus.CREATED)

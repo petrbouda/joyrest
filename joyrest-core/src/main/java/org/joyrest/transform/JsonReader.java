@@ -8,12 +8,12 @@ import org.joyrest.routing.Route;
 import java.io.IOException;
 import java.util.List;
 
-public class JsonReader implements Reader {
+public class JsonReader<T> implements Reader<T> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
-	public <T> T readFrom(InternalRequest request, Class<T> clazz) {
+	public T readFrom(InternalRequest<T> request, Class<T> clazz) {
 		try {
 			return mapper.readValue(request.getRequestBody(), clazz);
 		} catch (IOException e) {
@@ -27,7 +27,7 @@ public class JsonReader implements Reader {
 	}
 
 	@Override
-	public boolean test(Route route) {
+	public boolean test(Route<T, ?> route) {
 		List<MediaType> consumes = route.getConsumes();
 		return consumes.contains(getMediaTypes());
 	}

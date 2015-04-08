@@ -6,8 +6,9 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.Response;
 import org.joyrest.routing.AbstractControllerConfiguration;
+import org.joyrest.routing.TypedControllerConfiguration;
 
-public class RouteController extends AbstractControllerConfiguration {
+public class RouteController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
@@ -19,7 +20,7 @@ public class RouteController extends AbstractControllerConfiguration {
 
 		// Missing POST -> no path, no body
 
-		post((Request req, Response resp, FeedEntry body) -> {
+		post((req, resp, body) -> {
 			resp.status(HttpStatus.OK);
 		}).consumes(MediaType.JSON);
 //

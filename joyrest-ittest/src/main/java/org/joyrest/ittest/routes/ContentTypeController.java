@@ -4,8 +4,9 @@ import org.joyrest.ittest.routes.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.AbstractControllerConfiguration;
+import org.joyrest.routing.TypedControllerConfiguration;
 
-public class ContentTypeController extends AbstractControllerConfiguration {
+public class ContentTypeController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {

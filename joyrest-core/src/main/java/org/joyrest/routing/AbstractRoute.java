@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author pbouda
  */
-public abstract class AbstractRoute implements Route {
+public abstract class AbstractRoute<REQ, RESP> implements Route<REQ, RESP> {
 
 	private final static JoyLogger logger = new JoyLogger(AbstractRoute.class);
 
@@ -34,7 +34,7 @@ public abstract class AbstractRoute implements Route {
 	private final static Map<String, PathType<?>> pathTypes;
 
 	/* All Readers added to the application */
-	private Map<MediaType, Reader> readers;
+	private Map<MediaType, Reader<REQ>> readers;
 
 	static {
 		pathTypes = new HashMap<>();
@@ -67,7 +67,7 @@ public abstract class AbstractRoute implements Route {
 	private List<MediaType> produces = Collections.singletonList(MediaType.WILDCARD);
 
 	/* Collection of interceptors which will be applied with execution of this route */
-	private List<Aspect> aspects = new ArrayList<>();
+	private List<Aspect<REQ, RESP>> aspects = new ArrayList<>();
 
 	/**
 	 * @param path       entire path of the route
@@ -79,7 +79,7 @@ public abstract class AbstractRoute implements Route {
 		this.routeParts = createRouteParts(path);
 	}
 
-	public AbstractRoute consumes(MediaType... consumes) {
+	public AbstractRoute<REQ, RESP> consumes(MediaType... consumes) {
 		this.consumes = Arrays.asList(consumes);
 		return this;
 	}
@@ -89,7 +89,7 @@ public abstract class AbstractRoute implements Route {
 		return Collections.unmodifiableList(consumes);
 	}
 
-	public AbstractRoute produces(MediaType... produces) {
+	public AbstractRoute<REQ, RESP> produces(MediaType... produces) {
 		this.produces = Arrays.asList(produces);
 		return this;
 	}
@@ -149,14 +149,14 @@ public abstract class AbstractRoute implements Route {
 		}
 	}
 
-	public AbstractRoute aspect(Aspect... aspect) {
+	public AbstractRoute<REQ, RESP> aspect(Aspect<REQ, RESP>... aspect) {
 		requireNonNull(aspect, "An added aspect cannot be null.");
 		aspects.addAll(Arrays.asList(aspect));
 		return this;
 	}
 
 	@Override
-	public List<Aspect> getAspects() {
+	public List<Aspect<REQ, RESP>> getAspects() {
 		return Collections.unmodifiableList(aspects);
 	}
 
@@ -165,7 +165,7 @@ public abstract class AbstractRoute implements Route {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Reader> getReader(MediaType mediaType) {
+	public Optional<Reader<REQ>> getReader(MediaType mediaType) {
 		return Optional.ofNullable(readers.get(mediaType));
 	}
 
@@ -173,7 +173,7 @@ public abstract class AbstractRoute implements Route {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setReaders(Map<MediaType, Reader> readers) {
+	public void setReaders(Map<MediaType, Reader<REQ>> readers) {
 		this.readers = Collections.unmodifiableMap(readers);
 	}
 
@@ -190,7 +190,8 @@ public abstract class AbstractRoute implements Route {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		final AbstractRoute other = (AbstractRoute) obj;
+		@SuppressWarnings("unchecked")
+		final AbstractRoute<REQ, RESP> other = (AbstractRoute<REQ, RESP>) obj;
 		return Objects.equals(this.httpMethod, other.httpMethod)
 			&& Objects.equals(this.path, other.path);
 	}

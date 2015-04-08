@@ -11,7 +11,7 @@ import java.util.stream.StreamSupport;
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.model.http.HeaderName;
 
-public class LambdaRequest extends InternalRequest {
+public class LambdaRequest<E> extends InternalRequest<E> {
 
 	private final Function<String, String> headerProvider;
 	private final Function<String, String[]> queryParamProvider;

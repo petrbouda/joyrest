@@ -6,8 +6,8 @@ import org.joyrest.routing.Route;
 
 import java.util.function.Predicate;
 
-public interface Reader extends Predicate<Route>, Default, Transformer {
+public interface Reader<T> extends Predicate<Route<T, ?>>, Default, Transformer {
 
-	<T> T readFrom(InternalRequest request, Class<T> clazz);
+	T readFrom(InternalRequest<T> request, Class<T> clazz);
 
 }

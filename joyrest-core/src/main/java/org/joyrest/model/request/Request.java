@@ -5,7 +5,7 @@ import org.joyrest.model.http.*;
 import java.io.InputStream;
 import java.util.*;
 
-public interface Request {
+public interface Request<E> {
 
     Map<HeaderName, String> getHeaders();
 
@@ -25,7 +25,7 @@ public interface Request {
 
     Optional<String> getHeader(HeaderName name);
 
-    Optional<Object> getEntity();
+    Optional<E> getEntity();
 
 
 }

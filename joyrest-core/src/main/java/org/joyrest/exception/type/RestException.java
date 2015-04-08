@@ -2,7 +2,6 @@ package org.joyrest.exception.type;
 
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.model.response.Response;
 
 import java.util.function.Supplier;
 
@@ -10,7 +9,7 @@ public class RestException extends RuntimeException {
 
 	private static final long serialVersionUID = 3036905776427215166L;
 
-	private final Response response;
+	private final InternalResponse<?> response;
 
 	public RestException(HttpStatus status) {
 		this(new InternalResponse().status(status), "");
@@ -20,16 +19,16 @@ public class RestException extends RuntimeException {
 		this(new InternalResponse().status(status), message);
 	}
 
-	public RestException(Response response) {
+	public RestException(InternalResponse<?> response) {
 		this(response, "");
 	}
 
-	public RestException(Response response, String message) {
+	public RestException(InternalResponse<?> response, String message) {
 		super(message);
 		this.response = response;
 	}
 
-	public Response getResponse() {
+	public InternalResponse<?> getResponse() {
 		return response;
 	}
 

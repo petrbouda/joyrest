@@ -1,15 +1,12 @@
 package org.joyrest.ittest.routes;
 
-import org.joyrest.ittest.routes.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
-import org.joyrest.routing.AbstractControllerConfiguration;
+import org.joyrest.routing.TypedControllerConfiguration;
 
 import static org.joyrest.model.http.HttpStatus.*;
 
-public class StatusController extends AbstractControllerConfiguration {
+public class StatusController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
@@ -17,7 +14,7 @@ public class StatusController extends AbstractControllerConfiguration {
 
 		get("/200", (req, resp) -> resp.status(OK));
 
-		post("/201", (Request req, Response resp, FeedEntry body) -> {
+		post("/201", (req, resp, body) -> {
 			resp.status(HttpStatus.CREATED);
 		}).consumes(MediaType.JSON);
 
@@ -27,7 +24,7 @@ public class StatusController extends AbstractControllerConfiguration {
 
 		get("/302", (req, resp) -> resp.status(FOUND));
 
-		post("/400", (Request req, Response resp, FeedEntry body) -> {
+		post("/400", (req, resp, body) -> {
 			resp.status(BAD_REQUEST);
 		}).consumes(MediaType.JSON);
 

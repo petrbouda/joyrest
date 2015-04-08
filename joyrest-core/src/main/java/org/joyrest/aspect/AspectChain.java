@@ -1,13 +1,13 @@
 package org.joyrest.aspect;
 
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
+import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.Route;
 
-public interface AspectChain {
+public interface AspectChain<REQ, RESP> {
 
-	Response proceed(Request request, Response response);
+	InternalResponse<RESP> proceed(InternalRequest<REQ> request, InternalResponse<RESP> response);
 
-	Route getRoute();
+	Route<REQ, RESP> getRoute();
 
 }

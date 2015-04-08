@@ -24,6 +24,6 @@ public interface RequestProcessor {
      * @return generated response on the base of the incoming request
 	 * @throws java.lang.Exception
 	 */
-    Response process(InternalRequest request, InternalResponse response) throws Exception;
+    InternalResponse<?> process(InternalRequest<?> request, InternalResponse<?> response) throws Exception;
 
 }

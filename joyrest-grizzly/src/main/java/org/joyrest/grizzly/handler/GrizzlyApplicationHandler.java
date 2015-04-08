@@ -36,8 +36,8 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 	@Override
 	public void service(org.glassfish.grizzly.http.server.Request request,
 			org.glassfish.grizzly.http.server.Response response) throws Exception {
-		LambdaRequest joyRequest = createJoyRequest(request);
-		LambdaResponse joyResponse = createJoyResponse(response);
+		LambdaRequest<?> joyRequest = createJoyRequest(request);
+		LambdaResponse<?> joyResponse = createJoyResponse(response);
 
 		/*
 		 * Processes the given client's request and using ConsumerResponse automatically populate HttpServletResponse.
@@ -46,8 +46,8 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 		processor.process(joyRequest, joyResponse);
 	}
 
-	private LambdaRequest createJoyRequest(org.glassfish.grizzly.http.server.Request request) {
-		LambdaRequest joyRequest = new LambdaRequest(request::getHeader, request::getParameterValues);
+	private LambdaRequest<?> createJoyRequest(org.glassfish.grizzly.http.server.Request request) {
+		LambdaRequest<?> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
 		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
 		joyRequest.setMethod(HttpMethod.of(request.getMethod().getMethodString()));
 		joyRequest.setRequestBody(request.getInputStream());
@@ -56,8 +56,8 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 		return joyRequest;
 	}
 
-	private LambdaResponse createJoyResponse(org.glassfish.grizzly.http.server.Response response) throws IOException {
-		LambdaResponse joyResponse = new LambdaResponse(response::addHeader,
+	private LambdaResponse<?> createJoyResponse(org.glassfish.grizzly.http.server.Response response) throws IOException {
+		LambdaResponse<?> joyResponse = new LambdaResponse<>(response::addHeader,
 					status -> response.setStatus(status.code()));
 		joyResponse.setOutputStream(response.getOutputStream());
 		return joyResponse;

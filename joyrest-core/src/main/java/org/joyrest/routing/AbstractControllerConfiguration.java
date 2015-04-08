@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
  * Class {@link AbstractControllerConfiguration} is abstract implementation of
  * {@link ControllerConfiguration} and makes easier to create the given route
  * using predefined protected method.
- * <p/>
+ * <p>
  * It can be considered as container for routes which are provided to
  * {@link RequestProcessor} because of processing
  * and handling incoming requests.
@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractControllerConfiguration implements ControllerConfiguration {
 
 	/* Set of routes which are configured in an inherited class  */
-	private final Set<AbstractRoute> routes = new HashSet<>();
+	private final Set<AbstractRoute<?, ?>> routes = new HashSet<>();
 
 	/* Class validates and customized given path */
 	private final PathCorrector pathCorrector = new PathCorrector();
@@ -78,238 +78,32 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 		}
 	}
 
-	/*
-	* ----------------
-    * 	POST ROUTES
-    * ----------------
-    **/
-
-	/**
-	 * Creates a route with POST method and the given path and action
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute post(String path, BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.POST, path, action);
-	}
-
-	/**
-	 * Creates a route with POST method and the given path and action
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute post(BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.POST, "", action);
-	}
-
-	/**
-	 * Creates a route with POST method and the given path and an action with a body type
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> post(String path,
-											TriConsumer<Request, Response, T> action, Class<T> clazz) {
-		return createEntityRoute(HttpMethod.POST, path, action, clazz);
-	}
-
-	/**
-	 * Creates a route with POST method and the given path and an action with a body type
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> post(String path, TriConsumer<Request, Response, T> action) {
-		return createEntityRoute(HttpMethod.POST, path, action, getActionBodyClass(action));
-	}
-
-	/**
-	 * Creates a route with POST method and the given path and an action with a body type
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> post(TriConsumer<Request, Response, T> action) {
-		return createEntityRoute(HttpMethod.POST, "", action, getActionBodyClass(action));
-	}
-
-	/**
-	 * Creates a route with POST method and the base path and an action with a body type
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> post(TriConsumer<Request, Response, T> action, Class<T> clazz) {
-		return createEntityRoute(HttpMethod.POST, "", action, clazz);
-	}
-
-	/*
-	* ----------------
-    * 	GET ROUTES
-    * ----------------
-    **/
-
-	/**
-	 * Creates a route with GET method and the given path and action
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute get(String path, BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.GET, path, action);
-	}
-
-	/**
-	 * Creates a route with GET method and the given action
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute get(BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.GET, "", action);
-	}
-
-	/**
-	 * Creates a route with GET method and the given path and an action with a body type
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> get(String path,
-										   TriConsumer<Request, Response, T> action, Class<T> clazz) {
-		return createEntityRoute(HttpMethod.GET, path, action, clazz);
-	}
-
-	/**
-	 * Creates a route with GET method and the given path and an action with a body type
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> get(String path, TriConsumer<Request, Response, T> action) {
-		return createEntityRoute(HttpMethod.GET, path, action, getActionBodyClass(action));
-	}
-
-	/**
-	 * Creates a route with GET method and the given path and an action with a body type
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> get(TriConsumer<Request, Response, T> action) {
-		return createEntityRoute(HttpMethod.GET, "", action, getActionBodyClass(action));
-	}
-
-    /*
-	* ----------------
-    * 	PUT ROUTES
-    * ----------------
-    **/
-
-	/**
-	 * Creates a route with PUT method and the given path and action
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute put(String path, BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.PUT, path, action);
-	}
-
-	/**
-	 * Creates a route with PUT method and the given path and action
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute put(BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.PUT, "", action);
-	}
-
-	/**
-	 * Creates a route with PUT method and the given path and an action with a body type
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> put(String path,
-										   TriConsumer<Request, Response, T> action, Class<T> clazz) {
-		return createEntityRoute(HttpMethod.PUT, path, action, clazz);
-	}
-
-	/**
-	 * Creates a route with PUT method and the given path and an action with a body type
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> put(String path, TriConsumer<Request, Response, T> action) {
-		return createEntityRoute(HttpMethod.PUT, path, action, getActionBodyClass(action));
-	}
-
-	/**
-	 * Creates a route with PUT method and the given path and an action with a body type
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final <T> EntityRoute<T> put(TriConsumer<Request, Response, T> action) {
-		return createEntityRoute(HttpMethod.PUT, "", action, getActionBodyClass(action));
-	}
-
-	/*
-	* ------------------
-    * 	DELETE ROUTES
-    * ------------------
-    **/
-
-	/**
-	 * Creates a route with DELETE method and the given path and action
-	 *
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute delete(BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.DELETE, "", action);
-	}
-
-	/**
-	 * Creates a route with DELETE method and the given path and action
-	 *
-	 * @param path   path which corresponds to this route
-	 * @param action action which will be executed if the route is selected
-	 */
-	protected final SimpleRoute delete(String path, BiConsumer<Request, Response> action) {
-		return createSimpleRoute(HttpMethod.DELETE, path, action);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<AbstractRoute> getRoutes() {
+	public Set<AbstractRoute<?, ?>> getRoutes() {
 		return routes;
 	}
 
-	private SimpleRoute createSimpleRoute(HttpMethod method, String path, BiConsumer<Request, Response> action) {
+	protected <REQ, RESP> EntityRoute<REQ, RESP> createEntityRouteFromTri(HttpMethod method, String path,
+											TriConsumer<Request<REQ>, Response<RESP>, REQ> action, Class<REQ> clazz) {
 		final String correctPath = pathCorrector.apply(path);
-		final SimpleRoute route = new SimpleRoute(correctPath, method, action);
+		final EntityRoute<REQ, RESP> route = new EntityRoute<>(correctPath, method, action, clazz);
 		routes.add(route);
 		return route;
 	}
 
-	private <T> EntityRoute<T> createEntityRoute(HttpMethod method, String path,
-												 TriConsumer<Request, Response, T> action, Class<T> clazz) {
+	protected <REQ, RESP> EntityRoute<REQ, RESP> createEntityRouteFromBi(HttpMethod method, String path,
+				BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> reqClazz, Class<RESP> respClazz) {
 		final String correctPath = pathCorrector.apply(path);
-		final EntityRoute<T> route = new EntityRoute<>(correctPath, method, action, clazz);
+		final EntityRoute<REQ, RESP> route = new EntityRoute<>(correctPath, method, action, reqClazz, respClazz);
 		routes.add(route);
 		return route;
 	}
 
-	/**
-	 * Method returns third argument's class type of {@link TriConsumer} which is added runtime
-	 * during defining custom controllers.
-	 *
-	 * @param action action defined in a controller
-	 * @param <T>    body type
-	 * @return {@link java.lang.Class} which corresponds to the body of the route
-	 */
 	@SuppressWarnings("unchecked")
-	private <T> Class<T> getActionBodyClass(TriConsumer<Request, Response, T> action) {
-		return (Class<T>) TypeResolver.resolveRawArguments(TriConsumer.class, action.getClass())[2];
+	protected <REQ, RESP> Class<REQ> getActionBodyClass(TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
+		return (Class<REQ>) TypeResolver.resolveRawArguments(TriConsumer.class, action.getClass())[2];
 	}
 }

@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public final class SerializationUtils {
 
-	public static Writer selectWriter(DefaultMultiMap<MediaType, WriterRegistrar> registrars,
-								Class<?> responseClass, MediaType acceptHeader) {
+	public static <T> Writer<T> selectWriter(DefaultMultiMap<MediaType, WriterRegistrar> registrars,
+								Class<T> responseClass, MediaType acceptHeader) {
 		// Find Writer for dedicated to entity
 		List<WriterRegistrar> allNonDefault = registrars.getAllNonDefault(acceptHeader);
 		Optional<WriterRegistrar> optRegistrar = allNonDefault.stream().filter(

@@ -3,10 +3,8 @@ package org.joyrest.context;
 import org.joyrest.collection.DefaultMultiMap;
 import org.joyrest.collection.JoyCollections;
 import org.joyrest.exception.ExceptionConfiguration;
-import org.joyrest.function.TriConsumer;
+import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.model.http.MediaType;
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
 import org.joyrest.routing.Route;
 import org.joyrest.transform.WriterRegistrar;
 
@@ -18,8 +16,8 @@ public class ApplicationContextImpl implements ApplicationContext {
 	private DefaultMultiMap<MediaType, WriterRegistrar> writers;
 
 	/* Set of all configured items in this application */
-	private final Set<Route> routes = new HashSet<>();
-	private final Map<Class<? extends Exception>, TriConsumer<Request, Response, ? extends Exception>>
+	private final Set<Route<?,?>> routes = new HashSet<>();
+	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>>
 		exceptionHandlers = new HashMap<>();
 
 	/**
@@ -27,18 +25,18 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 */
 	@Override
 	public void addExceptionHandlers(Collection<ExceptionConfiguration> exceptionConfigurations) {
-		Map<Class<? extends Exception>, TriConsumer<Request, Response, ? extends Exception>>
-			tempHandlers = exceptionConfigurations.stream()
+		Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers =
+			exceptionConfigurations.stream()
 			.flatMap(config -> config.getExceptionHandlers().entrySet().stream())
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		exceptionHandlers.putAll(tempHandlers);
+		exceptionHandlers.putAll(handlers);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addRoutes(Set<Route> routes) {
+	public void addRoutes(Set<Route<?,?>> routes) {
 		this.routes.addAll(routes);
 	}
 
@@ -46,7 +44,7 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<Route> getRoutes() {
+	public Set<Route<?,?>> getRoutes() {
 		return Collections.unmodifiableSet(routes);
 	}
 
@@ -70,7 +68,7 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Map<Class<? extends Exception>, TriConsumer<Request, Response, ? extends Exception>> getExceptionHandlers() {
+	public Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> getExceptionHandlers() {
 		return Collections.unmodifiableMap(exceptionHandlers);
 	}
 }

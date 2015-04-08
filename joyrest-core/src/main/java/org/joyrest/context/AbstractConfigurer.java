@@ -6,6 +6,7 @@ import org.joyrest.collection.JoyCollections;
 import org.joyrest.exception.ExceptionConfiguration;
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.model.http.MediaType;
+import org.joyrest.routing.AbstractRoute;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.Route;
 import org.joyrest.transform.Reader;
@@ -16,6 +17,7 @@ import org.joyrest.transform.aspect.SerializationAspect;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
@@ -35,13 +37,18 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
 		List<ControllerConfiguration> routers = getBeans(ControllerConfiguration.class);
 		Aspect[] requiredAspects = getRequiredAspects(writers);
-		Set<Route> routes = routers.stream()
+
+		Set<Route<?, ?>> routes = routers.stream()
 			.peek(ControllerConfiguration::initialize)
 			.flatMap(config -> config.getRoutes().stream())
-			.peek(route -> {
+			.collect(Collectors.toSet());
+
+		routes.stream()
+			.map(route -> (AbstractRoute) route)
+			.forEach(route -> {
 				populateReader(route, readers);
 				route.aspect(requiredAspects);
-			}).collect(Collectors.toSet());
+			});
 
 		ApplicationContext joyContext = new ApplicationContextImpl();
 		joyContext.addRoutes(routes);
@@ -56,15 +63,18 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		return map;
 	}
 
-	private Aspect[] getRequiredAspects(DefaultMultiMap<MediaType, WriterRegistrar> writers) {
-		return new Aspect[]{new SerializationAspect(writers)};
+	private Aspect<?, ?>[] getRequiredAspects(DefaultMultiMap<MediaType, WriterRegistrar> writers) {
+		return new Aspect<?, ?>[]{new SerializationAspect(writers)};
 	}
 
 	private void populateReader(Route route, DefaultMultiMap<MediaType, ReaderRegistrar> registrars) {
 		Map<MediaType, Reader> readers = new HashMap<>();
 
-		if (route.hasRequestBody()) {
-			for (MediaType mediaType : route.getConsumes()) {
+		if (route.getRequestBodyClass().isPresent()) {
+
+			List consumes = route.getConsumes();
+			for (int i=0; i < consumes.size(); ++i) {
+				MediaType mediaType = (MediaType) consumes.get(i);
 
 				// Find Reader for dedicated to entity
 				List<ReaderRegistrar> allNonDefault = registrars.getAllNonDefault(mediaType);

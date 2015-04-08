@@ -5,23 +5,20 @@ import java.util.Optional;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.handler.ExceptionHandler;
-import org.joyrest.function.TriConsumer;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.model.response.Response;
 
 public class ExceptionProcessorImpl implements ExceptionProcessor {
 
-	private final Map<Class<? extends Exception>, TriConsumer<Request, Response, ? extends Exception>> handlers;
+	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers;
 
 	public ExceptionProcessorImpl(ApplicationContext config) {
 		this.handlers = config.getExceptionHandlers();
 	}
 
 	@Override
-	public Response process(final Exception ex, final InternalRequest request, final InternalResponse response)
-			throws Exception {
+		public <T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request,
+																 InternalResponse<?> response) throws Exception {
 		Class<? extends Exception> clazz = ex.getClass();
 		ExceptionHandler<? super Exception> handler = getHandler(clazz);
 

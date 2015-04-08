@@ -69,7 +69,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Response process(final InternalRequest request, final InternalResponse response) throws Exception {
+	public InternalResponse<?> process(final InternalRequest<?> request, final InternalResponse<?> response) throws Exception {
 		try {
 			return processRequest(request, response);
 		} catch (RestException re) {
@@ -80,13 +80,14 @@ public class RequestProcessorImpl implements RequestProcessor {
 		}
 	}
 
-	private Response processException(final InternalRequest request, final Response response) {
+	private InternalResponse<?> processException(final InternalRequest<?> request, final InternalResponse<?> response) {
 		writeEntity(request, response);
 		return response;
 	}
 
-	private Response processRequest(final InternalRequest request, final InternalResponse response) {
-		final Route route = cachedRouteResolver.resolveRoute(request)
+	@SuppressWarnings("unchecked")
+	private InternalResponse<?> processRequest(final InternalRequest<?> request, final InternalResponse<?> response) {
+		final Route<?, ?> route = cachedRouteResolver.resolveRoute(request)
 			.chainEmpty(defaultRouteResolver.resolveRoute(request))
 			.orElseThrow(notFoundSupplier());
 
@@ -96,7 +97,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 		return chain.proceed(request, response);
 	}
 
-	private void writeEntity(final Request request, final Response response) {
+	private void writeEntity(final InternalRequest<?> request, final InternalResponse<?> response) {
 		if (response.getEntity().isPresent()) {
 			MediaType accept = request.getHeader(ACCEPT).map(MediaType::of).get();
 			Class<?> responseClass = response.getEntity().get().getClass();
@@ -105,7 +106,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 		}
 	}
 
-	private Map<String, PathParam> resolvePathParams(final Route route, final Request request) {
+	private Map<String, PathParam> resolvePathParams(final Route<?, ?> route, final Request<?> request) {
 		return StreamUtils
 			.zip(route.getRouteParts().stream(), request.getPathParts().stream(), pathParamExtractor)
 			.filter(Objects::nonNull)

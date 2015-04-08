@@ -8,55 +8,52 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class InternalResponse implements Response {
+public class InternalResponse<E> implements Response<E> {
 
-    private Map<HeaderName, String> headers = new HashMap<>();
+	private Map<HeaderName, String> headers = new HashMap<>();
 
-    private HttpStatus status = HttpStatus.OK;
+	private HttpStatus status = HttpStatus.OK;
 
-    private Object entity;
+	private E entity;
 
-    private OutputStream responseBody;
+	private OutputStream responseBody;
 
-    @Override
-    public InternalResponse header(HeaderName name, String value) {
-        headers.put(name, value);
-        return this;
-    }
+	@Override
+	public InternalResponse<E> header(HeaderName name, String value) {
+		headers.put(name, value);
+		return this;
+	}
 
-    @Override
-    public InternalResponse status(HttpStatus status) {
-        this.status = status;
-        return this;
-    }
+	@Override
+	public InternalResponse<E> status(HttpStatus status) {
+		this.status = status;
+		return this;
+	}
 
-    @Override
-    public InternalResponse entity(Object entity) {
-        this.entity = entity;
-        return this;
-    }
+	@Override
+	public InternalResponse<E> entity(E entity) {
+		this.entity = entity;
+		return this;
+	}
 
-    public void setOutputStream(OutputStream responseBody) {
-        this.responseBody = responseBody;
-    }
+	public void setOutputStream(OutputStream responseBody) {
+		this.responseBody = responseBody;
+	}
 
-    public OutputStream getOutputStream() {
-        return responseBody;
-    }
+	public OutputStream getOutputStream() {
+		return responseBody;
+	}
 
-    @Override
-    public Map<HeaderName, String> getHeaders() {
-        return headers;
-    }
+	public Map<HeaderName, String> getHeaders() {
+		return headers;
+	}
 
-    @Override
-    public HttpStatus getStatus() {
-        return status;
-    }
+	public HttpStatus getStatus() {
+		return status;
+	}
 
-    @Override
-    public Optional<Object> getEntity() {
-        return Optional.ofNullable(entity);
-    }
+	public Optional<E> getEntity() {
+		return Optional.ofNullable(entity);
+	}
 
 }

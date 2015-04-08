@@ -6,11 +6,12 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.Response;
 import org.joyrest.routing.AbstractControllerConfiguration;
+import org.joyrest.routing.TypedControllerConfiguration;
 
 import javax.inject.Inject;
 import java.util.List;
 
-public class JokeController extends AbstractControllerConfiguration {
+public class JokeController extends TypedControllerConfiguration{
 
 	@Inject
 	private JokeService service;
@@ -19,7 +20,7 @@ public class JokeController extends AbstractControllerConfiguration {
 	protected void configure() {
 		setGlobalPath("jokes");
 
-		post((Request request, Response response, Joke joke) -> {
+		post((Request<Joke> request, Response<Joke> response, Joke joke) -> {
 			Joke savedJoke = service.save(joke);
 			response.entity(savedJoke)
 				.status(HttpStatus.CREATED)

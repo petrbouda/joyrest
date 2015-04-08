@@ -1,25 +1,14 @@
 package org.joyrest.model.response;
 
-import java.io.OutputStream;
-import java.util.Map;
-import java.util.Optional;
-
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpStatus;
 
-public interface Response {
+public interface Response<E> {
 
-	Optional<Object> getEntity();
+	Response<E> header(HeaderName name, String value);
 
-	OutputStream getOutputStream();
+	Response<E> status(HttpStatus status);
 
-	Map<HeaderName, String> getHeaders();
+	Response<E> entity(E entity);
 
-	HttpStatus getStatus();
-
-	Response header(HeaderName name, String value);
-
-	Response status(HttpStatus status);
-
-	Response entity(Object entity);
 }

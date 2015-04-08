@@ -15,16 +15,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
 
-<<<<<<< HEAD
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest("server.port=0")
-=======
-/**
- * TODO Udelat testy na Spring Boot !!
- * */
->>>>>>> bca5483... refactoring and TODO spring boot
 public abstract class AbstractBasicIT {
 
     @Value("${local.server.port}")

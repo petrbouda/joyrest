@@ -1,11 +1,12 @@
 package org.joyrest.aspect;
 
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
+import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.response.InternalResponse;
 
 @FunctionalInterface
-public interface Aspect {
+public interface Aspect<REQ, RESP> {
 
-	Response around(AspectChain chain, Request request, Response response);
+	InternalResponse<RESP> around(AspectChain<REQ, RESP> chain,
+								  InternalRequest<REQ> request, InternalResponse<RESP> response);
 
 }

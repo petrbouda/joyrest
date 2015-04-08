@@ -10,7 +10,7 @@ import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.PathParam;
 import org.joyrest.utils.PathUtils;
 
-public class InternalRequest implements Request {
+public class InternalRequest<E> implements Request<E> {
 
 	protected Map<HeaderName, String> headers;
 
@@ -24,7 +24,7 @@ public class InternalRequest implements Request {
 
 	protected HttpMethod method;
 
-	protected Object entity;
+	protected E entity;
 
 	protected InputStream requestBody;
 
@@ -77,7 +77,7 @@ public class InternalRequest implements Request {
 	}
 
 	@Override
-	public Optional<Object> getEntity() {
+	public Optional<E> getEntity() {
 		return Optional.ofNullable(entity);
 	}
 
@@ -110,7 +110,7 @@ public class InternalRequest implements Request {
 		this.method = method;
 	}
 
-	public void setEntity(Object entity) {
+	public void setEntity(E entity) {
 		this.entity = entity;
 	}
 
