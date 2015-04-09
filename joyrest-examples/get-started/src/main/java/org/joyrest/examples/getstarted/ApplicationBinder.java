@@ -1,4 +1,4 @@
-package org.joyrest.examples.servlet;
+package org.joyrest.examples.getstarted;
 
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

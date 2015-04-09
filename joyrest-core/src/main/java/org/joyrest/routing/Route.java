@@ -7,6 +7,7 @@ import org.joyrest.model.response.LambdaResponse;
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.MediaType;
+import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Reader;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Container for all information about one route {@link AbstractRoute}
+ * Container for all information about one route {@link EntityRoute}
  *
  * @author pbouda
  */
@@ -35,15 +36,17 @@ public interface Route<REQ, RESP> {
 
     List<RoutePart<?>> getRouteParts();
 
+    String getPath();
+
     Map<String, RoutePart<?>> getPathParams();
 
     List<MediaType> getConsumes();
 
     List<MediaType> getProduces();
 
-    Optional<Class<REQ>> getRequestBodyClass();
+    Type<REQ> getRequestBodyClass();
 
-    Optional<Class<RESP>> getResponseBodyClass();
+    Type<RESP> getResponseBodyClass();
 
     /**
      * Returns concrete reader registered belongs to the route

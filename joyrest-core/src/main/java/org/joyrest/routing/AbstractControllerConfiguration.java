@@ -1,12 +1,11 @@
 package org.joyrest.routing;
 
-import net.jodah.typetools.TypeResolver;
-import org.joyrest.function.TriConsumer;
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.Response;
 import org.joyrest.processor.RequestProcessor;
+import org.joyrest.routing.entity.Type;
 import org.joyrest.utils.PathUtils;
 
 import java.util.HashSet;
@@ -20,7 +19,7 @@ import static java.util.Objects.requireNonNull;
  * Class {@link AbstractControllerConfiguration} is abstract implementation of
  * {@link ControllerConfiguration} and makes easier to create the given route
  * using predefined protected method.
- * <p>
+ * <p/>
  * It can be considered as container for routes which are provided to
  * {@link RequestProcessor} because of processing
  * and handling incoming requests.
@@ -30,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractControllerConfiguration implements ControllerConfiguration {
 
 	/* Set of routes which are configured in an inherited class  */
-	private final Set<AbstractRoute<?, ?>> routes = new HashSet<>();
+	private final Set<EntityRoute<?, ?>> routes = new HashSet<>();
 
 	/* Class validates and customized given path */
 	private final PathCorrector pathCorrector = new PathCorrector();
@@ -82,28 +81,15 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<AbstractRoute<?, ?>> getRoutes() {
+	public Set<EntityRoute<?, ?>> getRoutes() {
 		return routes;
 	}
 
-	protected <REQ, RESP> EntityRoute<REQ, RESP> createEntityRouteFromTri(HttpMethod method, String path,
-											TriConsumer<Request<REQ>, Response<RESP>, REQ> action, Class<REQ> clazz) {
-		final String correctPath = pathCorrector.apply(path);
-		final EntityRoute<REQ, RESP> route = new EntityRoute<>(correctPath, method, action, clazz);
-		routes.add(route);
-		return route;
-	}
-
-	protected <REQ, RESP> EntityRoute<REQ, RESP> createEntityRouteFromBi(HttpMethod method, String path,
-				BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> reqClazz, Class<RESP> respClazz) {
+	protected <REQ, RESP> EntityRoute<REQ, RESP> createEntityRoute(HttpMethod method, String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, Type<REQ> reqClazz, Type<RESP> respClazz) {
 		final String correctPath = pathCorrector.apply(path);
 		final EntityRoute<REQ, RESP> route = new EntityRoute<>(correctPath, method, action, reqClazz, respClazz);
 		routes.add(route);
 		return route;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected <REQ, RESP> Class<REQ> getActionBodyClass(TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
-		return (Class<REQ>) TypeResolver.resolveRawArguments(TriConsumer.class, action.getClass())[2];
 	}
 }

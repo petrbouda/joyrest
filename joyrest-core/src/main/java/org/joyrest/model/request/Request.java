@@ -19,13 +19,13 @@ public interface Request<E> {
 
     List<String> getPathParts();
 
-    Optional<String> getPathParam(String name);
+    String getPathParam(String name);
 
     Optional<String[]> getQueryParams(String name);
 
     Optional<String> getHeader(HeaderName name);
 
-    Optional<E> getEntity();
+    E getEntity();
 
 
 }

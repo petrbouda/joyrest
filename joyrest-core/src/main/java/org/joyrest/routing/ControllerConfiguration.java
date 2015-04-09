@@ -4,7 +4,7 @@ import java.util.Set;
 
 /**
  * A basic configuration interface contains method {@link #initialize()} in
- * which is mostly set of {@link AbstractRoute} classes represent an individual
+ * which is mostly set of {@link EntityRoute} classes represent an individual
  * handler for client's request.
  *
  * @author pbouda
@@ -26,6 +26,6 @@ public interface ControllerConfiguration {
 	 * @return set of routes which are configured in {@link #initialize()}
 	 *         method
 	 **/
-	Set<AbstractRoute<?, ?>> getRoutes();
+	Set<EntityRoute<?, ?>> getRoutes();
 
 }

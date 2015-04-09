@@ -15,13 +15,15 @@ public class RequestResponseDataController extends TypedControllerConfiguration 
 	protected void configure() {
 		setGlobalPath("feeds");
 
-		post((request, response, entry) -> {
+		post((request, response) -> {
+			
+			
 			assertNotNull("Request object cannot be null.", request);
 			assertNotNull("Response object cannot be null.", response);
 			assertNotNull("Entity object cannot be null.", entry);
 
 			assertThat("Entity object is not the same object as in Request#getEntityClass()",
-				request.getEntity().get(), sameInstance(entry));
+				request.getEntity(), sameInstance(entry));
 			assertEquals("Http Method is not correct.",
 				HttpMethod.POST, request.getMethod());
 			assertEquals("Route path is not correct.",
@@ -36,6 +38,6 @@ public class RequestResponseDataController extends TypedControllerConfiguration 
 				request.getPathParams().isEmpty());
 			assertTrue("There is any query param and should not be.",
 				request.getQueryParams().isEmpty());
-		}).consumes(MediaType.JSON);
+		}, Entry.class).consumes(MediaType.JSON);
 	}
 }

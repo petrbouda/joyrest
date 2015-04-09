@@ -1,4 +1,4 @@
-package org.joyrest.examples.servlet;
+package org.joyrest.examples.getstarted;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

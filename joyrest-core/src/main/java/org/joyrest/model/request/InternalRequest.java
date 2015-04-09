@@ -45,9 +45,8 @@ public class InternalRequest<E> implements Request<E> {
 	}
 
 	@Override
-	public Optional<String> getPathParam(String name) {
-		String value = pathParams.get(name).getValue();
-		return Optional.ofNullable(value);
+	public String getPathParam(String name) {
+		return pathParams.get(name).getValue();
 	}
 
 	@Override
@@ -77,8 +76,8 @@ public class InternalRequest<E> implements Request<E> {
 	}
 
 	@Override
-	public Optional<E> getEntity() {
-		return Optional.ofNullable(entity);
+	public E getEntity() {
+		return entity;
 	}
 
 	public InputStream getRequestBody() {

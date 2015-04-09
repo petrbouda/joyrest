@@ -15,7 +15,7 @@ public final class ImmutableRequest<E> implements Request<E> {
         this.request = request;
     }
 
-    public static <T> ImmutableRequest of(Request<T> request) {
+    public static <T> ImmutableRequest<T> of(Request<T> request) {
         return new ImmutableRequest<>(request);
     }
 
@@ -35,7 +35,7 @@ public final class ImmutableRequest<E> implements Request<E> {
     }
 
     @Override
-    public Optional<String> getPathParam(String name) {
+    public String getPathParam(String name) {
         return request.getPathParam(name);
     }
 
@@ -65,7 +65,7 @@ public final class ImmutableRequest<E> implements Request<E> {
     }
 
     @Override
-    public Optional<E> getEntity() {
+    public E getEntity() {
         return request.getEntity();
     }
 
@@ -82,7 +82,7 @@ public final class ImmutableRequest<E> implements Request<E> {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final ImmutableRequest other = (ImmutableRequest) obj;
+        final ImmutableRequest<?> other = (ImmutableRequest<?>) obj;
         return Objects.equals(this.request, other.request);
     }
 }

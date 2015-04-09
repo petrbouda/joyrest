@@ -1,11 +1,10 @@
 package org.joyrest.routing;
 
-import org.joyrest.function.TriConsumer;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.Response;
 import org.joyrest.processor.RequestProcessor;
-import org.joyrest.routing.entity.GenericType;
+import org.joyrest.routing.entity.*;
 
 import java.util.function.BiConsumer;
 
@@ -13,7 +12,7 @@ import java.util.function.BiConsumer;
  * Class {@link TypedControllerConfiguration} is abstract implementation of
  * {@link ControllerConfiguration} and makes easier to create the given route
  * using predefined protected method.
- * <p>
+ * <p/>
  * It can be considered as container for routes which are provided to
  * {@link RequestProcessor} because of processing
  * and handling incoming requests.
@@ -22,62 +21,98 @@ import java.util.function.BiConsumer;
  */
 public abstract class TypedControllerConfiguration extends AbstractControllerConfiguration {
 
-	/*
-	* ----------------
-    * 	POST ROUTES
-    * ----------------
-    **/
+//	---------------
+//    POST ROUTES
+//  ---------------
 
-	@SuppressWarnings("unchecked")
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(BiConsumer<Request<REQ>, Response<RESP>> action,
-		GenericType<REQ> req, Class<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.POST, "", action, (Class<REQ>) req.getType(), resp);
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestGenericType<REQ> req, Class<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, new Type<>(resp));
 	}
 
-	@SuppressWarnings("unchecked")
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(BiConsumer<Request<REQ>, Response<RESP>> action,
-		GenericType<REQ> req, GenericType<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.POST, "", action,
-			(Class<REQ>) req.getType(), (Class<RESP>) resp.getType());
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestGenericType<REQ> req, Class<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, new Type<>(resp));
 	}
 
-	@SuppressWarnings("unchecked")
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(BiConsumer<Request<REQ>, Response<RESP>> action,
-		Class<REQ> req, GenericType<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.POST, "", action, req, (Class<RESP>) resp.getType());
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestGenericType<REQ> req, ResponseGenericType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
 	}
 
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(BiConsumer<Request<REQ>, Response<RESP>> action,
-		Class<REQ> req, Class<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.POST, "", action, req, resp);
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestGenericType<REQ> req, ResponseGenericType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, resp);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseGenericType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, new Type<>(req), resp);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseGenericType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, new Type<>(req), resp);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, Class<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, new Type<>(req), new Type<>(resp));
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, Class<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, new Type<>(req), new Type<>(resp));
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, null);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, null);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, null, resp);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, null, resp);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestGenericType<REQ> req) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, null);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestGenericType<REQ> req) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, null);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, ResponseGenericType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, null, resp);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, ResponseGenericType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, null, resp);
+	}
+
+	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
+		BiConsumer<Request<REQ>, Response<RESP>> action) {
+		return createEntityRoute(HttpMethod.POST, "", action, null, null);
 	}
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
 		BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.POST, path, action, null, null);
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.POST, "", action, null, null);
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
-		TriConsumer<Request<REQ>, Response<RESP>, REQ> action, Class<REQ> clazz) {
-		return createEntityRouteFromTri(HttpMethod.POST, path, action, clazz);
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(String path,
-		TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
-		return createEntityRouteFromTri(HttpMethod.POST, path, action, getActionBodyClass(action));
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
-		return createEntityRouteFromTri(HttpMethod.POST, "", action, getActionBodyClass(action));
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> post(
-		TriConsumer<Request<REQ>, Response<RESP>, REQ> action, Class<REQ> clazz) {
-		return createEntityRouteFromTri(HttpMethod.POST, "", action, clazz);
+		return createEntityRoute(HttpMethod.POST, path, action, null, null);
 	}
 
 	/*
@@ -86,51 +121,34 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
     * ----------------
     **/
 
-	@SuppressWarnings("unchecked")
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(BiConsumer<Request<REQ>, Response<RESP>> action,
-		GenericType<REQ> req, Class<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.GET, "", action, (Class<REQ>) req.getType(), resp);
+		RequestGenericType<REQ> req, Class<RESP> resp) {
+		return createEntityRoute(HttpMethod.GET, "", action, (Class<REQ>) req.getType(), resp);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(BiConsumer<Request<REQ>, Response<RESP>> action,
-		GenericType<REQ> req, GenericType<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.GET, "", action,
+		ParamType<REQ> req, ParamType<RESP> resp) {
+		return createEntityRoute(HttpMethod.GET, "", action,
 			(Class<REQ>) req.getType(), (Class<RESP>) resp.getType());
 	}
 
-	@SuppressWarnings("unchecked")
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(BiConsumer<Request<REQ>, Response<RESP>> action,
-		Class<REQ> req, GenericType<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.GET, "", action, req, (Class<RESP>) resp.getType());
+		Class<REQ> req, ParamType<RESP> resp) {
+		return createEntityRoute(HttpMethod.GET, "", action, req, (Class<RESP>) resp.getType());
 	}
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(BiConsumer<Request<REQ>, Response<RESP>> action,
 		Class<REQ> req, Class<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.GET, "", action, req, resp);
+		return createEntityRoute(HttpMethod.GET, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(String path,
 		BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.GET, path, action, null, null);
+		return createEntityRoute(HttpMethod.GET, path, action, null, null);
 	}
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.GET, "", action, null, null);
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(String path,
-		TriConsumer<Request<REQ>, Response<RESP>, REQ> action, Class<REQ> clazz) {
-		return createEntityRouteFromTri(HttpMethod.GET, path, action, clazz);
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(String path,
-		TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
-		return createEntityRouteFromTri(HttpMethod.GET, path, action, getActionBodyClass(action));
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> get(TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
-		return createEntityRouteFromTri(HttpMethod.GET, "", action, getActionBodyClass(action));
+		return createEntityRoute(HttpMethod.GET, "", action, null, null);
 	}
 
     /*
@@ -142,49 +160,35 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	@SuppressWarnings("unchecked")
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(BiConsumer<Request<REQ>, Response<RESP>> action,
 		GenericType<REQ> req, Class<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.PUT, "", action, (Class<REQ>) req.getType(), resp);
+		return createEntityRoute(HttpMethod.PUT, "", action, (Class<REQ>) req.getType(), resp);
 	}
 
 	@SuppressWarnings("unchecked")
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(BiConsumer<Request<REQ>, Response<RESP>> action,
 		GenericType<REQ> req, GenericType<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.PUT, "", action,
+		return createEntityRoute(HttpMethod.PUT, "", action,
 			(Class<REQ>) req.getType(), (Class<RESP>) resp.getType());
 	}
 
 	@SuppressWarnings("unchecked")
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(BiConsumer<Request<REQ>, Response<RESP>> action,
 		Class<REQ> req, GenericType<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.PUT, "", action, req, (Class<RESP>) resp.getType());
+		return createEntityRoute(HttpMethod.PUT, "", action, req, (Class<RESP>) resp.getType());
 	}
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(BiConsumer<Request<REQ>, Response<RESP>> action,
 		Class<REQ> req, Class<RESP> resp) {
-		return createEntityRouteFromBi(HttpMethod.PUT, "", action, req, resp);
+		return createEntityRoute(HttpMethod.PUT, "", action, req, resp);
 	}
 
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(String path,
 		BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.PUT, path, action, null, null);
+		return createEntityRoute(HttpMethod.PUT, path, action, null, null);
 	}
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.PUT, "", action, null, null);
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(String path,
-		TriConsumer<Request<REQ>, Response<RESP>, REQ> action, Class<REQ> clazz) {
-		return createEntityRouteFromTri(HttpMethod.PUT, path, action, clazz);
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(String path,
-		TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
-		return createEntityRouteFromTri(HttpMethod.PUT, path, action, getActionBodyClass(action));
-	}
-
-	protected final <REQ, RESP> EntityRoute<REQ, RESP> put(TriConsumer<Request<REQ>, Response<RESP>, REQ> action) {
-		return createEntityRouteFromTri(HttpMethod.PUT, "", action, getActionBodyClass(action));
+		return createEntityRoute(HttpMethod.PUT, "", action, null, null);
 	}
 
 	/*
@@ -195,12 +199,12 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> delete(
 		BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.DELETE, "", action, null, null);
+		return createEntityRoute(HttpMethod.DELETE, "", action, null, null);
 	}
 
 	protected final <REQ, RESP> EntityRoute<REQ, RESP> delete(String path,
 		BiConsumer<Request<REQ>, Response<RESP>> action) {
-		return createEntityRouteFromBi(HttpMethod.DELETE, path, action, null, null);
+		return createEntityRoute(HttpMethod.DELETE, path, action, null, null);
 	}
 
 }

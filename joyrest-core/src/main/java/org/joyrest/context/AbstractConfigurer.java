@@ -5,8 +5,9 @@ import org.joyrest.collection.DefaultMultiMap;
 import org.joyrest.collection.JoyCollections;
 import org.joyrest.exception.ExceptionConfiguration;
 import org.joyrest.exception.type.InvalidConfigurationException;
+import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.http.MediaType;
-import org.joyrest.routing.AbstractRoute;
+import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.Route;
 import org.joyrest.transform.Reader;
@@ -17,9 +18,10 @@ import org.joyrest.transform.aspect.SerializationAspect;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
+
+	private final static JoyLogger log = new JoyLogger(EntityRoute.class);
 
 	/* ServiceLocator name in its own context */
 	public static final String JOY_REST_BEAN_CONTEXT = "JoyRestBeanContext";
@@ -41,10 +43,14 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		Set<Route<?, ?>> routes = routers.stream()
 			.peek(ControllerConfiguration::initialize)
 			.flatMap(config -> config.getRoutes().stream())
+			.peek(route -> log.info(() -> String.format(
+				"Route instantiated: METHOD[%s], PATH[%s], CONSUMES[%s], PRODUCES[%s], REQ-CLASS[%s], RESP-CLASS[%s]",
+				route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
+				getSimpleName(route.getRequestBodyClass()), getSimpleName(route.getResponseBodyClass()))))
 			.collect(Collectors.toSet());
 
 		routes.stream()
-			.map(route -> (AbstractRoute) route)
+			.map(route -> (EntityRoute) route)
 			.forEach(route -> {
 				populateReader(route, readers);
 				route.aspect(requiredAspects);
@@ -57,7 +63,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		return joyContext;
 	}
 
-	private <X extends TransformerRegistrar> DefaultMultiMap<MediaType, X> createTransformerMap(List<X> registrars) {
+	private <X extends TransformerRegistrar<?>> DefaultMultiMap<MediaType, X> createTransformerMap(List<X> registrars) {
 		DefaultMultiMap<MediaType, X> map = JoyCollections.defaultHashMultiMap();
 		registrars.stream().forEach(registrar -> map.add(registrar.getMediaType(), registrar));
 		return map;
@@ -67,10 +73,14 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		return new Aspect<?, ?>[]{new SerializationAspect(writers)};
 	}
 
+	private String getSimpleName(Class<?> clazz) {
+		return clazz == null ? "none" : clazz.getSimpleName();
+	}
+
 	private void populateReader(Route route, DefaultMultiMap<MediaType, ReaderRegistrar> registrars) {
 		Map<MediaType, Reader> readers = new HashMap<>();
 
-		if (route.getRequestBodyClass().isPresent()) {
+		if (route.getRequestBodyClass() == null) {
 
 			List consumes = route.getConsumes();
 			for (int i=0; i < consumes.size(); ++i) {
@@ -79,7 +89,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 				// Find Reader for dedicated to entity
 				List<ReaderRegistrar> allNonDefault = registrars.getAllNonDefault(mediaType);
 				Optional<ReaderRegistrar> optRegistrar = allNonDefault.stream().filter(
-					registrar -> registrar.getEntityClass().get() == route.getRequestBodyClass().get()).findFirst();
+					registrar -> registrar.getEntityClass().get() == route.getRequestBodyClass()).findFirst();
 
 				// Find Reader for dedicated to entity
 				if (optRegistrar.isPresent()) {
@@ -91,7 +101,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 				ReaderRegistrar registrar = registrars.getDefault(mediaType).orElseThrow(
 					() -> new InvalidConfigurationException(
 						String.format("No reader for media-type '%s' and class '%s'",
-							mediaType.getValue(), route.getRequestBodyClass().get())));
+							mediaType.getValue(), route.getRequestBodyClass())));
 				readers.put(mediaType, registrar.getTransformer());
 			}
 		}

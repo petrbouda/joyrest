@@ -1,4 +1,4 @@
-package org.joyrest.examples.servlet;
+package org.joyrest.examples.getstarted;
 
 import java.util.List;
 

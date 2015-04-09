@@ -1,8 +1,7 @@
-package org.joyrest.examples.servlet;
+package org.joyrest.examples.getstarted;
 
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.Configurer;
 import org.joyrest.grizzly.GrizzlyServer;
 import org.joyrest.hk2.HK2Configurer;
 

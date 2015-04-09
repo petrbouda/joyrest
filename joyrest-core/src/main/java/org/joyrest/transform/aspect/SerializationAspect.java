@@ -53,7 +53,7 @@ public class SerializationAspect<REQ, RESP> implements Aspect<REQ, RESP> {
 		Reader<REQ> reader = route.getReader(contentType)
 			.orElseThrow(unsupportedMediaTypeSupplier());
 		EntityRoute<REQ, RESP> entityRoute = (EntityRoute<REQ, RESP>) route;
-		return reader.readFrom(request, entityRoute.getRequestBodyClass().get());
+		return reader.readFrom(request, entityRoute.getRequestBodyClass());
 	}
 
 }
