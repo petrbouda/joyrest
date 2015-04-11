@@ -9,11 +9,14 @@ import java.util.stream.Collectors;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.model.request.InternalRequest;
+import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.PathComparator;
 import org.joyrest.routing.Route;
 import org.joyrest.stream.BiStream;
 import org.joyrest.utils.OptionalChain;
 import org.joyrest.validator.RequestValidator;
+
+import javax.swing.text.html.parser.Entity;
 
 public class DefaultRouteResolver implements RouteResolver {
 
@@ -24,7 +27,7 @@ public class DefaultRouteResolver implements RouteResolver {
 	private final ApplicationContext context;
 
 	/* All routes configures in an application */
-	private final Set<Route<?, ?>> routes;
+	private final Set<EntityRoute<?, ?>> routes;
 
 	public DefaultRouteResolver(ApplicationContext context) {
 		this.context = context;
@@ -32,12 +35,12 @@ public class DefaultRouteResolver implements RouteResolver {
 	}
 
 	@Override
-	public OptionalChain<Route<?, ?>> resolveRoute(InternalRequest<?> request) {
-		final List<Route<?, ?>> routes = this.routes.stream()
+	public OptionalChain<EntityRoute<?, ?>> resolveRoute(InternalRequest<?> request) {
+		final List<EntityRoute<?, ?>> routes = this.routes.stream()
 			.filter(route -> pathComparator.test(route, request.getPathParts()))
 			.collect(Collectors.toList());
 
-		Optional<Route<?, ?>> route = BiStream.of(routes.stream(), request)
+		Optional<EntityRoute<?, ?>> route = BiStream.of(routes.stream(), request)
 			.throwFilter(RequestValidator::validateNonEmptyList, notFoundSupplier())
 			.throwFilter(RequestValidator::validateHttpMethod, notFoundSupplier())
 			.throwFilter(RequestValidator::validateContentType, unsupportedMediaTypeSupplier())

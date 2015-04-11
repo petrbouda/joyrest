@@ -1,27 +1,34 @@
 package org.joyrest.context;
 
+import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.partitioningBy;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.joyrest.aspect.Aspect;
-import org.joyrest.collection.DefaultMultiMap;
-import org.joyrest.collection.JoyCollections;
+import org.joyrest.collection.annotation.Default;
 import org.joyrest.exception.ExceptionConfiguration;
-import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.logging.JoyLogger;
-import org.joyrest.model.http.MediaType;
-import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.ControllerConfiguration;
+import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.Route;
 import org.joyrest.transform.Reader;
-import org.joyrest.transform.ReaderRegistrar;
-import org.joyrest.transform.TransformerRegistrar;
-import org.joyrest.transform.WriterRegistrar;
+import org.joyrest.transform.Transformer;
+import org.joyrest.transform.Writer;
 import org.joyrest.transform.aspect.SerializationAspect;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+@SuppressWarnings("rawtypes")
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
-	private final static JoyLogger log = new JoyLogger(EntityRoute.class);
+	private final static JoyLogger log = new JoyLogger(AbstractConfigurer.class);
+
+	public static final List<Aspect> REQUIRED_ASPECTS = Arrays.asList(new SerializationAspect());
 
 	/* ServiceLocator name in its own context */
 	public static final String JOY_REST_BEAN_CONTEXT = "JoyRestBeanContext";
@@ -29,83 +36,82 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	protected abstract <B> List<B> getBeans(Class<B> clazz);
 
 	protected ApplicationContext initializeContext() {
-		DefaultMultiMap<MediaType, WriterRegistrar> writers =
-			createTransformerMap(getBeans(WriterRegistrar.class));
-		DefaultMultiMap<MediaType, ReaderRegistrar> readers =
-			createTransformerMap(getBeans(ReaderRegistrar.class));
+		Map<Boolean, List<Reader>> readers = getBeans(Reader.class)
+			.stream().collect(partitioningBy(Default::isDefault));
+
+		Map<Boolean, List<Writer>> writers = getBeans(Writer.class)
+			.stream().collect(partitioningBy(Default::isDefault));
+
+		List<Aspect> aspects = getBeans(Aspect.class);
+		aspects.addAll(REQUIRED_ASPECTS);
 
 		List<ExceptionConfiguration> handlers = getBeans(ExceptionConfiguration.class);
 		handlers.forEach(ExceptionConfiguration::initialize);
 
 		List<ControllerConfiguration> routers = getBeans(ControllerConfiguration.class);
-		Aspect[] requiredAspects = getRequiredAspects(writers);
 
-		Set<Route<?, ?>> routes = routers.stream()
+		Stream<EntityRoute<?, ?>> routeStream = routers.stream()
 			.peek(ControllerConfiguration::initialize)
 			.flatMap(config -> config.getRoutes().stream())
-			.peek(route -> log.info(() -> String.format(
-				"Route instantiated: METHOD[%s], PATH[%s], CONSUMES[%s], PRODUCES[%s], REQ-CLASS[%s], RESP-CLASS[%s]",
-				route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
-				getSimpleName(route.getRequestBodyClass()), getSimpleName(route.getResponseBodyClass()))))
-			.collect(Collectors.toSet());
+			.peek(AbstractConfigurer::logRoute)
+			.peek(route -> setAspects(route, aspects.toArray(new Aspect[aspects.size()])))
+			.peek(route -> populateTransforms(readers, route, AbstractConfigurer::setReader, nonNull(route.getRequestType())))
+			.peek(route -> populateTransforms(writers, route, AbstractConfigurer::setWriter, nonNull(route.getResponseType())));
 
-		routes.stream()
-			.map(route -> (EntityRoute) route)
-			.forEach(route -> {
-				populateReader(route, readers);
-				route.aspect(requiredAspects);
-			});
+		Set<EntityRoute<?, ?>> routes = routeStream.collect(Collectors.toSet());
 
 		ApplicationContext joyContext = new ApplicationContextImpl();
 		joyContext.addRoutes(routes);
-		joyContext.setWriters(writers);
 		joyContext.addExceptionHandlers(handlers);
 		return joyContext;
 	}
 
-	private <X extends TransformerRegistrar<?>> DefaultMultiMap<MediaType, X> createTransformerMap(List<X> registrars) {
-		DefaultMultiMap<MediaType, X> map = JoyCollections.defaultHashMultiMap();
-		registrars.stream().forEach(registrar -> map.add(registrar.getMediaType(), registrar));
-		return map;
-	}
+	private static <X extends Transformer> void populateTransforms(Map<Boolean, List<X>> transformers,
+			EntityRoute<?, ?> route, BiConsumer<EntityRoute, Transformer> setter, boolean condition) {
+		if(condition) {
+			transformers.get(Boolean.FALSE).stream()
+				.distinct()
+				.filter(transformer -> transformer.isCompatible(route))
+				.forEach(transformer -> setter.accept(route, transformer));
 
-	private Aspect<?, ?>[] getRequiredAspects(DefaultMultiMap<MediaType, WriterRegistrar> writers) {
-		return new Aspect<?, ?>[]{new SerializationAspect(writers)};
-	}
-
-	private String getSimpleName(Class<?> clazz) {
-		return clazz == null ? "none" : clazz.getSimpleName();
-	}
-
-	private void populateReader(Route route, DefaultMultiMap<MediaType, ReaderRegistrar> registrars) {
-		Map<MediaType, Reader> readers = new HashMap<>();
-
-		if (route.getRequestBodyClass() == null) {
-
-			List consumes = route.getConsumes();
-			for (int i=0; i < consumes.size(); ++i) {
-				MediaType mediaType = (MediaType) consumes.get(i);
-
-				// Find Reader for dedicated to entity
-				List<ReaderRegistrar> allNonDefault = registrars.getAllNonDefault(mediaType);
-				Optional<ReaderRegistrar> optRegistrar = allNonDefault.stream().filter(
-					registrar -> registrar.getEntityClass().get() == route.getRequestBodyClass()).findFirst();
-
-				// Find Reader for dedicated to entity
-				if (optRegistrar.isPresent()) {
-					readers.put(mediaType, optRegistrar.get().getTransformer());
-					continue;
-				}
-
-				// Find Default Reader for given media-type
-				ReaderRegistrar registrar = registrars.getDefault(mediaType).orElseThrow(
-					() -> new InvalidConfigurationException(
-						String.format("No reader for media-type '%s' and class '%s'",
-							mediaType.getValue(), route.getRequestBodyClass())));
-				readers.put(mediaType, registrar.getTransformer());
-			}
+			transformers.get(Boolean.TRUE).stream()
+				.distinct()
+				.filter(transformer -> transformer.isCompatible(route))
+				.forEach(transformer -> setter.accept(route, transformer));
 		}
-		route.setReaders(readers);
+	}
+
+	private static void logRoute(Route<?, ?> route) {
+		log.info(() -> String.format(
+				"Route instantiated: METHOD[%s], PATH[%s], CONSUMES[%s], PRODUCES[%s], REQ-CLASS[%s], RESP-CLASS[%s]",
+				route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
+				route.getRequestType(), route.getResponseType()));
+	}
+
+	private static <T extends Transformer> void setReader(EntityRoute<?, ?> route, T reader) {
+		if (reader instanceof Reader) {
+			route.addReader((Reader) reader);
+			log.debug(() -> String.format(
+					"Reader [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
+					reader.getClass().getSimpleName(), reader.getMediaType(), route.getHttpMethod(), route.getPath()));
+		}
+	}
+
+	private static <T extends Transformer> void setWriter(EntityRoute<?, ?> route, T writer) {
+		if (writer instanceof Writer) {
+			route.addWriter((Writer) writer);
+			log.debug(() -> String.format(
+					"Writer [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
+					writer.getClass().getSimpleName(), writer.getMediaType(), route.getHttpMethod(), route.getPath()));
+		}
+	}
+
+	private static void setAspects(EntityRoute<?, ?> route, Aspect... aspects) {
+		route.aspect(aspects);
+		Arrays.stream(aspects).forEach(aspect ->
+				log.debug(() -> String.format(
+						"Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
+						aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
 	}
 
 }

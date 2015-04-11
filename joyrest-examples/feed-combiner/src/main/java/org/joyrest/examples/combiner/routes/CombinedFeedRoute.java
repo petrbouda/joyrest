@@ -23,12 +23,12 @@ public class CombinedFeedRoute extends TypedControllerConfiguration {
     protected void configure() {
         setGlobalPath("feeds");
 
-        post((Request<CombinedFeed> request, Response<CombinedFeed> response, CombinedFeed insertedFeed) -> {
-            CombinedFeed feed = feedService.save(insertedFeed);
+        post((request, response) -> {
+            CombinedFeed feed = feedService.save(request.getEntity());
             response.entity(feed)
                     .status(HttpStatus.CREATED)
                     .header(HeaderName.LOCATION, getEntityLocation(feed.getId(), request.getPath()));
-        }).consumes(MediaType.JSON).produces(MediaType.JSON);
+        }, CombinedFeed.class, CombinedFeed.class).consumes(MediaType.JSON).produces(MediaType.JSON);
 
         delete("/{id}", (request, response) -> {
             feedService.delete(request.getPathParam("id"))

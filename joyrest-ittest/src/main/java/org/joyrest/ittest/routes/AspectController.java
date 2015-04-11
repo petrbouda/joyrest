@@ -11,7 +11,7 @@ public class AspectController extends TypedControllerConfiguration {
 	protected void configure() {
 		setGlobalPath("/ittest/aspect");
 
-		post((req, resp, body) -> {
+		post((req, resp) -> {
 			resp.status(HttpStatus.OK);
 		}).consumes(MediaType.JSON).aspect(new TestAspect());
 	}

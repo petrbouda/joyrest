@@ -5,6 +5,9 @@ import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.AbstractControllerConfiguration;
 import org.joyrest.routing.TypedControllerConfiguration;
+import org.joyrest.routing.entity.RequestType;
+
+import static org.joyrest.routing.entity.RequestType.Req;
 
 public class ContentTypeController extends TypedControllerConfiguration {
 
@@ -12,29 +15,29 @@ public class ContentTypeController extends TypedControllerConfiguration {
 	protected void configure() {
 		setGlobalPath("/ittest/content-type/");
 
-		post("/withBodyJson", (req, resp, body) -> {
+		post("/withBodyJson", (req, resp) -> {
 			resp.status(HttpStatus.OK);
-		}, FeedEntry.class).consumes(MediaType.JSON);
+		}, Req(FeedEntry.class)).consumes(MediaType.JSON);
 
-		post("/withBodyXml", (req, resp, body) -> {
+		post("/withBodyXml", (req, resp) -> {
 			resp.status(HttpStatus.OK);
-		}, FeedEntry.class).consumes(MediaType.XML);
+		}, Req(FeedEntry.class)).consumes(MediaType.XML);
 
 		post("/withoutBody", (req, resp) -> {
 			resp.status(HttpStatus.OK);
 		}).consumes(MediaType.JSON);
 
-		post("/missingWithBody", (req, resp, body) -> {
+		post("/missingWithBody", (req, resp) -> {
 			resp.status(HttpStatus.OK);
-		}, FeedEntry.class);
+		}, Req(FeedEntry.class));
 
 		post("/missingWithoutBody", (req, resp) -> {
 			resp.status(HttpStatus.OK);
 		});
 
-		post("/wildcardWithBody", (req, resp, body) -> {
+		post("/wildcardWithBody", (req, resp) -> {
 			resp.status(HttpStatus.OK);
-		}, FeedEntry.class).consumes(MediaType.WILDCARD);
+		}, Req(FeedEntry.class)).consumes(MediaType.WILDCARD);
 
 		post("/wildcardWithoutBody", (req, resp) -> {
 			resp.status(HttpStatus.OK);

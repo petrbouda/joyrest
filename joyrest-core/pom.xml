@@ -28,11 +28,6 @@
         </dependency>
 
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.jodah</groupId>
             <artifactId>typetools</artifactId>
             <version>${typetools.version}</version>

@@ -6,7 +6,6 @@ import org.joyrest.routing.TypedControllerConfiguration;
 import javax.inject.Inject;
 import java.util.List;
 
-import static org.joyrest.routing.entity.GenericType.List;
 
 public class JokeController extends TypedControllerConfiguration{
 
@@ -23,12 +22,12 @@ public class JokeController extends TypedControllerConfiguration{
 //				.status(HttpStatus.CREATED)
 //				.header(HeaderName.LOCATION, getEntityLocation(savedJoke.getId(), request.getPath()));
 //		}).consumes(MediaType.JSON).produces(MediaType.JSON);
-
-		get((request, response) -> {
-			List<Joke> jokes = service.getAll();
-			response.entity(jokes);
-		}, Joke.class, List(Joke.class))
-			.produces(MediaType.JSON, MediaType.XML);
+//
+//		get((request, response) -> {
+//			List<Joke> jokes = service.getAll();
+//			response.entity(jokes);
+//		}, Joke.class, List(Joke.class))
+//			.produces(MediaType.JSON, MediaType.XML);
 //
 //		get(":id", (request, response) -> {
 //			Joke joke = service.get(request.getPathParam("id").get());

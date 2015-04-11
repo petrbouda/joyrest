@@ -20,9 +20,9 @@ public class RouteController extends TypedControllerConfiguration {
 
 		// Missing POST -> no path, no body
 
-		post((req, resp, body) -> {
-			resp.status(HttpStatus.OK);
-		}).consumes(MediaType.JSON);
+//		post((req, resp, body) -> {
+//			resp.status(HttpStatus.OK);
+//		}).consumes(MediaType.JSON);
 //
 //		post("/withBody", (Request req, Response resp, FeedEntry body) -> {
 //			resp.status(HttpStatus.OK);

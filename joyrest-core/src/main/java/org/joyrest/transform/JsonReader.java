@@ -1,39 +1,59 @@
 package org.joyrest.transform;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.routing.Route;
+import org.joyrest.routing.entity.Type;
 
-import java.io.IOException;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonReader<T> implements Reader<T> {
+
+	private final MediaType supportedMediaType = MediaType.JSON;
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
-	public T readFrom(InternalRequest<T> request, Class<T> clazz) {
+	public T readFrom(InternalRequest<T> request, Type<T> type) {
 		try {
-			return mapper.readValue(request.getRequestBody(), clazz);
+			return mapper.readValue(request.getRequestBody(), (Class<T>) type.getType());
 		} catch (IOException e) {
 			throw new RuntimeException("An error occurred during unmarshalling from JSON.");
 		}
 	}
 
 	@Override
-	public MediaType[] getMediaTypes() {
-		return new MediaType[] { MediaType.JSON };
+	public MediaType getMediaType() {
+		return supportedMediaType;
 	}
 
 	@Override
-	public boolean test(Route<T, ?> route) {
-		List<MediaType> consumes = route.getConsumes();
-		return consumes.contains(getMediaTypes());
+	public boolean isCompatible(Route<?, ?> route) {
+		return route.getConsumes().contains(supportedMediaType);
 	}
 
 	@Override
 	public boolean isDefault() {
 		return true;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof JsonReader))
+			return false;
+
+		JsonReader<?> that = (JsonReader<?>) o;
+
+		return !(supportedMediaType != null ? !supportedMediaType.equals(that.supportedMediaType) : that.supportedMediaType != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return supportedMediaType != null ? supportedMediaType.hashCode() : 0;
 	}
 }

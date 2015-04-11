@@ -11,4 +11,8 @@ public class Type<T> {
 	public Class<?> getType() {
 		return type;
 	}
+
+	public String toString() {
+		return type.getSimpleName();
+	}
 }

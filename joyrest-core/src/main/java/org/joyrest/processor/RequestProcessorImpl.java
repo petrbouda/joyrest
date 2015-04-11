@@ -1,9 +1,15 @@
 package org.joyrest.processor;
 
-import com.codepoetics.protonpack.StreamUtils;
+import static org.joyrest.exception.type.RestException.notFoundSupplier;
+import static org.joyrest.model.http.HeaderName.ACCEPT;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.joyrest.aspect.AspectChain;
 import org.joyrest.aspect.AspectChainImpl;
-import org.joyrest.collection.DefaultMultiMap;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.processor.ExceptionProcessor;
 import org.joyrest.exception.processor.ExceptionProcessorImpl;
@@ -14,28 +20,18 @@ import org.joyrest.model.http.PathParam;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.model.response.Response;
+import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.Route;
 import org.joyrest.routing.strategy.CachedRouteResolver;
 import org.joyrest.routing.strategy.DefaultRouteResolver;
 import org.joyrest.routing.strategy.RouteResolver;
-import org.joyrest.transform.Writer;
-import org.joyrest.transform.WriterRegistrar;
-import org.joyrest.utils.SerializationUtils;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static org.joyrest.exception.type.RestException.notFoundSupplier;
-import static org.joyrest.model.http.HeaderName.ACCEPT;
+import com.codepoetics.protonpack.StreamUtils;
 
 /**
  * {@inheritDoc}
  * <p/>
- * The processor gets {@link ApplicationContext} with all information which
- * can be provided by framework regarding configured routes.
+ * The processor gets {@link ApplicationContext} with all information which can be provided by framework regarding configured routes.
  *
  * @author pbouda
  */
@@ -48,9 +44,6 @@ public class RequestProcessorImpl implements RequestProcessor {
 	private final RouteResolver defaultRouteResolver;
 	private final RouteResolver cachedRouteResolver;
 
-	/* Classes for deserializing entities */
-	private final DefaultMultiMap<MediaType, WriterRegistrar> writers;
-
 	/* Class for a ecxeption processing */
 	private final ExceptionProcessor exceptionProcessor;
 
@@ -59,7 +52,6 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 	public RequestProcessorImpl(ApplicationContext context) {
 		this.context = context;
-		this.writers = context.getWriters();
 		this.defaultRouteResolver = new DefaultRouteResolver(context);
 		this.cachedRouteResolver = new CachedRouteResolver(context);
 		this.exceptionProcessor = new ExceptionProcessorImpl(context);
@@ -87,7 +79,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 	@SuppressWarnings("unchecked")
 	private InternalResponse<?> processRequest(final InternalRequest<?> request, final InternalResponse<?> response) {
-		final Route<?, ?> route = cachedRouteResolver.resolveRoute(request)
+		final EntityRoute<?, ?> route = cachedRouteResolver.resolveRoute(request)
 			.chainEmpty(defaultRouteResolver.resolveRoute(request))
 			.orElseThrow(notFoundSupplier());
 
@@ -101,8 +93,8 @@ public class RequestProcessorImpl implements RequestProcessor {
 		if (response.getEntity().isPresent()) {
 			MediaType accept = request.getHeader(ACCEPT).map(MediaType::of).get();
 			Class<?> responseClass = response.getEntity().get().getClass();
-			Writer writer = SerializationUtils.selectWriter(writers, responseClass, accept);
-			writer.writeTo(response);
+			// Writer writer = SerializationUtils.selectWriter(writers, responseClass, accept);
+			// writer.writeTo(response);
 		}
 	}
 

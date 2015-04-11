@@ -14,7 +14,7 @@ public class StatusController extends TypedControllerConfiguration {
 
 		get("/200", (req, resp) -> resp.status(OK));
 
-		post("/201", (req, resp, body) -> {
+		post("/201", (req, resp) -> {
 			resp.status(HttpStatus.CREATED);
 		}).consumes(MediaType.JSON);
 
@@ -24,7 +24,7 @@ public class StatusController extends TypedControllerConfiguration {
 
 		get("/302", (req, resp) -> resp.status(FOUND));
 
-		post("/400", (req, resp, body) -> {
+		post("/400", (req, resp) -> {
 			resp.status(BAD_REQUEST);
 		}).consumes(MediaType.JSON);
 

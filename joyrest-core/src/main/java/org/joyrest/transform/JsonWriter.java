@@ -1,14 +1,16 @@
 package org.joyrest.transform;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.Route;
 
-import java.io.IOException;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonWriter<T> implements Writer<T> {
+
+	private final MediaType supportedMediaType = MediaType.JSON;
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -22,18 +24,33 @@ public class JsonWriter<T> implements Writer<T> {
 	}
 
 	@Override
-	public MediaType[] getMediaTypes() {
-		return new MediaType[]{MediaType.JSON};
+	public MediaType getMediaType() {
+		return supportedMediaType;
 	}
 
 	@Override
-	public boolean test(Route<?, T> route) {
-		List<MediaType> produces = route.getProduces();
-		return produces.contains(getMediaTypes());
+	public boolean isCompatible(Route<?, ?> route) {
+		return route.getProduces().contains(supportedMediaType);
 	}
 
 	@Override
 	public boolean isDefault() {
 		return true;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof JsonWriter)) return false;
+
+		JsonWriter<?> that = (JsonWriter<?>) o;
+
+		return !(supportedMediaType != null ? !supportedMediaType.equals(that.supportedMediaType) : that.supportedMediaType != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return supportedMediaType != null ? supportedMediaType.hashCode() : 0;
 	}
 }

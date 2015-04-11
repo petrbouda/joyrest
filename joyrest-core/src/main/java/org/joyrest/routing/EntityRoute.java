@@ -17,6 +17,7 @@ import org.joyrest.model.response.InternalResponse;
 import org.joyrest.model.response.Response;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Reader;
+import org.joyrest.transform.Writer;
 import org.joyrest.utils.PathUtils;
 
 import java.util.*;
@@ -42,7 +43,8 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	private final static Map<String, PathType<?>> pathTypes;
 
 	/* All Readers added to the application */
-	private Map<MediaType, Reader<REQ>> readers;
+	private Map<MediaType, Reader<REQ>> readers = new HashMap<>();
+	private Map<MediaType, Writer<RESP>> writers = new HashMap<>();
 
 	static {
 		pathTypes = new HashMap<>();
@@ -79,16 +81,16 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 
 	private BiConsumer<Request<REQ>, Response<RESP>> action;
 
-	private Type<REQ> requestBodyClass;
-	private Type<RESP> responseBodyClass;
+	private Type<REQ> requestType;
+	private Type<RESP> responseType;
 
 	public EntityRoute(String path, HttpMethod httpMethod, BiConsumer<Request<REQ>, Response<RESP>> action,
 		Type<REQ> requestClazz, Type<RESP> responseClazz) {
 		this.path = path;
 		this.httpMethod = httpMethod;
 		this.action = action;
-		this.requestBodyClass = requestClazz;
-		this.responseBodyClass = responseClazz;
+		this.requestType = requestClazz;
+		this.responseType = responseClazz;
 		this.routeParts = createRouteParts(path);
 	}
 
@@ -170,13 +172,17 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	}
 
 	@Override
-	public Type<REQ> getRequestBodyClass() {
-		return requestBodyClass;
+	public Type<REQ> getRequestType() {
+		return requestType;
 	}
 
 	@Override
-	public Type<RESP> getResponseBodyClass() {
-		return responseBodyClass;
+	public Type<RESP> getResponseType() {
+		return responseType;
+	}
+
+	public boolean hasRequestBody() {
+		return Objects.nonNull(requestType);
 	}
 
 	/**
@@ -184,6 +190,7 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	 *
 	 * @param request
 	 */
+
 	@Override
 	public InternalResponse<RESP> execute(InternalRequest<REQ> request, InternalResponse<RESP> response) {
 		action.accept(ImmutableRequest.of(request), response);
@@ -204,12 +211,32 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 		return Optional.ofNullable(readers.get(mediaType));
 	}
 
+	public void setReaders(Map<MediaType, Reader<REQ>> readers) {
+		requireNonNull(readers);
+		this.readers = readers;
+	}
+
+	public void addReader(Reader<REQ> reader) {
+		requireNonNull(reader);
+		this.readers.put(reader.getMediaType(), reader);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setReaders(Map<MediaType, Reader<REQ>> readers) {
-		this.readers = Collections.unmodifiableMap(readers);
+	public Optional<Writer<RESP>> getWriter(MediaType mediaType) {
+		return Optional.ofNullable(writers.get(mediaType));
+	}
+
+	public void setWriters(Map<MediaType, Writer<RESP>> writers) {
+		requireNonNull(writers);
+		this.writers = writers;
+	}
+
+	public void addWriter(Writer<RESP> writer) {
+		requireNonNull(writer);
+		this.writers.put(writer.getMediaType(), writer);
 	}
 
 	@Override

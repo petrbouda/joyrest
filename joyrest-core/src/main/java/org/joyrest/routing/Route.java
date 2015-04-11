@@ -9,6 +9,7 @@ import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Reader;
+import org.joyrest.transform.Writer;
 
 import java.util.List;
 import java.util.Map;
@@ -44,23 +45,12 @@ public interface Route<REQ, RESP> {
 
     List<MediaType> getProduces();
 
-    Type<REQ> getRequestBodyClass();
+    Type<REQ> getRequestType();
 
-    Type<RESP> getResponseBodyClass();
+    Type<RESP> getResponseType();
 
-    /**
-     * Returns concrete reader registered belongs to the route
-     *
-     * @return {@link Reader} according to the given media type
-     */
     Optional<Reader<REQ>> getReader(MediaType mediaType);
 
-    /**
-     * Registers all readers belongs to the route
-     *
-     * @param readers {@link Map} with collection of {@code readers}
-     */
-    void setReaders(Map<MediaType, Reader<REQ>> readers);
-
+    Optional<Writer<RESP>> getWriter(MediaType mediaType);
 
 }
