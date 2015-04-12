@@ -6,8 +6,10 @@ import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.Route;
 
 import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.Queue;
 
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 public class AspectChainImpl<REQ, RESP> implements AspectChain<REQ, RESP> {
@@ -17,19 +19,19 @@ public class AspectChainImpl<REQ, RESP> implements AspectChain<REQ, RESP> {
 	private final EntityRoute<REQ, RESP> route;
 
 	public AspectChainImpl(EntityRoute<REQ, RESP> route) {
-		requireNonNull(route, "Route cannot be null in AspectChain.");
+		requireNonNull(route);
 		this.route = route;
 		this.aspects.addAll(route.getAspects());
 	}
 
 	@Override
 	public InternalResponse<RESP> proceed(InternalRequest<REQ> request, InternalResponse<RESP> response) {
-		requireNonNull(request, "Request cannot be null.");
+		requireNonNull(request);
 		Aspect<REQ, RESP> aspect = aspects.poll();
 
-		if (aspect != null) {
+		if (nonNull(aspect))
 			return aspect.around(this, request, response);
-		}
+
 		return route.execute(request, response);
 	}
 
