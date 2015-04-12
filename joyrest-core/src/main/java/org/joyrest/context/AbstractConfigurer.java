@@ -10,10 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.joyrest.aspect.Aspect;
-import org.joyrest.collection.annotation.Default;
+import org.joyrest.common.annotation.Default;
 import org.joyrest.exception.ExceptionConfiguration;
 import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.logging.JoyLogger;

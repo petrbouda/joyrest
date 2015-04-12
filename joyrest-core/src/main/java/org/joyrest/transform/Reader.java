@@ -1,12 +1,8 @@
 package org.joyrest.transform;
 
-import org.joyrest.collection.annotation.Default;
-import org.joyrest.model.http.MediaType;
+import org.joyrest.common.annotation.Default;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.routing.Route;
 import org.joyrest.routing.entity.Type;
-
-import java.util.function.Predicate;
 
 public interface Reader extends Default, Transformer {
 
