@@ -8,14 +8,14 @@ import org.joyrest.routing.Route;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonWriter<T> implements Writer<T> {
+public class JsonWriter implements Writer {
 
 	private final MediaType supportedMediaType = MediaType.JSON;
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
-	public void writeTo(InternalResponse<T> response) {
+	public void writeTo(InternalResponse<?> response) {
 		try {
 			mapper.writeValue(response.getOutputStream(), response.getEntity().get());
 		} catch (IOException e) {
@@ -43,10 +43,10 @@ public class JsonWriter<T> implements Writer<T> {
 		if (this == o) return true;
 		if (!(o instanceof JsonWriter)) return false;
 
-		JsonWriter<?> that = (JsonWriter<?>) o;
+		JsonWriter that = (JsonWriter) o;
 
-		return !(supportedMediaType != null ? !supportedMediaType.equals(that.supportedMediaType) : that.supportedMediaType != null);
-
+		return !(supportedMediaType != null ?
+			!supportedMediaType.equals(that.supportedMediaType) : that.supportedMediaType != null);
 	}
 
 	@Override

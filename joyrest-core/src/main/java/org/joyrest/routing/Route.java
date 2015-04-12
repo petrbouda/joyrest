@@ -49,8 +49,8 @@ public interface Route<REQ, RESP> {
 
     Type<RESP> getResponseType();
 
-    Optional<Reader<REQ>> getReader(MediaType mediaType);
+    Optional<Reader> getReader(MediaType mediaType);
 
-    Optional<Writer<RESP>> getWriter(MediaType mediaType);
+    Optional<Writer> getWriter(MediaType mediaType);
 
 }

@@ -1,6 +1,7 @@
 package org.joyrest.context;
 
 import static java.util.Objects.nonNull;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.partitioningBy;
 
 import java.util.Arrays;
@@ -14,7 +15,9 @@ import java.util.stream.Stream;
 import org.joyrest.aspect.Aspect;
 import org.joyrest.collection.annotation.Default;
 import org.joyrest.exception.ExceptionConfiguration;
+import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.logging.JoyLogger;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.Route;
@@ -31,7 +34,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	public static final List<Aspect> REQUIRED_ASPECTS = Arrays.asList(new SerializationAspect());
 
 	/* ServiceLocator name in its own context */
-	public static final String JOY_REST_BEAN_CONTEXT = "JoyRestBeanContext";
+	public static final String JOYREST_BEAN_CONTEXT = "JoyRestBeanContext";
 
 	protected abstract <B> List<B> getBeans(Class<B> clazz);
 
@@ -42,33 +45,40 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		Map<Boolean, List<Writer>> writers = getBeans(Writer.class)
 			.stream().collect(partitioningBy(Default::isDefault));
 
+		Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers =
+			getBeans(ExceptionConfiguration.class).stream().peek(ExceptionConfiguration::initialize)
+				.flatMap(config -> config.getExceptionHandlers().entrySet().stream())
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
 		List<Aspect> aspects = getBeans(Aspect.class);
 		aspects.addAll(REQUIRED_ASPECTS);
 
-		List<ExceptionConfiguration> handlers = getBeans(ExceptionConfiguration.class);
-		handlers.forEach(ExceptionConfiguration::initialize);
-
-		List<ControllerConfiguration> routers = getBeans(ControllerConfiguration.class);
-
-		Stream<EntityRoute<?, ?>> routeStream = routers.stream()
+		Set<EntityRoute<?, ?>> routes = getBeans(ControllerConfiguration.class).stream()
 			.peek(ControllerConfiguration::initialize)
 			.flatMap(config -> config.getRoutes().stream())
-			.peek(AbstractConfigurer::logRoute)
-			.peek(route -> setAspects(route, aspects.toArray(new Aspect[aspects.size()])))
-			.peek(route -> populateTransforms(readers, route, AbstractConfigurer::setReader, nonNull(route.getRequestType())))
-			.peek(route -> populateTransforms(writers, route, AbstractConfigurer::setWriter, nonNull(route.getResponseType())));
+			.peek(route -> {
+				logRoute(route);
+				setAspects(route, aspects.toArray(new Aspect[aspects.size()]));
+				populateTransformers(readers, route, AbstractConfigurer::setReader, nonNull(route.getRequestType()));
+				populateTransformers(writers, route, AbstractConfigurer::setWriter, nonNull(route.getResponseType()));
+			}).collect(Collectors.toSet());
 
-		Set<EntityRoute<?, ?>> routes = routeStream.collect(Collectors.toSet());
-
-		ApplicationContext joyContext = new ApplicationContextImpl();
-		joyContext.addRoutes(routes);
-		joyContext.addExceptionHandlers(handlers);
-		return joyContext;
+		ApplicationContextImpl context = new ApplicationContextImpl();
+		context.setRoutes(routes);
+		context.setExceptionHandlers(handlers);
+		context.setExceptionWriters(createExceptionWriters(writers));
+		return context;
 	}
 
-	private static <X extends Transformer> void populateTransforms(Map<Boolean, List<X>> transformers,
-			EntityRoute<?, ?> route, BiConsumer<EntityRoute, Transformer> setter, boolean condition) {
-		if(condition) {
+	private static Map<MediaType, Writer> createExceptionWriters(Map<Boolean, List<Writer>> writers) {
+		return writers.values().stream()
+			.flatMap(List::stream)
+			.collect(Collectors.toMap(Transformer::getMediaType, identity()));
+	}
+
+	private static <X extends Transformer> void populateTransformers(Map<Boolean, List<X>> transformers,
+		EntityRoute<?, ?> route, BiConsumer<EntityRoute, Transformer> setter, boolean condition) {
+		if (condition) {
 			transformers.get(Boolean.FALSE).stream()
 				.distinct()
 				.filter(transformer -> transformer.isCompatible(route))
@@ -83,17 +93,17 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
 	private static void logRoute(Route<?, ?> route) {
 		log.info(() -> String.format(
-				"Route instantiated: METHOD[%s], PATH[%s], CONSUMES[%s], PRODUCES[%s], REQ-CLASS[%s], RESP-CLASS[%s]",
-				route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
-				route.getRequestType(), route.getResponseType()));
+			"Route instantiated: METHOD[%s], PATH[%s], CONSUMES[%s], PRODUCES[%s], REQ-CLASS[%s], RESP-CLASS[%s]",
+			route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
+			route.getRequestType(), route.getResponseType()));
 	}
 
 	private static <T extends Transformer> void setReader(EntityRoute<?, ?> route, T reader) {
 		if (reader instanceof Reader) {
 			route.addReader((Reader) reader);
 			log.debug(() -> String.format(
-					"Reader [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
-					reader.getClass().getSimpleName(), reader.getMediaType(), route.getHttpMethod(), route.getPath()));
+				"Reader [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
+				reader.getClass().getSimpleName(), reader.getMediaType(), route.getHttpMethod(), route.getPath()));
 		}
 	}
 
@@ -101,17 +111,17 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		if (writer instanceof Writer) {
 			route.addWriter((Writer) writer);
 			log.debug(() -> String.format(
-					"Writer [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
-					writer.getClass().getSimpleName(), writer.getMediaType(), route.getHttpMethod(), route.getPath()));
+				"Writer [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
+				writer.getClass().getSimpleName(), writer.getMediaType(), route.getHttpMethod(), route.getPath()));
 		}
 	}
 
 	private static void setAspects(EntityRoute<?, ?> route, Aspect... aspects) {
 		route.aspect(aspects);
 		Arrays.stream(aspects).forEach(aspect ->
-				log.debug(() -> String.format(
-						"Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
-						aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
+			log.debug(() -> String.format(
+				"Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
+				aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
 	}
 
 }

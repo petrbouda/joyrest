@@ -1,26 +1,46 @@
 package org.joyrest.exception.processor;
 
+import static org.joyrest.model.http.HeaderName.ACCEPT;
+
 import java.util.Map;
 import java.util.Optional;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.handler.ExceptionHandler;
+import org.joyrest.exception.type.RestException;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
+import org.joyrest.transform.Writer;
 
 public class ExceptionProcessorImpl implements ExceptionProcessor {
 
 	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers;
 
+	private final Map<MediaType, Writer> writers;
+
 	public ExceptionProcessorImpl(ApplicationContext config) {
 		this.handlers = config.getExceptionHandlers();
+		this.writers = config.getExceptionWriters();
 	}
 
 	@Override
-		public <T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request,
-																 InternalResponse<?> response) throws Exception {
+	public <T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request, InternalResponse<?> response)
+			throws Exception {
+		if (ex instanceof RestException) {
+			InternalResponse<?> exResponse = ((RestException) ex).getResponse();
+			exResponse.setOutputStream(response.getOutputStream());
+			writeEntity(request, exResponse);
+			return exResponse;
+		} else {
+			return callHandler(ex, request, response);
+		}
+	}
+
+	private <T extends Exception> InternalResponse<?> callHandler(T ex, InternalRequest<?> request, InternalResponse<?> response)
+			throws Exception {
 		Class<? extends Exception> clazz = ex.getClass();
-		ExceptionHandler<? super Exception> handler = getHandler(clazz);
+		ExceptionHandler<? super Exception> handler = handlers.get(clazz);
 
 		if (handler == null) {
 			Optional<ExceptionHandler<? super Exception>> optHandler = getHandlerFromParent(clazz);
@@ -38,7 +58,7 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 
 		Class<?> superClazz = clazz.getSuperclass();
 		while (superClazz != Exception.class) {
-			ExceptionHandler<? super Exception> handler = getHandler(superClazz);
+			ExceptionHandler<? super Exception> handler = handlers.get(clazz);
 			if (handler != null) {
 				return Optional.of(handler);
 			}
@@ -49,8 +69,11 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 		return Optional.empty();
 	}
 
-	@SuppressWarnings("all")
-	private ExceptionHandler<? super Exception> getHandler(Class<?> clazz) {
-		return (ExceptionHandler<? super Exception>) handlers.get(clazz);
+	private void writeEntity(final InternalRequest<?> request, final InternalResponse<?> response) {
+		if (response.getEntity().isPresent()) {
+			MediaType accept = request.getHeader(ACCEPT).map(MediaType::of).get();
+			Writer writer = writers.get(accept);
+			writer.writeTo(response);
+		}
 	}
 }

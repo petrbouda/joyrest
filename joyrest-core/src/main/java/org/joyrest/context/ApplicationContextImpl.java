@@ -1,40 +1,52 @@
 package org.joyrest.context;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import static java.util.Objects.requireNonNull;
 
-import org.joyrest.exception.ExceptionConfiguration;
+import java.util.*;
+
 import org.joyrest.exception.handler.ExceptionHandler;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.Route;
+import org.joyrest.transform.Writer;
 
 public class ApplicationContextImpl implements ApplicationContext {
 
 	/* Set of all configured items in this application */
-	private final Set<EntityRoute<?, ?>> routes = new HashSet<>();
+	private Set<EntityRoute<?, ?>> routes = new HashSet<>();
 
-	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers = new HashMap<>();
+	private Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers = new HashMap<>();
+
+	private Map<MediaType, Writer> exceptionWriters;
 
 	/**
-	 * {@inheritDoc}
+	 * Adds a map of {@link ExceptionHandler} into the application
+	 *
+	 * @param exceptionHandlers configurations which keep given handlers
 	 */
-	@Override
-	public void addExceptionHandlers(Collection<ExceptionConfiguration> exceptionConfigurations) {
-		Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers =
-				exceptionConfigurations.stream()
-					.flatMap(config -> config.getExceptionHandlers().entrySet().stream())
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		exceptionHandlers.putAll(handlers);
+	public void setExceptionHandlers(Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers) {
+		requireNonNull(exceptionHandlers);
+		this.exceptionHandlers = exceptionHandlers;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @param routes
+	 * Adds a collection of {@link Route} into the application
+	 *
+	 * @param routes set of routes defined in application
 	 */
-	@Override
-	public void addRoutes(Set<EntityRoute<?, ?>> routes) {
-		this.routes.addAll(routes);
+	public void setRoutes(Set<EntityRoute<?, ?>> routes) {
+		requireNonNull(routes);
+		this.routes = routes;
+	}
+
+	/**
+	 * Adds a map of {@link Writer} into the application
+	 *
+	 * @param exceptionWriters set of writer for exception processing defined in application
+	 */
+	public void setExceptionWriters(Map<MediaType, Writer> exceptionWriters) {
+		requireNonNull(exceptionWriters);
+		this.exceptionWriters = exceptionWriters;
 	}
 
 	/**
@@ -51,5 +63,13 @@ public class ApplicationContextImpl implements ApplicationContext {
 	@Override
 	public Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> getExceptionHandlers() {
 		return Collections.unmodifiableMap(exceptionHandlers);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<MediaType, Writer> getExceptionWriters() {
+		return Collections.unmodifiableMap(exceptionWriters);
 	}
 }

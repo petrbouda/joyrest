@@ -27,7 +27,7 @@ public class RequestResponseDataIT extends AbstractBasicIT {
 		String string = mapper.writeValueAsString(f);
 
 		Response resp = given()
-			.contentType(MediaType.JSON.getValue())
+			.contentType(MediaType.JSON.getType())
 			.body(string)
 			.when()
 			.post("feeds");

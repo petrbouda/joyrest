@@ -1,16 +1,13 @@
 package org.joyrest.exception;
 
-import org.joyrest.exception.handler.ExceptionHandler;
-import org.joyrest.function.TriConsumer;
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joyrest.exception.handler.ExceptionHandler;
+
 public abstract class AbstractExceptionConfiguration implements ExceptionConfiguration {
 
-	/* Map of routes which are configured in an inherited class  */
+	/* Map of routes which are configured in an inherited class */
 	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers = new HashMap<>();
 
 	protected abstract void configure();

@@ -9,14 +9,14 @@ import org.joyrest.routing.entity.Type;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonReader<T> implements Reader<T> {
+public class JsonReader implements Reader {
 
 	private final MediaType supportedMediaType = MediaType.JSON;
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
-	public T readFrom(InternalRequest<T> request, Type<T> type) {
+	public <T> T readFrom(InternalRequest<T> request, Type<T> type) {
 		try {
 			return mapper.readValue(request.getRequestBody(), (Class<T>) type.getType());
 		} catch (IOException e) {
@@ -46,10 +46,10 @@ public class JsonReader<T> implements Reader<T> {
 		if (!(o instanceof JsonReader))
 			return false;
 
-		JsonReader<?> that = (JsonReader<?>) o;
+		JsonReader that = (JsonReader) o;
 
-		return !(supportedMediaType != null ? !supportedMediaType.equals(that.supportedMediaType) : that.supportedMediaType != null);
-
+		return !(supportedMediaType != null ?
+			!supportedMediaType.equals(that.supportedMediaType) : that.supportedMediaType != null);
 	}
 
 	@Override

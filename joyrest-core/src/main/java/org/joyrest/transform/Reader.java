@@ -8,8 +8,8 @@ import org.joyrest.routing.entity.Type;
 
 import java.util.function.Predicate;
 
-public interface Reader<T> extends Default, Transformer {
+public interface Reader extends Default, Transformer {
 
-	T readFrom(InternalRequest<T> request, Type<T> clazz);
+	<T> T readFrom(InternalRequest<T> request, Type<T> clazz);
 
 }

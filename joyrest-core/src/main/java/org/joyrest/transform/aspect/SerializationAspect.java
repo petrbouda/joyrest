@@ -34,7 +34,7 @@ public class SerializationAspect<REQ, RESP> implements Aspect<REQ, RESP> {
 	private void writeEntity(final Route<REQ, RESP> route, final InternalRequest<REQ> request, final InternalResponse<RESP> response) {
 		if (response.getEntity().isPresent()) {
 			MediaType accept = request.getHeader(ACCEPT).map(MediaType::of).get();
-			Writer<RESP> writer = route.getWriter(accept)
+			Writer writer = route.getWriter(accept)
 				.orElseThrow(notAcceptableSupplier());
 			writer.writeTo(response);
 		}
@@ -42,7 +42,7 @@ public class SerializationAspect<REQ, RESP> implements Aspect<REQ, RESP> {
 
 	private REQ readEntity(final EntityRoute<REQ, RESP> route, final InternalRequest<REQ> request) {
 		MediaType contentType = request.getHeader(CONTENT_TYPE).map(MediaType::of).get();
-		Reader<REQ> reader = route.getReader(contentType)
+		Reader reader = route.getReader(contentType)
 			.orElseThrow(unsupportedMediaTypeSupplier());
 		return reader.readFrom(request, route.getRequestType());
 	}

@@ -9,11 +9,11 @@
         <servlet-class>org.joyrest.servlet.ServletApplicationHandler</servlet-class>
         <init-param>
             <param-name>applicationJavaConfig</param-name>
-            <param-value>org.joyrest.examples.servlet.ApplicationBinder</param-value>
+            <param-type>org.joyrest.examples.servlet.ApplicationBinder</param-type>
         </init-param>
         <init-param>
             <param-name>configurer</param-name>
-            <param-value>org.joyrest.hk2.HK2Configurer</param-value>
+            <param-type>org.joyrest.hk2.HK2Configurer</param-type>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

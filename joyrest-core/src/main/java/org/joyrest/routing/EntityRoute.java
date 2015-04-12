@@ -1,5 +1,13 @@
 package org.joyrest.routing;
 
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
+
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import org.joyrest.aspect.Aspect;
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.extractor.param.IntegerPath;
@@ -20,14 +28,6 @@ import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 import org.joyrest.utils.PathUtils;
 
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.joining;
-
 /**
  * Container for all information about one route {@link EntityRoute}
  *
@@ -43,8 +43,8 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	private final static Map<String, PathType<?>> pathTypes;
 
 	/* All Readers added to the application */
-	private Map<MediaType, Reader<REQ>> readers = new HashMap<>();
-	private Map<MediaType, Writer<RESP>> writers = new HashMap<>();
+	private Map<MediaType, Reader> readers = new HashMap<>();
+	private Map<MediaType, Writer> writers = new HashMap<>();
 
 	static {
 		pathTypes = new HashMap<>();
@@ -70,10 +70,10 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	/* Flag that indicates having a resource path in the list of the RouteParts */
 	private boolean hasGlobalPath = false;
 
-	/* Must match with ContentType header in the client's request  */
+	/* Must match with ContentType header in the client's request */
 	private List<MediaType> consumes = Collections.singletonList(MediaType.WILDCARD);
 
-	/* Final MediaType of the Response is determined by the Accept header in the client's request*/
+	/* Final MediaType of the Response is determined by the Accept header in the client's request */
 	private List<MediaType> produces = Collections.singletonList(MediaType.WILDCARD);
 
 	/* Collection of interceptors which will be applied with execution of this route */
@@ -85,7 +85,7 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	private Type<RESP> responseType;
 
 	public EntityRoute(String path, HttpMethod httpMethod, BiConsumer<Request<REQ>, Response<RESP>> action,
-		Type<REQ> requestClazz, Type<RESP> responseClazz) {
+			Type<REQ> requestClazz, Type<RESP> responseClazz) {
 		this.path = path;
 		this.httpMethod = httpMethod;
 		this.action = action;
@@ -202,21 +202,20 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 		return Collections.unmodifiableList(aspects);
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Reader<REQ>> getReader(MediaType mediaType) {
+	public Optional<Reader> getReader(MediaType mediaType) {
 		return Optional.ofNullable(readers.get(mediaType));
 	}
 
-	public void setReaders(Map<MediaType, Reader<REQ>> readers) {
+	public void setReaders(Map<MediaType, Reader> readers) {
 		requireNonNull(readers);
 		this.readers = readers;
 	}
 
-	public void addReader(Reader<REQ> reader) {
+	public void addReader(Reader reader) {
 		requireNonNull(reader);
 		this.readers.put(reader.getMediaType(), reader);
 	}
@@ -225,16 +224,16 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Writer<RESP>> getWriter(MediaType mediaType) {
+	public Optional<Writer> getWriter(MediaType mediaType) {
 		return Optional.ofNullable(writers.get(mediaType));
 	}
 
-	public void setWriters(Map<MediaType, Writer<RESP>> writers) {
+	public void setWriters(Map<MediaType, Writer> writers) {
 		requireNonNull(writers);
 		this.writers = writers;
 	}
 
-	public void addWriter(Writer<RESP> writer) {
+	public void addWriter(Writer writer) {
 		requireNonNull(writer);
 		this.writers.put(writer.getMediaType(), writer);
 	}
@@ -255,7 +254,7 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 		@SuppressWarnings("unchecked")
 		final EntityRoute<REQ, RESP> other = (EntityRoute<REQ, RESP>) obj;
 		return Objects.equals(this.httpMethod, other.httpMethod)
-			&& Objects.equals(this.path, other.path);
+				&& Objects.equals(this.path, other.path);
 	}
 
 	/**
@@ -273,16 +272,16 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 			if (part.startsWith(PARAM_CHAR)) {
 				String var = part.replaceFirst(PARAM_CHAR, part);
 
-                /* Split a name and a type of the param  */
+				/* Split a name and a type of the param */
 				String[] split = var.split(":");
 
-                /* param without a definition of a type - String default */
+				/* param without a definition of a type - String default */
 				if (split.length == 1) {
 					String paramName = split[0];
 					pathParams.put(paramName, new RoutePart<>(RoutePart.Type.PARAM, paramName, StringPath.INSTANCE));
 				}
 
-                /* param with a definition of a type */
+				/* param with a definition of a type */
 				if (split.length == 2) {
 					String paramName = split[0];
 					String strParamType = split[1];
@@ -291,13 +290,12 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 					PathType<?> pathType = optPathType.orElseThrow(() ->
 						new InvalidConfigurationException("Invalid configuration of the route '" + path + "'."));
 					pathParams.put(paramName,
-						new RoutePart<>(RoutePart.Type.PARAM, paramName, pathType));
+							new RoutePart<>(RoutePart.Type.PARAM, paramName, pathType));
 				}
 
-                /* There is no valid type of the param */
+				/* There is no valid type of the param */
 				if (split.length == 0 || split.length > 2)
-					throw new InvalidConfigurationException
-						("Invalid configuration of the route '" + path + "'.");
+					throw new InvalidConfigurationException("Invalid configuration of the route '" + path + "'.");
 			}
 		}
 	}

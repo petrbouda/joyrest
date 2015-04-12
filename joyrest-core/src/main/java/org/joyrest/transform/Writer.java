@@ -7,8 +7,8 @@ import org.joyrest.routing.Route;
 
 import java.util.function.Predicate;
 
-public interface Writer<T> extends Default, Transformer {
+public interface Writer extends Default, Transformer {
 
-	void writeTo(InternalResponse<T> response);
+	void writeTo(InternalResponse<?> response);
 
 }

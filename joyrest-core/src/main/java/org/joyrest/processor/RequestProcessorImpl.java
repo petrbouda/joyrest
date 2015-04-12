@@ -47,11 +47,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 	/* Class for a ecxeption processing */
 	private final ExceptionProcessor exceptionProcessor;
 
-	/* Class contains all information about a running application */
-	private final ApplicationContext context;
-
 	public RequestProcessorImpl(ApplicationContext context) {
-		this.context = context;
 		this.defaultRouteResolver = new DefaultRouteResolver(context);
 		this.cachedRouteResolver = new CachedRouteResolver(context);
 		this.exceptionProcessor = new ExceptionProcessorImpl(context);
@@ -64,17 +60,9 @@ public class RequestProcessorImpl implements RequestProcessor {
 	public InternalResponse<?> process(final InternalRequest<?> request, final InternalResponse<?> response) throws Exception {
 		try {
 			return processRequest(request, response);
-		} catch (RestException re) {
-			return processException(request, re.getResponse());
-		} catch (Exception t) {
-			this.exceptionProcessor.process(t, request, response);
-			return processException(request, response);
+		} catch (Exception ex) {
+			return exceptionProcessor.process(ex, request, response);
 		}
-	}
-
-	private InternalResponse<?> processException(final InternalRequest<?> request, final InternalResponse<?> response) {
-		writeEntity(request, response);
-		return response;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -87,15 +75,6 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 		AspectChain chain = new AspectChainImpl(route);
 		return chain.proceed(request, response);
-	}
-
-	private void writeEntity(final InternalRequest<?> request, final InternalResponse<?> response) {
-		if (response.getEntity().isPresent()) {
-			MediaType accept = request.getHeader(ACCEPT).map(MediaType::of).get();
-			Class<?> responseClass = response.getEntity().get().getClass();
-			// Writer writer = SerializationUtils.selectWriter(writers, responseClass, accept);
-			// writer.writeTo(response);
-		}
 	}
 
 	private Map<String, PathParam> resolvePathParams(final Route<?, ?> route, final Request<?> request) {

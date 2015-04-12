@@ -30,7 +30,7 @@ public final class HK2Configurer extends AbstractConfigurer<Binder> {
 		requireNonNull(applicationConfig, "ApplicationConfig must be non-null for configuring HK2.");
 
 		ServiceLocatorFactory locatorFactory = ServiceLocatorFactory.getInstance();
-		locator = locatorFactory.create(JOY_REST_BEAN_CONTEXT);
+		locator = locatorFactory.create(JOYREST_BEAN_CONTEXT);
 		ServiceLocatorUtilities.bind(locator, applicationConfig);
 
 		return initializeContext();
