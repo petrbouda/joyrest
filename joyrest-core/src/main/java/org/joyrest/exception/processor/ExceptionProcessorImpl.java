@@ -1,5 +1,6 @@
 package org.joyrest.exception.processor;
 
+import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
 import static org.joyrest.model.http.HeaderName.ACCEPT;
 
 import java.util.Map;
@@ -71,9 +72,21 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 
 	private void writeEntity(final InternalRequest<?> request, final InternalResponse<?> response) {
 		if (response.getEntity().isPresent()) {
-			MediaType accept = request.getHeader(ACCEPT).map(MediaType::of).get();
-			Writer writer = writers.get(accept);
+			MediaType acceptHeader = request.getHeader(ACCEPT).map(MediaType::of).get();
+			Writer writer = chooseWriter(writers, acceptHeader);
 			writer.writeTo(response);
 		}
+	}
+
+	private static Writer chooseWriter(Map<MediaType, Writer> writers, MediaType acceptHeader) {
+		Writer writer = writers.get(acceptHeader);
+		if (writer == null)
+			writers.get(acceptHeader.getProcessingType()
+				.orElseThrow(internalServerErrorSupplier()));
+
+		if(writer == null)
+			throw internalServerErrorSupplier().get();
+
+		return writer;
 	}
 }
