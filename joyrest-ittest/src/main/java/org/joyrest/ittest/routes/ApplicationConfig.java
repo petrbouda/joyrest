@@ -1,5 +1,9 @@
 package org.joyrest.ittest.routes;
 
+import org.joyrest.ittest.routes.route.DeleteRouteController;
+import org.joyrest.ittest.routes.route.GetRouteController;
+import org.joyrest.ittest.routes.route.PostRouteController;
+import org.joyrest.ittest.routes.route.PutRouteController;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.servlet.ServletApplicationHandler;
 import org.joyrest.spring.SpringJavaConfigurer;
@@ -16,19 +20,24 @@ public class ApplicationConfig {
 	}
 
 	@Bean
-	ControllerConfiguration routeController() {
-		return new RouteController();
+	ControllerConfiguration postRouteController() {
+		return new PostRouteController();
 	}
 
-	// @Bean
-	// ControllerConfiguration contentController() {
-	// return new ContentTypeController();
-	// }
-	//
-	// @Bean
-	// ControllerConfiguration aspectController() {
-	// return new AspectController();
-	// }
+	@Bean
+	ControllerConfiguration getRouteController() {
+		return new GetRouteController();
+	}
+
+	@Bean
+	ControllerConfiguration putRouteController() {
+		return new PutRouteController();
+	}
+
+	@Bean
+	ControllerConfiguration deleteRouteController() {
+		return new DeleteRouteController();
+	}
 
 	@Bean
 	Reader jsonReaderRegistrar() {

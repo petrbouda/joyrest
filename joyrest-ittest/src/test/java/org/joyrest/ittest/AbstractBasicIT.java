@@ -22,7 +22,7 @@ import java.util.Date;
 public abstract class AbstractBasicIT {
 
     @Value("${local.server.port}")
-    int port;
+    protected int port;
 
     public static final ObjectMapper mapper = new ObjectMapper();
 

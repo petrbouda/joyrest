@@ -7,6 +7,7 @@ import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.aspect.AspectChain;
+import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
@@ -33,7 +34,8 @@ public class SerializationAspect<REQ, RESP> implements Aspect<REQ, RESP> {
 
 	private void writeEntity(final Route<REQ, RESP> route, final InternalRequest<REQ> request, final InternalResponse<RESP> response) {
 		if (response.getEntity().isPresent()) {
-			MediaType accept = request.getHeader(ACCEPT).map(MediaType::of).get();
+			MediaType accept = request.getMatchedAccept();
+			response.header(HeaderName.CONTENT_TYPE, accept.get());
 			Writer writer = route.getWriter(accept)
 				.orElseThrow(notAcceptableSupplier());
 			writer.writeTo(response);

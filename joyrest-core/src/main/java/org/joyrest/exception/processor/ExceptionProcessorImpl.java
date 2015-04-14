@@ -30,9 +30,11 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 			throws Exception {
 		if (ex instanceof RestException) {
 			InternalResponse<?> exResponse = ((RestException) ex).getResponse();
+			response.status(exResponse.getStatus());
+			exResponse.getHeaders().forEach(response::header);
 			exResponse.setOutputStream(response.getOutputStream());
-			writeEntity(request, exResponse);
-			return exResponse;
+			writeEntity(request, response);
+			return response;
 		} else {
 			return callHandler(ex, request, response);
 		}

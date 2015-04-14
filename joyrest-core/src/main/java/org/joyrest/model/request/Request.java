@@ -27,5 +27,4 @@ public interface Request<E> {
 
     E getEntity();
 
-
 }

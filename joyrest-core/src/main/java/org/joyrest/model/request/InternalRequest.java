@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
 import org.joyrest.utils.PathUtils;
 
@@ -17,6 +18,8 @@ public class InternalRequest<E> implements Request<E> {
 	protected Map<String, PathParam> pathParams;
 
 	protected Map<String, String[]> queryParams;
+
+	protected MediaType matchedAccept;
 
 	protected List<String> pathParts;
 
@@ -111,6 +114,18 @@ public class InternalRequest<E> implements Request<E> {
 
 	public void setEntity(E entity) {
 		this.entity = entity;
+	}
+
+	public MediaType getMatchedAccept() {
+		return matchedAccept;
+	}
+
+	public void setMatchedAccept(MediaType matchedAccept) {
+		this.matchedAccept = matchedAccept;
+	}
+
+	public void setPathParts(List<String> pathParts) {
+		this.pathParts = pathParts;
 	}
 
 	@Override

@@ -22,13 +22,6 @@ import java.util.Optional;
  */
 public interface Route<REQ, RESP> {
 
-    /**
-     * Executes the store action of given route and generates {@link LambdaResponse}
-     * for clients.
-     *
-     * @param request {@code request} dedicated to the concrete route
-     * @return generated response that will be propagated to the client
-     */
     InternalResponse<RESP> execute(InternalRequest<REQ> request, InternalResponse<RESP> response);
 
 	List<Aspect<REQ, RESP>> getAspects();
