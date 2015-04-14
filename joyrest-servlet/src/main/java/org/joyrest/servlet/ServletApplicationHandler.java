@@ -3,7 +3,7 @@ package org.joyrest.servlet;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.Configurer;
 import org.joyrest.model.http.HttpMethod;
-import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.request.*;
 import org.joyrest.model.response.LambdaResponse;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.processor.RequestProcessor;
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.Collections.list;
@@ -81,8 +82,8 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 
 	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 		try {
-			InternalRequest<?> request = createJoyRequest(req);
-			InternalResponse<?> response = createJoyResponse(resp);
+			LambdaRequest<?> request = createJoyRequest(req);
+			LambdaResponse<?> response = createJoyResponse(resp);
 
 			/*
 			 * Processes the given client's request and using ConsumerResponse automatically populate
@@ -94,20 +95,20 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		}
 	}
 
-	private InternalResponse<?> createJoyResponse(HttpServletResponse response) throws IOException {
+	private LambdaResponse<?> createJoyResponse(HttpServletResponse response) throws IOException {
 		LambdaResponse<?> joyResponse = new LambdaResponse<>(response::addHeader,
 			status -> response.setStatus(status.code()));
 		joyResponse.setOutputStream(response.getOutputStream());
 		return joyResponse;
 	}
 
-	private InternalRequest<?> createJoyRequest(HttpServletRequest request) throws IOException {
-		InternalRequest<?> joyRequest = new InternalRequest<>();
+	private LambdaRequest<?> createJoyRequest(HttpServletRequest request) throws IOException {
+		LambdaRequest<?> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
 		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
 		joyRequest.setMethod(HttpMethod.of(request.getMethod()));
 		joyRequest.setRequestBody(request.getInputStream());
-		joyRequest.setQueryParams(createQueryParams(list(request.getParameterNames()), request::getParameterValues));
-		joyRequest.setHeaders(createHeaders(list(request.getHeaderNames()), request::getHeader));
+		joyRequest.setQueryParamNames(list(request.getParameterNames()));
+		joyRequest.setHeaderNames(list(request.getHeaderNames()));
 		return joyRequest;
 	}
 

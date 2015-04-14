@@ -34,7 +34,7 @@ public class JsonWriter implements Writer {
 	}
 
 	@Override
-	public boolean isDefault() {
+	public boolean isGeneral() {
 		return true;
 	}
 

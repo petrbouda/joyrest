@@ -3,10 +3,12 @@ package org.joyrest.examples.getstarted;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
+import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.TypedControllerConfiguration;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.joyrest.routing.entity.ResponseCollectionType.RespList;
 
@@ -19,7 +21,7 @@ public class JokeController extends TypedControllerConfiguration {
 	protected void configure() {
 		setGlobalPath("jokes");
 
-		post((request, response) -> {
+		EntityRoute<Joke, List<Joke>> route = post((request, response) -> {
 			Joke savedJoke = service.save(request.getEntity());
 			response.entity(Arrays.asList(savedJoke))
 				.status(HttpStatus.CREATED)

@@ -18,11 +18,11 @@ public final class RequestValidator {
 	private RequestValidator() {
 	}
 
-	public static boolean validateNonEmptyList(Route route) {
+	public static boolean validateNonEmptyList(Route<?, ?> route) {
 		return Objects.nonNull(route);
 	}
 
-	public static boolean validateAccept(Route route, InternalRequest request) {
+	public static boolean validateAccept(Route<?, ?> route, InternalRequest<?> request) {
 		Optional<String> optAccept = request.getHeader(ACCEPT);
 
 		if (optAccept.isPresent()) {
@@ -33,7 +33,7 @@ public final class RequestValidator {
 		}
 	}
 
-	public static boolean validateContentType(Route route, InternalRequest request) {
+	public static boolean validateContentType(Route<?, ?> route, InternalRequest<?> request) {
 		Optional<String> optContentType = request.getHeader(CONTENT_TYPE);
 		MediaType contentType;
 		if (!optContentType.isPresent()) {
@@ -53,7 +53,7 @@ public final class RequestValidator {
 		}
 	}
 
-	public static boolean validateHttpMethod(Route route, InternalRequest request) {
+	public static boolean validateHttpMethod(Route<?, ?> route, InternalRequest<?> request) {
 		return route.getHttpMethod() == request.getMethod();
 	}
 }

@@ -10,5 +10,4 @@ public interface RouteResolver {
 
 	OptionalChain<EntityRoute<?, ?>> resolveRoute(InternalRequest<?> request);
 
-
 }

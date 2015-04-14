@@ -4,20 +4,14 @@
 
     <groupId>org.joyrest</groupId>
     <artifactId>joyrest</artifactId>
-    <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <name>joyrest</name>
 
     <description>Lightweight Lambda-based REST Framework</description>
 
     <url>http://www.joyrest.org</url>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
 
     <licenses>
         <license>

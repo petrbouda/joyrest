@@ -3,6 +3,7 @@ package org.joyrest.routing;
 import com.codepoetics.protonpack.StreamUtils;
 import org.joyrest.exception.type.RestException;
 import org.joyrest.model.RoutePart;
+import org.joyrest.model.request.InternalRequest;
 
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -13,17 +14,18 @@ import java.util.function.BiPredicate;
  *
  * @author pbouda
  */
-public class PathComparator implements BiPredicate<EntityRoute<?, ?>, List<String>> {
+public class PathComparator implements BiPredicate<EntityRoute<?, ?>, InternalRequest<?>> {
 
     /**
      * Compares a configured route with the given path which comes from the client call.
      *
      * @param route configured route
-     * @param pathParts collection of the path parts from the incoming request
+     * @param request incoming request
      * @return returns true if all parts are equal
      **/
     @Override
-    public boolean test(EntityRoute<?, ?> route, List<String> pathParts) {
+    public boolean test(EntityRoute<?, ?> route, InternalRequest<?> request) {
+        List<String> pathParts = request.getPathParts();
         List<RoutePart<?>> routeParts = route.getRouteParts();
         if(routeParts.size() != pathParts.size()){
             return false;

@@ -33,19 +33,19 @@ public class RestException extends RuntimeException {
 	}
 
 	public static Supplier<RestException> badRequestSupplier() {
-		return () -> new RestException(HttpStatus.BAD_REQUEST);
+		return () -> new RestException(HttpStatus.BAD_REQUEST, "Bad Request");
 	}
 
 	public static Supplier<RestException> notFoundSupplier() {
-		return () -> new RestException(HttpStatus.NOT_FOUND);
+		return () -> new RestException(HttpStatus.NOT_FOUND, "Not Found");
 	}
 
 	public static Supplier<RestException> unsupportedMediaTypeSupplier() {
-		return () -> new RestException(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+		return () -> new RestException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported Media Type");
 	}
 
 	public static Supplier<RestException> notAcceptableSupplier() {
-		return () -> new RestException(HttpStatus.NOT_ACCEPTABLE);
+		return () -> new RestException(HttpStatus.NOT_ACCEPTABLE, "Not Acceptable");
 	}
 
 	public static Supplier<RestException> internalServerErrorSupplier() {

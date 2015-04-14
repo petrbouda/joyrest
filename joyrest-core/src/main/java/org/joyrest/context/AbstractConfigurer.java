@@ -4,15 +4,12 @@ import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.partitioningBy;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.joyrest.aspect.Aspect;
-import org.joyrest.common.annotation.Default;
+import org.joyrest.common.annotation.General;
 import org.joyrest.exception.ExceptionConfiguration;
 import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.logging.JoyLogger;
@@ -30,7 +27,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
 	private final static JoyLogger log = new JoyLogger(AbstractConfigurer.class);
 
-	public static final List<Aspect> REQUIRED_ASPECTS = Arrays.asList(new SerializationAspect());
+	public static final List<Aspect> REQUIRED_ASPECTS = Collections.singletonList(new SerializationAspect());
 
 	/* ServiceLocator name in its own context */
 	public static final String JOYREST_BEAN_CONTEXT = "JoyRestBeanContext";
@@ -39,10 +36,10 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
 	protected ApplicationContext initializeContext() {
 		Map<Boolean, List<Reader>> readers = getBeans(Reader.class)
-			.stream().collect(partitioningBy(Default::isDefault));
+			.stream().collect(partitioningBy(General::isGeneral));
 
 		Map<Boolean, List<Writer>> writers = getBeans(Writer.class)
-			.stream().collect(partitioningBy(Default::isDefault));
+			.stream().collect(partitioningBy(General::isGeneral));
 
 		Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers =
 			getBeans(ExceptionConfiguration.class).stream().peek(ExceptionConfiguration::initialize)

@@ -35,7 +35,7 @@ public class JsonReader implements Reader {
 	}
 
 	@Override
-	public boolean isDefault() {
+	public boolean isGeneral() {
 		return true;
 	}
 
