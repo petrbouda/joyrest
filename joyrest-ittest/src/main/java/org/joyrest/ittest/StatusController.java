@@ -1,10 +1,10 @@
 package org.joyrest.ittest;
 
+import static org.joyrest.model.http.HttpStatus.*;
+
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.TypedControllerConfiguration;
-
-import static org.joyrest.model.http.HttpStatus.*;
 
 public class StatusController extends TypedControllerConfiguration {
 
@@ -27,7 +27,7 @@ public class StatusController extends TypedControllerConfiguration {
 		get("/302", (req, resp) -> resp.status(FOUND));
 
 		post("/400", (req, resp) -> resp.status(BAD_REQUEST))
-				.consumes(MediaType.JSON);
+			.consumes(MediaType.JSON);
 
 		get("/403", (req, resp) -> {
 			resp.status(FORBIDDEN);

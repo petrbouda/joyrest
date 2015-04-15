@@ -42,9 +42,17 @@ public class InternalRequest<E> implements Request<E> {
 		return headers == null ? new HashMap<>() : headers;
 	}
 
+	public void setHeaders(Map<HeaderName, String> headers) {
+		this.headers = headers;
+	}
+
 	@Override
 	public Map<String, PathParam> getPathParams() {
 		return pathParams == null ? new HashMap<>() : pathParams;
+	}
+
+	public void setPathParams(Map<String, PathParam> pathParams) {
+		this.pathParams = pathParams;
 	}
 
 	@Override
@@ -55,6 +63,10 @@ public class InternalRequest<E> implements Request<E> {
 	@Override
 	public Map<String, String[]> getQueryParams() {
 		return queryParams == null ? new HashMap<>() : queryParams;
+	}
+
+	public void setQueryParams(Map<String, String[]> queryParams) {
+		this.queryParams = queryParams;
 	}
 
 	@Override
@@ -68,9 +80,17 @@ public class InternalRequest<E> implements Request<E> {
 		return pathParts;
 	}
 
+	public void setPathParts(List<String> pathParts) {
+		this.pathParts = pathParts;
+	}
+
 	@Override
 	public HttpMethod getMethod() {
 		return method;
+	}
+
+	public void setMethod(HttpMethod method) {
+		this.method = method;
 	}
 
 	@Override
@@ -78,9 +98,18 @@ public class InternalRequest<E> implements Request<E> {
 		return path;
 	}
 
+	public void setPath(String path) {
+		this.pathParts = PathUtils.createPathParts(path);
+		this.path = path;
+	}
+
 	@Override
 	public E getEntity() {
 		return entity;
+	}
+
+	public void setEntity(E entity) {
+		this.entity = entity;
 	}
 
 	public InputStream getInputStream() {
@@ -91,41 +120,12 @@ public class InternalRequest<E> implements Request<E> {
 		this.inputStream = inputStream;
 	}
 
-	public void setHeaders(Map<HeaderName, String> headers) {
-		this.headers = headers;
-	}
-
-	public void setPathParams(Map<String, PathParam> pathParams) {
-		this.pathParams = pathParams;
-	}
-
-	public void setQueryParams(Map<String, String[]> queryParams) {
-		this.queryParams = queryParams;
-	}
-
-	public void setPath(String path) {
-		this.pathParts = PathUtils.createPathParts(path);
-		this.path = path;
-	}
-
-	public void setMethod(HttpMethod method) {
-		this.method = method;
-	}
-
-	public void setEntity(E entity) {
-		this.entity = entity;
-	}
-
 	public MediaType getMatchedAccept() {
 		return matchedAccept;
 	}
 
 	public void setMatchedAccept(MediaType matchedAccept) {
 		this.matchedAccept = matchedAccept;
-	}
-
-	public void setPathParts(List<String> pathParts) {
-		this.pathParts = pathParts;
 	}
 
 	@Override

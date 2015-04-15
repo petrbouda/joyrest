@@ -1,11 +1,11 @@
 package org.joyrest.utils;
 
-import org.joyrest.extractor.param.StringPath;
-import org.joyrest.model.RoutePart;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.joyrest.extractor.param.StringPath;
+import org.joyrest.model.RoutePart;
 
 /**
  * @author pbouda

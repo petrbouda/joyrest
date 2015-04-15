@@ -1,15 +1,20 @@
 package org.joyrest.validator;
 
 import static java.util.stream.Collectors.toList;
-import static org.joyrest.model.http.HeaderName.*;
+import static org.joyrest.model.http.HeaderName.ACCEPT;
+import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 import static org.joyrest.model.http.MediaType.WILDCARD;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-import org.joyrest.model.http.*;
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.routing.*;
+import org.joyrest.routing.EntityRoute;
 
 public final class RequestMatcher {
 

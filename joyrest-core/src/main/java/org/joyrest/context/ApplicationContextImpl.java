@@ -20,13 +20,11 @@ public class ApplicationContextImpl implements ApplicationContext {
 	private Map<MediaType, Writer> exceptionWriters;
 
 	/**
-	 * Adds a map of {@link ExceptionHandler} into the application
-	 *
-	 * @param exceptionHandlers configurations which keep given handlers
+	 * {@inheritDoc}
 	 */
-	public void setExceptionHandlers(Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers) {
-		requireNonNull(exceptionHandlers);
-		this.exceptionHandlers = exceptionHandlers;
+	@Override
+	public Set<EntityRoute> getRoutes() {
+		return Collections.unmodifiableSet(routes);
 	}
 
 	/**
@@ -40,24 +38,6 @@ public class ApplicationContextImpl implements ApplicationContext {
 	}
 
 	/**
-	 * Adds a map of {@link Writer} into the application
-	 *
-	 * @param exceptionWriters set of writer for exception processing defined in application
-	 */
-	public void setExceptionWriters(Map<MediaType, Writer> exceptionWriters) {
-		requireNonNull(exceptionWriters);
-		this.exceptionWriters = exceptionWriters;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<EntityRoute> getRoutes() {
-		return Collections.unmodifiableSet(routes);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -66,10 +46,30 @@ public class ApplicationContextImpl implements ApplicationContext {
 	}
 
 	/**
+	 * Adds a map of {@link ExceptionHandler} into the application
+	 *
+	 * @param exceptionHandlers configurations which keep given handlers
+	 */
+	public void setExceptionHandlers(Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers) {
+		requireNonNull(exceptionHandlers);
+		this.exceptionHandlers = exceptionHandlers;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Map<MediaType, Writer> getExceptionWriters() {
 		return Collections.unmodifiableMap(exceptionWriters);
+	}
+
+	/**
+	 * Adds a map of {@link Writer} into the application
+	 *
+	 * @param exceptionWriters set of writer for exception processing defined in application
+	 */
+	public void setExceptionWriters(Map<MediaType, Writer> exceptionWriters) {
+		requireNonNull(exceptionWriters);
+		this.exceptionWriters = exceptionWriters;
 	}
 }

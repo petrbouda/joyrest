@@ -1,12 +1,11 @@
 package org.joyrest.routing.strategy;
 
+import java.util.Optional;
+
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.routing.EntityRoute;
-import org.joyrest.routing.Route;
 import org.joyrest.utils.OptionalChain;
-
-import java.util.Optional;
 
 public class CachedRouteResolver implements RouteResolver {
 

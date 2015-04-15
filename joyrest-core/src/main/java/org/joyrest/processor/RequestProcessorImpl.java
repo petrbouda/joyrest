@@ -1,7 +1,6 @@
 package org.joyrest.processor;
 
 import static org.joyrest.exception.type.RestException.notFoundSupplier;
-import static org.joyrest.model.http.HeaderName.ACCEPT;
 
 import java.util.Map;
 import java.util.Objects;
@@ -13,15 +12,12 @@ import org.joyrest.aspect.AspectChainImpl;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.processor.ExceptionProcessor;
 import org.joyrest.exception.processor.ExceptionProcessorImpl;
-import org.joyrest.exception.type.RestException;
 import org.joyrest.extractor.PathParamExtractor;
-import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.EntityRoute;
-import org.joyrest.routing.Route;
 import org.joyrest.routing.strategy.CachedRouteResolver;
 import org.joyrest.routing.strategy.DefaultRouteResolver;
 import org.joyrest.routing.strategy.RouteResolver;

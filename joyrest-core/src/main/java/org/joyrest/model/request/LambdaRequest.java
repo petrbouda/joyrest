@@ -43,13 +43,19 @@ public class LambdaRequest<E> extends InternalRequest<E> {
 			return super.getHeaders();
 		}
 
-        if (headerNames == null) {
-            throw new InvalidConfigurationException("Header names cannot be null.");
-        }
+		if (headerNames == null) {
+			throw new InvalidConfigurationException("Header names cannot be null.");
+		}
 
 		super.headers = StreamSupport.stream(headerNames.spliterator(), false)
 			.collect(toMap(HeaderName::of, name -> getHeader(HeaderName.of(name)).get()));
 		return super.headers;
+	}
+
+	@Override
+	public void setHeaders(Map<HeaderName, String> headers) {
+		throw new UnsupportedOperationException(
+				"Class LambdaRequest uses lambda expression for providing headerNames");
 	}
 
 	@Override
@@ -58,13 +64,19 @@ public class LambdaRequest<E> extends InternalRequest<E> {
 			return super.getQueryParams();
 		}
 
-        if (queryParamNames == null) {
-            throw new InvalidConfigurationException("Query param names cannot be null.");
-        }
+		if (queryParamNames == null) {
+			throw new InvalidConfigurationException("Query param names cannot be null.");
+		}
 
 		super.queryParams = StreamSupport.stream(queryParamNames.spliterator(), false)
 			.collect(toMap(Function.identity(), name -> getQueryParams(name).get()));
 		return super.queryParams;
+	}
+
+	@Override
+	public void setQueryParams(Map<String, String[]> queryParams) {
+		throw new UnsupportedOperationException(
+				"Class LambdaRequest uses lambda expression for providing query params");
 	}
 
 	@Override
@@ -77,17 +89,5 @@ public class LambdaRequest<E> extends InternalRequest<E> {
 	public Optional<String> getHeader(HeaderName name) {
 		String headerValue = headerProvider.apply(name.getValue());
 		return Optional.ofNullable(headerValue);
-	}
-
-	@Override
-	public void setQueryParams(Map<String, String[]> queryParams) {
-		throw new UnsupportedOperationException(
-				"Class LambdaRequest uses lambda expression for providing query params");
-	}
-
-	@Override
-	public void setHeaders(Map<HeaderName, String> headers) {
-		throw new UnsupportedOperationException(
-				"Class LambdaRequest uses lambda expression for providing headerNames");
 	}
 }

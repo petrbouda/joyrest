@@ -6,8 +6,8 @@ public interface PathType<T> {
 
 	Optional<T> valueOf(String value);
 
-    String getName();
+	String getName();
 
-    boolean isAssignableFromString(String obj);
+	boolean isAssignableFromString(String obj);
 
 }

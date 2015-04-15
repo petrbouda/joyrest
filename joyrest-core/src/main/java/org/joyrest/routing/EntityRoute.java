@@ -42,10 +42,6 @@ public class EntityRoute implements Route {
 	/* All path param types which are available for a creation of route */
 	private final static Map<String, PathType<?>> pathTypes;
 
-	/* All Readers added to the application */
-	private Map<MediaType, Reader> readers = new HashMap<>();
-	private Map<MediaType, Writer> writers = new HashMap<>();
-
 	static {
 		pathTypes = new HashMap<>();
 		pathTypes.put(StringPath.NAME, StringPath.INSTANCE);
@@ -54,19 +50,17 @@ public class EntityRoute implements Route {
 	}
 
 	private final HttpMethod httpMethod;
-
-	/* It is not FINAL because of adding a global path */
-	private String path;
-
 	/* List of the all path's parts which contains this route */
 	private final List<RoutePart<?>> routeParts;
-
 	/* Map of the all path params which contains this route */
 	private final Map<String, RoutePart<?>> pathParams = new HashMap<>();
-
 	/* Parser what is responsible for getting params from the given path */
 	private final ParamParser PARAM_PARSER = new ParamParser();
-
+	/* All Readers added to the application */
+	private Map<MediaType, Reader> readers = new HashMap<>();
+	private Map<MediaType, Writer> writers = new HashMap<>();
+	/* It is not FINAL because of adding a global path */
+	private String path;
 	/* Flag that indicates having a resource path in the list of the RouteParts */
 	private boolean hasGlobalPath = false;
 
@@ -186,7 +180,7 @@ public class EntityRoute implements Route {
 	 * @param request
 	 */
 	@SuppressWarnings("unchecked")
-	public  InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response) {
+	public InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response) {
 		action.accept(ImmutableRequest.of(request), response);
 		return response;
 	}

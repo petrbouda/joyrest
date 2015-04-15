@@ -14,32 +14,63 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A simple in-memory store for serializable values based on key. Implementation
- * of the {@link org.joyrest.examples.combiner.store.InMemoryDataStore data
- * store} and their methods are thread-safe.
+ * A simple in-memory store for serializable values based on key. Implementation of the
+ * {@link org.joyrest.examples.combiner.store.InMemoryDataStore data store} and their methods are thread-safe.
  * 
- * The data store provides the capability of an adding
- * {@link DataStoreObserver observers} which
- * are able to listen any changes in the data store.
+ * The data store provides the capability of an adding {@link DataStoreObserver observers} which are able to listen any changes in the data
+ * store.
  * 
  * @author Petr Bouda
  */
 public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableDataStore {
 
-	private static Logger LOG = Logger.getLogger(ReadWriteLockDataStore.class.getName());
-
-	private HashMap<String, Serializable> datastore = new HashMap<>();
-
 	// check whether is possible to cast a loaded entity to the datastore type
 	private static final Predicate<Object> DATASTORE_CAST_CHECKER = new DataStoreCastChecker();
-	
-	// observers which get information about saving and removing entities
-	private Set<DataStoreObserver> observers = new CopyOnWriteArraySet<DataStoreObserver>();
-
+	private static Logger LOG = Logger.getLogger(ReadWriteLockDataStore.class.getName());
 	// instances ensure thread-safe nature of this data store
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final Lock readerLock = lock.readLock();
 	private final Lock writerLock = lock.writeLock();
+	private HashMap<String, Serializable> datastore = new HashMap<>();
+	// observers which get information about saving and removing entities
+	private Set<DataStoreObserver> observers = new CopyOnWriteArraySet<DataStoreObserver>();
+
+	/**
+	 * Deserializes an {@code Optional<Object>} from the given stream.
+	 *
+	 * The given stream will not be close.
+	 *
+	 * @param input the serialized object input stream, must not be null
+	 * @return the serialized object
+	 * @throws IOException in case the load operation failed
+	 **/
+	private static Optional<Object> deserialize(InputStream input) throws IOException {
+		try {
+			BufferedInputStream bis = new BufferedInputStream(input);
+			ObjectInputStream ois = new ObjectInputStream(bis);
+
+			return Optional.of(ois.readObject());
+		} catch (ClassNotFoundException ex) {
+			LOG.log(Level.SEVERE, "An error occurred during deserialization an object.", ex);
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Serializes an {@code Serializable} to the specified stream.
+	 *
+	 * The given stream will not be close.
+	 *
+	 * @param object the object to serialize to bytes
+	 * @param output the stream to write to, must not be null
+	 * @throws IOException in case the load operation failed
+	 */
+	private static void serialize(Serializable object, OutputStream output) throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(output);
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
+		oos.writeObject(object);
+		bos.flush();
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -50,14 +81,14 @@ public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableData
 			if (key == null) {
 				throw new NullPointerException("The parameter 'key' must not be null");
 			}
-			
+
 			if (data == null) {
 				notifyRemove(key);
 				return datastore.remove(key);
 			}
-			
+
 			Serializable previousEntity = datastore.put(key, data);
-			if(previousEntity == null){
+			if (previousEntity == null) {
 				notifySave(data);
 			}
 			return previousEntity;
@@ -86,7 +117,7 @@ public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableData
 			readerLock.unlock();
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -105,7 +136,7 @@ public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableData
 	@SuppressWarnings("unchecked")
 	public void load(InputStream in) throws IOException {
 		Optional<Object> newDatastore = ReadWriteLockDataStore.deserialize(in);
-		
+
 		newDatastore
 			.filter(DATASTORE_CAST_CHECKER)
 			.map(HashMap.class::cast)
@@ -119,44 +150,7 @@ public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableData
 					writerLock.unlock();
 				}
 			}
-		);
-	}
-
-	/**
-	 * Deserializes an {@code Optional<Object>} from the given stream.
-	 * 
-	 * The given stream will not be close.
-	 * 
-	 * @param input the serialized object input stream, must not be null
-	 * @return the serialized object
-	 * @throws IOException in case the load operation failed
-	 **/
-	private static Optional<Object> deserialize(InputStream input) throws IOException {
-		try {
-			BufferedInputStream bis = new BufferedInputStream(input);
-			ObjectInputStream ois = new ObjectInputStream(bis);
-			
-			return Optional.of(ois.readObject());
-		} catch (ClassNotFoundException ex) {
-			LOG.log(Level.SEVERE, "An error occurred during deserialization an object.", ex);
-		}
-		return Optional.empty();
-	}
-
-	/**
-	 * Serializes an {@code Serializable} to the specified stream.
-	 * 
-	 * The given stream will not be close.
-	 * 
-	 * @param object the object to serialize to bytes
-	 * @param output the stream to write to, must not be null
-	 * @throws IOException in case the load operation failed
-	 */
-	private static void serialize(Serializable object, OutputStream output) throws IOException {
-		BufferedOutputStream bos = new BufferedOutputStream(output);
-		ObjectOutputStream oos = new ObjectOutputStream(bos);
-		oos.writeObject(object);
-		bos.flush();
+			);
 	}
 
 	/**
@@ -198,23 +192,21 @@ public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableData
 			observer.removeAll(keys);
 		}
 	}
-	
+
 	private void notifySave(Serializable entity) {
 		for (DataStoreObserver observer : observers) {
 			observer.save(entity);
 		}
 	}
-	
+
 	private void notifySaveAll(Collection<Serializable> entities) {
 		for (DataStoreObserver observer : observers) {
 			observer.saveAll(entities);
 		}
 	}
-	
-	
+
 	/**
-	 * The instance of this class checks whether is possible to cast an unknown loaded entity
-	 * to the datastore type.
+	 * The instance of this class checks whether is possible to cast an unknown loaded entity to the datastore type.
 	 *
 	 * @author Petr Bouda
 	 **/
@@ -225,7 +217,7 @@ public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableData
 			try {
 				@SuppressWarnings({ "unchecked", "unused" })
 				HashMap<String, Serializable> loadedStore = (HashMap<String, Serializable>) entity;
-			} catch(ClassCastException ex) {
+			} catch (ClassCastException ex) {
 				LOG.log(Level.SEVERE, "The loaded object is not a valid type of the datastore.", ex);
 				return false;
 			}

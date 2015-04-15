@@ -1,10 +1,11 @@
 package org.joyrest.examples.getstarted;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
-import java.util.UUID;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -47,6 +48,5 @@ public class Joke implements Serializable {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-
 
 }

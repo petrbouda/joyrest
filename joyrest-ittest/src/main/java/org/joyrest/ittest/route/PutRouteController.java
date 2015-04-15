@@ -4,11 +4,11 @@ import static org.joyrest.model.http.MediaType.JSON;
 import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseType.Resp;
 
+import java.util.Date;
+
 import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.routing.TypedControllerConfiguration;
-
-import java.util.Date;
 
 public class PutRouteController extends TypedControllerConfiguration {
 

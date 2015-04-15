@@ -8,8 +8,6 @@ import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.routing.TypedControllerConfiguration;
 
-import java.util.Objects;
-
 public class PostRouteController extends TypedControllerConfiguration {
 
 	@Override

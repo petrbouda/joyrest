@@ -13,54 +13,24 @@ import org.joyrest.exception.ExceptionConfiguration;
 import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.http.MediaType;
-import org.joyrest.routing.*;
-import org.joyrest.transform.*;
+import org.joyrest.routing.ControllerConfiguration;
+import org.joyrest.routing.EntityRoute;
+import org.joyrest.transform.Reader;
+import org.joyrest.transform.StringReaderWriter;
+import org.joyrest.transform.Transformer;
+import org.joyrest.transform.Writer;
 import org.joyrest.transform.aspect.SerializationAspect;
 
 @SuppressWarnings("rawtypes")
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
-	private final static JoyLogger log = new JoyLogger(AbstractConfigurer.class);
-
-	private final StringReaderWriter stringReaderWriter = new StringReaderWriter();
-
-	public final List<Aspect> REQUIRED_ASPECTS = Collections.singletonList(new SerializationAspect());
-	public final List<Reader> REQUIRED_READERS = Collections.singletonList(stringReaderWriter);
-	public final List<Writer> REQUIRED_WRITERS = Collections.singletonList(stringReaderWriter);
-
 	/* ServiceLocator name in its own context */
 	public static final String JOYREST_BEAN_CONTEXT = "JoyRestBeanContext";
-
-	protected abstract <B> List<B> getBeans(Class<B> clazz);
-
-	protected ApplicationContext initializeContext() {
-		Map<Boolean, List<Reader>> readers = createTransformers(getBeans(Reader.class), REQUIRED_READERS);
-		Map<Boolean, List<Writer>> writers = createTransformers(getBeans(Writer.class), REQUIRED_WRITERS);
-
-		Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers =
-				getBeans(ExceptionConfiguration.class).stream().peek(ExceptionConfiguration::initialize)
-					.flatMap(config -> config.getExceptionHandlers().entrySet().stream())
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-		List<Aspect> aspects = getBeans(Aspect.class);
-		aspects.addAll(REQUIRED_ASPECTS);
-
-		Set<EntityRoute> routes = getBeans(ControllerConfiguration.class).stream()
-			.peek(ControllerConfiguration::initialize)
-			.flatMap(config -> config.getRoutes().stream())
-			.peek(route -> {
-				logRoute(route);
-				setAspects(route, aspects.toArray(new Aspect[aspects.size()]));
-				populateReader(readers, route, nonNull(route.getRequestType()));
-				populateWriter(writers, route, nonNull(route.getResponseType()));
-			}).collect(Collectors.toSet());
-
-		ApplicationContextImpl context = new ApplicationContextImpl();
-		context.setRoutes(routes);
-		context.setExceptionHandlers(handlers);
-		context.setExceptionWriters(createExceptionWriters(writers));
-		return context;
-	}
+	private final static JoyLogger log = new JoyLogger(AbstractConfigurer.class);
+	public final List<Aspect> REQUIRED_ASPECTS = Collections.singletonList(new SerializationAspect());
+	private final StringReaderWriter stringReaderWriter = new StringReaderWriter();
+	public final List<Reader> REQUIRED_READERS = Collections.singletonList(stringReaderWriter);
+	public final List<Writer> REQUIRED_WRITERS = Collections.singletonList(stringReaderWriter);
 
 	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(List<T> writers, List<T> additional) {
 		writers.addAll(additional);
@@ -132,6 +102,37 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 				log.debug(() -> String.format(
 						"Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
 						aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
+	}
+
+	protected abstract <B> List<B> getBeans(Class<B> clazz);
+
+	protected ApplicationContext initializeContext() {
+		Map<Boolean, List<Reader>> readers = createTransformers(getBeans(Reader.class), REQUIRED_READERS);
+		Map<Boolean, List<Writer>> writers = createTransformers(getBeans(Writer.class), REQUIRED_WRITERS);
+
+		Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers =
+				getBeans(ExceptionConfiguration.class).stream().peek(ExceptionConfiguration::initialize)
+					.flatMap(config -> config.getExceptionHandlers().entrySet().stream())
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+		List<Aspect> aspects = getBeans(Aspect.class);
+		aspects.addAll(REQUIRED_ASPECTS);
+
+		Set<EntityRoute> routes = getBeans(ControllerConfiguration.class).stream()
+			.peek(ControllerConfiguration::initialize)
+			.flatMap(config -> config.getRoutes().stream())
+			.peek(route -> {
+				logRoute(route);
+				setAspects(route, aspects.toArray(new Aspect[aspects.size()]));
+				populateReader(readers, route, nonNull(route.getRequestType()));
+				populateWriter(writers, route, nonNull(route.getResponseType()));
+			}).collect(Collectors.toSet());
+
+		ApplicationContextImpl context = new ApplicationContextImpl();
+		context.setRoutes(routes);
+		context.setExceptionHandlers(handlers);
+		context.setExceptionWriters(createExceptionWriters(writers));
+		return context;
 	}
 
 }

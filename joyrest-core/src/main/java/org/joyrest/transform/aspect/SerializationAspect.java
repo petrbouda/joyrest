@@ -2,7 +2,6 @@ package org.joyrest.transform.aspect;
 
 import static org.joyrest.exception.type.RestException.notAcceptableSupplier;
 import static org.joyrest.exception.type.RestException.unsupportedMediaTypeSupplier;
-import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
 import org.joyrest.aspect.Aspect;
@@ -12,7 +11,6 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.EntityRoute;
-import org.joyrest.routing.Route;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 

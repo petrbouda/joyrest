@@ -1,8 +1,8 @@
 package org.joyrest.hk2.extension.property.parser;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.function.Function;
+
+import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 @FunctionalInterface

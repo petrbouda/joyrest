@@ -1,5 +1,19 @@
 package org.joyrest.examples.combiner.binder;
 
+import static java.util.stream.Collectors.toMap;
+
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Function;
+import java.util.logging.Logger;
+
+import javax.inject.Singleton;
+
 import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -23,19 +37,6 @@ import org.joyrest.hk2.extension.property.parser.IntegerPropertyParser;
 import org.joyrest.hk2.extension.property.parser.LongPropertyParser;
 import org.joyrest.routing.ControllerConfiguration;
 
-import javax.inject.Singleton;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.function.Function;
-import java.util.logging.Logger;
-
-import static java.util.stream.Collectors.toMap;
-
 public class ApplicationBinder extends AbstractBinder {
 
 	private static Logger LOG = Logger.getLogger(PropertiesBinder.class.getName());
@@ -46,15 +47,26 @@ public class ApplicationBinder extends AbstractBinder {
 		this.properties = getProperties(propertiesFileName);
 	}
 
+	private static Properties getProperties(String path) {
+		try (InputStream inputStream = ApplicationBinder.class.getClassLoader().getResourceAsStream(path)) {
+			Properties properties = new Properties();
+			properties.load(inputStream);
+			return properties;
+		} catch (Exception e) {
+			LOG.warning("Property file '" + path + "' not found in the classpath");
+		}
+		return null;
+	}
+
 	@Override
 	protected void configure() {
 		ReadWriteLockDataStore datastore = new ReadWriteLockDataStore();
 
 		install(
-			new RouteBinder(),
-			new PropertiesBinder(properties),
-			new ResourcePartBinder(datastore),
-			new SchedulerPartBinder(datastore, properties));
+				new RouteBinder(),
+				new PropertiesBinder(properties),
+				new ResourcePartBinder(datastore),
+				new SchedulerPartBinder(datastore, properties));
 	}
 
 	private static class RouteBinder extends AbstractBinder {
@@ -117,8 +129,7 @@ public class ApplicationBinder extends AbstractBinder {
 				.to(InMemoryDataStore.class);
 
 			bind(CombinedFeedService.class)
-				.to(new TypeLiteral<CrudService<CombinedFeed>>() {
-				})
+				.to(new TypeLiteral<CrudService<CombinedFeed>>() {})
 				.in(Singleton.class);
 
 			bind(SequenceIdGenerator.class)
@@ -148,21 +159,9 @@ public class ApplicationBinder extends AbstractBinder {
 				parsers.put(String.class, Function.identity());
 
 				bind(new PropertyResolver(propertyMap, parsers))
-					.to(new TypeLiteral<InjectionResolver<Property>>() {
-					});
+					.to(new TypeLiteral<InjectionResolver<Property>>() {});
 
 			}
 		}
-	}
-
-	private static Properties getProperties(String path) {
-		try (InputStream inputStream = ApplicationBinder.class.getClassLoader().getResourceAsStream(path)) {
-			Properties properties = new Properties();
-			properties.load(inputStream);
-			return properties;
-		} catch (Exception e) {
-			LOG.warning("Property file '" + path + "' not found in the classpath");
-		}
-		return null;
 	}
 }

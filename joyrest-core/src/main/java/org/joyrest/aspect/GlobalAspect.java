@@ -1,8 +1,8 @@
 package org.joyrest.aspect;
 
-import org.joyrest.routing.Route;
-
 import java.util.function.Predicate;
+
+import org.joyrest.routing.Route;
 
 public interface GlobalAspect extends Aspect, Predicate<Route> {
 

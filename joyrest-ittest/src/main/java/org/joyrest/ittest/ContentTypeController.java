@@ -1,19 +1,13 @@
 package org.joyrest.ittest;
 
-import org.joyrest.ittest.entity.FeedEntry;
-import org.joyrest.model.http.HttpStatus;
-import org.joyrest.model.http.MediaType;
-import org.joyrest.routing.TypedControllerConfiguration;
-
-import java.util.Objects;
-
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.joyrest.model.http.HttpStatus.NO_CONTENT;
-import static org.joyrest.model.http.MediaType.JSON;
-import static org.joyrest.model.http.MediaType.PLAIN_TEXT;
-import static org.joyrest.model.http.MediaType.XML;
+import static org.joyrest.model.http.MediaType.*;
 import static org.joyrest.routing.entity.RequestType.Req;
+
+import org.joyrest.ittest.entity.FeedEntry;
+import org.joyrest.model.http.MediaType;
+import org.joyrest.routing.TypedControllerConfiguration;
 
 public class ContentTypeController extends TypedControllerConfiguration {
 

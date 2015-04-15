@@ -1,15 +1,15 @@
 package org.joyrest.ittest;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.*;
+
 import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.TypedControllerConfiguration;
-
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.*;
 
 public class RequestResponseDataController extends TypedControllerConfiguration {
 

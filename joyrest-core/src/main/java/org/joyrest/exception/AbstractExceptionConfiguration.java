@@ -9,11 +9,10 @@ public abstract class AbstractExceptionConfiguration implements ExceptionConfigu
 
 	/* Map of routes which are configured in an inherited class */
 	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers = new HashMap<>();
-
-	protected abstract void configure();
-
 	/* RoutingConfiguration's initialization should be executed only once */
 	private boolean isInitialized = false;
+
+	protected abstract void configure();
 
 	@Override
 	public final void initialize() {

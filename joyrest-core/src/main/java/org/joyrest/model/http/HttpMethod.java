@@ -1,26 +1,34 @@
 package org.joyrest.model.http;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
-
 public enum HttpMethod {
 
-    OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT, PATCH;
+	OPTIONS,
+	GET,
+	HEAD,
+	POST,
+	PUT,
+	DELETE,
+	TRACE,
+	CONNECT,
+	PATCH;
 
-    private static final Map<String, HttpMethod> methods;
+	private static final Map<String, HttpMethod> methods;
 
-    static {
-        methods = Arrays.asList(values()).stream()
-                .collect(Collectors.toMap(HttpMethod::name, Function.identity()));
-    }
+	static {
+		methods = Arrays.asList(values()).stream()
+			.collect(Collectors.toMap(HttpMethod::name, Function.identity()));
+	}
 
-    public static final HttpMethod of(String methodName) {
-        requireNonNull(methodName, "Method name cannot be null.");
-        return methods.get(methodName.toUpperCase());
-    }
+	public static final HttpMethod of(String methodName) {
+		requireNonNull(methodName, "Method name cannot be null.");
+		return methods.get(methodName.toUpperCase());
+	}
 
 }

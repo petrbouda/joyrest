@@ -13,11 +13,11 @@ public class PathRouteController1 extends TypedControllerConfiguration {
 			resp.status(HttpStatus.NO_CONTENT);
 		});
 
-		post("path0",(req, resp) -> {
+		post("path0", (req, resp) -> {
 			resp.status(HttpStatus.NO_CONTENT);
 		});
 
-		post("path1/",(req, resp) -> {
+		post("path1/", (req, resp) -> {
 			resp.status(HttpStatus.NO_CONTENT);
 		});
 

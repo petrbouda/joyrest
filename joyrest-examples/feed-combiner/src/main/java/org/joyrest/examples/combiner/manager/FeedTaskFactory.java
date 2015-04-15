@@ -1,6 +1,5 @@
 package org.joyrest.examples.combiner.manager;
 
-
 import org.joyrest.examples.combiner.model.CombinedFeed;
 
 /**

@@ -1,13 +1,14 @@
 package org.joyrest.ittest;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
+import static com.jayway.restassured.RestAssured.given;
+
 import org.joyrest.model.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static com.jayway.restassured.RestAssured.given;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 
 @Ignore
 public class AspectIT extends AbstractBasicIT {

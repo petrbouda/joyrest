@@ -1,6 +1,6 @@
 package org.joyrest.routing.entity;
 
-public class CollectionType<T> extends Type<T>{
+public class CollectionType<T> extends Type<T> {
 
 	private final Class<?> param;
 

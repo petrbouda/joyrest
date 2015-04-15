@@ -87,6 +87,12 @@ public final class MediaType {
 		return new MediaType(typeSplit[0], typeSplit[1], processingType, params);
 	}
 
+	private static final NameValueEntity<String, String> paramToNameValue(String param) {
+		String[] paramSplit = param.split("=");
+		return nonNull(paramSplit[0]) && nonNull(paramSplit[1]) ?
+				new NameValueEntity<>(paramSplit[0].toLowerCase(), paramSplit[1].toLowerCase()) : null;
+	}
+
 	public String get() {
 		return type + "/" + subType;
 	}
@@ -112,12 +118,6 @@ public final class MediaType {
 		return Optional.ofNullable(params.get(name.toLowerCase()));
 	}
 
-	private static final NameValueEntity<String, String> paramToNameValue(String param) {
-		String[] paramSplit = param.split("=");
-		return nonNull(paramSplit[0]) && nonNull(paramSplit[1]) ?
-				new NameValueEntity<>(paramSplit[0].toLowerCase(), paramSplit[1].toLowerCase()) : null;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(type, subType);
@@ -133,7 +133,7 @@ public final class MediaType {
 		}
 		final MediaType other = (MediaType) obj;
 		return Objects.equals(this.type, other.type)
-			&& Objects.equals(this.subType, other.subType);
+				&& Objects.equals(this.subType, other.subType);
 	}
 
 	@Override

@@ -1,30 +1,33 @@
 package org.joyrest.model.request;
 
-import org.joyrest.model.http.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import java.io.InputStream;
-import java.util.*;
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.PathParam;
 
 public interface Request<E> {
 
-    Map<HeaderName, String> getHeaders();
+	Map<HeaderName, String> getHeaders();
 
-    Map<String, String[]> getQueryParams();
+	Map<String, String[]> getQueryParams();
 
-    Map<String, PathParam> getPathParams();
+	Map<String, PathParam> getPathParams();
 
-    HttpMethod getMethod();
+	HttpMethod getMethod();
 
-    String getPath();
+	String getPath();
 
-    List<String> getPathParts();
+	List<String> getPathParts();
 
-    String getPathParam(String name);
+	String getPathParam(String name);
 
-    Optional<String[]> getQueryParams(String name);
+	Optional<String[]> getQueryParams(String name);
 
-    Optional<String> getHeader(HeaderName name);
+	Optional<String> getHeader(HeaderName name);
 
-    E getEntity();
+	E getEntity();
 
 }

@@ -1,16 +1,14 @@
 package org.joyrest.aspect;
 
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
+
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.EntityRoute;
-import org.joyrest.routing.Route;
-
-import java.util.ArrayDeque;
-import java.util.Objects;
-import java.util.Queue;
-
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
 
 public class AspectChainImpl implements AspectChain {
 

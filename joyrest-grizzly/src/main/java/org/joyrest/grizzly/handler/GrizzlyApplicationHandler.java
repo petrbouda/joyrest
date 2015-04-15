@@ -14,8 +14,8 @@ import org.joyrest.processor.RequestProcessor;
 import org.joyrest.processor.RequestProcessorImpl;
 
 /**
- * Class that extends {@link HttpHandler} because of handling request transfer them into {@link InternalRequest}
- * (internal representation of an incoming request in JoyREST Framework)
+ * Class that extends {@link HttpHandler} because of handling request transfer them into {@link InternalRequest} (internal representation of
+ * an incoming request in JoyREST Framework)
  *
  * @author pbouda
  */
@@ -40,8 +40,8 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 		LambdaResponse<?> joyResponse = createJoyResponse(response);
 
 		/*
-		 * Processes the given client's request and using ConsumerResponse automatically populate HttpServletResponse.
-		 * There is no need of an additional response population.
+		 * Processes the given client's request and using ConsumerResponse automatically populate HttpServletResponse. There is no need of
+		 * an additional response population.
 		 */
 		processor.process(joyRequest, joyResponse);
 	}
@@ -58,7 +58,7 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 
 	private LambdaResponse<?> createJoyResponse(org.glassfish.grizzly.http.server.Response response) throws IOException {
 		LambdaResponse<?> joyResponse = new LambdaResponse<>(response::addHeader,
-					status -> response.setStatus(status.code()));
+				status -> response.setStatus(status.code()));
 		joyResponse.setOutputStream(response.getOutputStream());
 		return joyResponse;
 	}

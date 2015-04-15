@@ -1,12 +1,12 @@
 package org.joyrest.model.response;
 
-import org.joyrest.model.http.HeaderName;
-import org.joyrest.model.http.HttpStatus;
+import static java.util.Objects.requireNonNull;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static java.util.Objects.requireNonNull;
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.HttpStatus;
 
 public class LambdaResponse<E> extends InternalResponse<E> {
 

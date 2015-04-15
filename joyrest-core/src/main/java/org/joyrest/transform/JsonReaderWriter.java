@@ -11,9 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonReaderWriter extends AbstractReaderWriter {
 
-	private final MediaType supportedMediaType = MediaType.JSON;
-
 	private static final ObjectMapper mapper = new ObjectMapper();
+	private final MediaType supportedMediaType = MediaType.JSON;
 
 	@Override
 	public void writeTo(InternalResponse<?> response) {

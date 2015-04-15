@@ -1,5 +1,12 @@
 package org.joyrest.routing;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.request.Request;
@@ -8,27 +15,18 @@ import org.joyrest.processor.RequestProcessor;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.utils.PathUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.BiConsumer;
-
-import static java.util.Objects.requireNonNull;
-
 /**
- * Class {@link AbstractControllerConfiguration} is abstract implementation of
- * {@link ControllerConfiguration} and makes easier to create the given route
- * using predefined protected method.
+ * Class {@link AbstractControllerConfiguration} is abstract implementation of {@link ControllerConfiguration} and makes easier to create
+ * the given route using predefined protected method.
  * <p/>
- * It can be considered as container for routes which are provided to
- * {@link RequestProcessor} because of processing
- * and handling incoming requests.
+ * It can be considered as container for routes which are provided to {@link RequestProcessor} because of processing and handling incoming
+ * requests.
  *
  * @author pbouda
  */
 public abstract class AbstractControllerConfiguration implements ControllerConfiguration {
 
-	/* Set of routes which are configured in an inherited class  */
+	/* Set of routes which are configured in an inherited class */
 	private final Set<EntityRoute> routes = new HashSet<>();
 
 	/* Class validates and customized given path */
@@ -86,7 +84,7 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	}
 
 	protected <REQ, RESP> EntityRoute createEntityRoute(HttpMethod method, String path,
-		BiConsumer<Request<REQ>, Response<RESP>> action, Type<REQ> reqClazz, Type<RESP> respClazz) {
+			BiConsumer<Request<REQ>, Response<RESP>> action, Type<REQ> reqClazz, Type<RESP> respClazz) {
 		final String correctPath = pathCorrector.apply(path);
 		final EntityRoute route = new EntityRoute(correctPath, method, action, reqClazz, respClazz);
 		routes.add(route);

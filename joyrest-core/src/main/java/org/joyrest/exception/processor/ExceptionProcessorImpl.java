@@ -25,6 +25,18 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 		this.writers = config.getExceptionWriters();
 	}
 
+	private static Writer chooseWriter(Map<MediaType, Writer> writers, MediaType acceptHeader) {
+		Writer writer = writers.get(acceptHeader);
+		if (writer == null)
+			writers.get(acceptHeader.getProcessingType()
+				.orElseThrow(internalServerErrorSupplier()));
+
+		if (writer == null)
+			throw internalServerErrorSupplier().get();
+
+		return writer;
+	}
+
 	@Override
 	public <T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request, InternalResponse<?> response)
 			throws Exception {
@@ -78,17 +90,5 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 			Writer writer = chooseWriter(writers, acceptHeader);
 			writer.writeTo(response);
 		}
-	}
-
-	private static Writer chooseWriter(Map<MediaType, Writer> writers, MediaType acceptHeader) {
-		Writer writer = writers.get(acceptHeader);
-		if (writer == null)
-			writers.get(acceptHeader.getProcessingType()
-				.orElseThrow(internalServerErrorSupplier()));
-
-		if(writer == null)
-			throw internalServerErrorSupplier().get();
-
-		return writer;
 	}
 }

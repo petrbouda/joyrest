@@ -1,15 +1,14 @@
 package org.joyrest.spring;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joyrest.context.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Class that is able to configure JoyREST Framework for Spring Dependency Injection Framework.

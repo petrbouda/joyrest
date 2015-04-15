@@ -1,7 +1,7 @@
 package org.joyrest.ittest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
+
 import org.joyrest.ittest.config.Application;
 import org.joyrest.ittest.entity.FeedEntry;
 import org.junit.BeforeClass;
@@ -12,7 +12,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Date;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -20,21 +21,19 @@ import java.util.Date;
 @IntegrationTest("server.port=0")
 public abstract class AbstractBasicIT {
 
-    @Value("${local.server.port}")
-    protected int port;
+	public static final ObjectMapper mapper = new ObjectMapper();
+	public static String feedEntity = null;
+	@Value("${local.server.port}")
+	protected int port;
 
-    public static final ObjectMapper mapper = new ObjectMapper();
-
-    public static String feedEntity = null;
-
-    @BeforeClass
-    public static void initClass() throws JsonProcessingException {
-        FeedEntry f = new FeedEntry();
-        f.setLink("http://localhost:8080");
-        f.setPublishDate(new Date());
-        f.setTitle("My Feed Title");
-        f.setDescription("My Feed Description");
-        feedEntity = mapper.writeValueAsString(f);
-    }
+	@BeforeClass
+	public static void initClass() throws JsonProcessingException {
+		FeedEntry f = new FeedEntry();
+		f.setLink("http://localhost:8080");
+		f.setPublishDate(new Date());
+		f.setTitle("My Feed Title");
+		f.setDescription("My Feed Description");
+		feedEntity = mapper.writeValueAsString(f);
+	}
 
 }

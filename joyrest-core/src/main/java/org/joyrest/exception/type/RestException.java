@@ -1,9 +1,9 @@
 package org.joyrest.exception.type;
 
+import java.util.function.Supplier;
+
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.response.InternalResponse;
-
-import java.util.function.Supplier;
 
 public class RestException extends RuntimeException {
 
@@ -28,10 +28,6 @@ public class RestException extends RuntimeException {
 		this.response = response;
 	}
 
-	public InternalResponse<?> getResponse() {
-		return response;
-	}
-
 	public static Supplier<RestException> badRequestSupplier() {
 		return () -> new RestException(HttpStatus.BAD_REQUEST, "Bad Request");
 	}
@@ -50,6 +46,10 @@ public class RestException extends RuntimeException {
 
 	public static Supplier<RestException> internalServerErrorSupplier() {
 		return () -> new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+	}
+
+	public InternalResponse<?> getResponse() {
+		return response;
 	}
 
 }

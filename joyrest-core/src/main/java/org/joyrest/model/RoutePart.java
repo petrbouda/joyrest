@@ -4,31 +4,30 @@ import org.joyrest.extractor.param.PathType;
 
 public class RoutePart<T> {
 
-    public static enum Type {
-        PATH, PARAM
-    }
+	private final Type type;
+	private final PathType<T> pathType;
+	private final String value;
 
-    private final Type type;
+	public RoutePart(Type type, String value, PathType<T> pathType) {
+		this.type = type;
+		this.value = value;
+		this.pathType = pathType;
+	}
 
-    private final PathType<T> pathType;
+	public Type getType() {
+		return type;
+	}
 
-    private final String value;
+	public String getValue() {
+		return value;
+	}
 
-    public RoutePart(Type type, String value, PathType<T> pathType) {
-        this.type = type;
-        this.value = value;
-        this.pathType = pathType;
-    }
+	public PathType<T> getPathType() {
+		return pathType;
+	}
 
-    public Type getType() {
-        return type;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public PathType<T> getPathType() {
-        return pathType;
-    }
+	public static enum Type {
+		PATH,
+		PARAM
+	}
 }

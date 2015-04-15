@@ -1,17 +1,19 @@
 package org.joyrest.examples.combiner.exception;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Error {
 
 	List<String> messages = new ArrayList<>();
 
-	public Error() { }
-	
+	public Error() {
+	}
+
 	public Error(List<String> messages) {
 		this.messages = messages;
 	}
@@ -19,7 +21,7 @@ public class Error {
 	public void addMessage(String message) {
 		messages.add(message);
 	}
-	
+
 	public List<String> getMessages() {
 		return messages;
 	}
@@ -45,5 +47,5 @@ public class Error {
 	public int hashCode() {
 		return Objects.hash(messages);
 	}
-	
+
 }

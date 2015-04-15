@@ -1,7 +1,8 @@
 package org.joyrest.exception;
 
-import org.joyrest.exception.handler.ExceptionHandler;
 import java.util.Map;
+
+import org.joyrest.exception.handler.ExceptionHandler;
 
 public interface ExceptionConfiguration {
 

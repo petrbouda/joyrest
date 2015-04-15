@@ -1,27 +1,26 @@
 package org.joyrest.routing;
 
-import org.joyrest.exception.type.InvalidConfigurationException;
+import static java.util.Objects.requireNonNull;
 
 import java.util.function.Function;
 
-import static java.util.Objects.requireNonNull;
+import org.joyrest.exception.type.InvalidConfigurationException;
 
 /**
  * Class which customizes the form of the path to a valid internal representation
  *
- * "//"		=> Throw an Exception
- * "/" 		=> Correct!
- * ""  		=> Add "/"
- * "/path" 	=> Correct!
- * "/path/"	=> Remove the last char "/"
- * "path	=> Add the first char "/"
- * "path/"	=> Add the first char "/" && Remove the last char "/"
+ * "//" => Throw an Exception "/" => Correct! "" => Add "/" "/path" => Correct! "/path/" => Remove the last char "/"
+ * "path	=> Add the first char "/" "path/" => Add the first char "/" && Remove the last char "/"
  **/
 public class PathCorrector implements Function<String, String> {
 
 	private static final String SLASH = "/";
 
 	private static final String BLANK_PATH = "";
+
+	private static String removeLastChar(String str) {
+		return str.substring(0, str.length() - 1);
+	}
 
 	@Override
 	public String apply(final String path) {
@@ -56,9 +55,5 @@ public class PathCorrector implements Function<String, String> {
 		}
 
 		return path;
-	}
-
-	private static String removeLastChar(String str) {
-		return str.substring(0,str.length()-1);
 	}
 }

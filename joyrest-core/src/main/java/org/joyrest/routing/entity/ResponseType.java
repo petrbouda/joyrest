@@ -1,6 +1,6 @@
 package org.joyrest.routing.entity;
 
-public class ResponseType<T> extends Type<T>{
+public class ResponseType<T> extends Type<T> {
 
 	public ResponseType(Class<?> type) {
 		super(type);

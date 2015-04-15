@@ -1,11 +1,5 @@
 package org.joyrest.examples.combiner.model;
 
-import com.google.common.base.MoreObjects;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +8,14 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.common.base.MoreObjects;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -87,13 +89,13 @@ public final class CombinedFeed implements Serializable {
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
-				.add("id", id)
-				.add("urls", urls)
-				.add("refreshPeriod", refreshPeriod)
-				.add("feedEntries", feedEntries)
-				.add("title", title)
-				.add("description", description)
-				.toString();
+			.add("id", id)
+			.add("urls", urls)
+			.add("refreshPeriod", refreshPeriod)
+			.add("feedEntries", feedEntries)
+			.add("title", title)
+			.add("description", description)
+			.toString();
 	}
 
 	@Override
@@ -105,7 +107,7 @@ public final class CombinedFeed implements Serializable {
 			return false;
 		}
 		final CombinedFeed feed = (CombinedFeed) obj;
-		
+
 		return Objects.equals(this.id, feed.id)
 				&& Objects.equals(this.title, feed.title)
 				&& Objects.equals(this.description, feed.description)
@@ -113,7 +115,7 @@ public final class CombinedFeed implements Serializable {
 				&& Objects.deepEquals(this.urls, feed.urls)
 				&& Objects.deepEquals(this.feedEntries, feed.feedEntries);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, title, description, refreshPeriod, urls, feedEntries);
@@ -129,7 +131,7 @@ public final class CombinedFeed implements Serializable {
 		private String description;
 		private long refreshPeriod;
 		private List<FeedEntry> feedEntries = Collections.unmodifiableList(new ArrayList<>());
-		
+
 		public CombinedFeedBuilder(String id, String... urls) {
 			this(id, createUrlList(urls));
 		}
@@ -148,19 +150,26 @@ public final class CombinedFeed implements Serializable {
 			return builder;
 		}
 
+		private static List<URL> createUrlList(String... urls) {
+			return Arrays.stream(urls)
+				.map(mapper)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+		}
+
 		public CombinedFeedBuilder id(String id) {
 			this.id = id;
 			return this;
 		}
 
 		public CombinedFeedBuilder urls(List<URL> urls) {
-			if(urls == null){
+			if (urls == null) {
 				this.urls = Collections.unmodifiableList(new ArrayList<>());
 			} else {
 				this.urls = Collections.unmodifiableList(urls);
 			}
 			return this;
-			
+
 		}
 
 		public CombinedFeedBuilder title(String title) {
@@ -179,9 +188,9 @@ public final class CombinedFeed implements Serializable {
 		}
 
 		public CombinedFeedBuilder feedEntries(List<FeedEntry> feedEntries) {
-			if(feedEntries == null){
+			if (feedEntries == null) {
 				this.feedEntries = Collections.unmodifiableList(new ArrayList<>());
-			} else {				
+			} else {
 				this.feedEntries = Collections.unmodifiableList(feedEntries);
 			}
 			return this;
@@ -189,13 +198,6 @@ public final class CombinedFeed implements Serializable {
 
 		public CombinedFeed build() {
 			return new CombinedFeed(id, urls, refreshPeriod, feedEntries, title, description);
-		}
-
-		private static List<URL> createUrlList(String... urls) {
-			return Arrays.stream(urls)
-					.map(mapper)
-					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
 		}
 	}
 

@@ -6,45 +6,45 @@ import java.util.function.Function;
 
 public abstract class AbstractPath<T> implements PathType<T> {
 
-    private final String name;
+	private final String name;
 
-    private final Function<String, T> extractor;
+	private final Function<String, T> extractor;
 
-    public AbstractPath(String name, Function<String, T> extractor) {
-        this.name = name;
-        this.extractor = extractor;
-    }
+	public AbstractPath(String name, Function<String, T> extractor) {
+		this.name = name;
+		this.extractor = extractor;
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public Optional<T> valueOf(String value) {
-        return Optional.ofNullable(extractor.apply(value));
-    }
+	@Override
+	public Optional<T> valueOf(String value) {
+		return Optional.ofNullable(extractor.apply(value));
+	}
 
-    @Override
-    public boolean isAssignableFromString(String value) {
-        return Optional.ofNullable(extractor.apply(value)).isPresent();
-    }
+	@Override
+	public boolean isAssignableFromString(String value) {
+		return Optional.ofNullable(extractor.apply(value)).isPresent();
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, extractor);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, extractor);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final AbstractPath other = (AbstractPath) obj;
-        return Objects.equals(this.name, other.name)
-                && Objects.equals(this.extractor, other.extractor);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final AbstractPath other = (AbstractPath) obj;
+		return Objects.equals(this.name, other.name)
+				&& Objects.equals(this.extractor, other.extractor);
+	}
 }

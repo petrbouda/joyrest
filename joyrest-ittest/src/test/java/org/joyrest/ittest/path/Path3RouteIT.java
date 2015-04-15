@@ -20,11 +20,11 @@ public class Path3RouteIT extends AbstractBasicIT {
 	@Test
 	public void testPath_EmptyPath() {
 		given()
-				.contentType(ContentType.ANY)
+			.contentType(ContentType.ANY)
 			.when()
-				.post("/ittest/path3")
+			.post("/ittest/path3")
 			.then()
-				.statusCode(HttpStatus.NO_CONTENT.code());
+			.statusCode(HttpStatus.NO_CONTENT.code());
 	}
 
 }

@@ -1,24 +1,25 @@
 package org.joyrest.servlet;
 
-import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.Configurer;
-import org.joyrest.model.http.HttpMethod;
-import org.joyrest.model.request.*;
-import org.joyrest.model.response.LambdaResponse;
-import org.joyrest.processor.RequestProcessor;
-import org.joyrest.processor.RequestProcessorImpl;
+import static java.util.Collections.list;
+import static org.joyrest.servlet.ServletProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
+import static org.joyrest.servlet.ServletProperties.CONFIGURER_PROPERTY;
+import static org.joyrest.utils.RequestResponseUtils.createPath;
+
+import java.io.IOException;
+import java.util.function.Function;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.function.Function;
 
-import static java.util.Collections.list;
-import static org.joyrest.servlet.ServletProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
-import static org.joyrest.servlet.ServletProperties.CONFIGURER_PROPERTY;
-import static org.joyrest.utils.RequestResponseUtils.*;
+import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.Configurer;
+import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.request.LambdaRequest;
+import org.joyrest.model.response.LambdaResponse;
+import org.joyrest.processor.RequestProcessor;
+import org.joyrest.processor.RequestProcessorImpl;
 
 public class ServletApplicationHandler extends HttpServlet implements Filter {
 
@@ -37,6 +38,20 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 	public ServletApplicationHandler(Configurer<?> configurer, Object applicationConfig) {
 		this.configurer = configurer;
 		this.applicationConfig = applicationConfig;
+	}
+
+	private static Object getInstanceFromClazz(String clazzName) throws ServletException {
+		return getInstanceFromClazz(clazzName, Object.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T getInstanceFromClazz(String clazzName, Class<T> expectedClazz) throws ServletException {
+		try {
+			Class<?> clazz = Class.forName(clazzName);
+			return (T) clazz.newInstance();
+		} catch (Exception e) {
+			throw new ServletException("Invalid expected class", e);
+		}
 	}
 
 	@Override
@@ -65,7 +80,7 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
-		throws IOException, ServletException {
+			throws IOException, ServletException {
 		try {
 			processRequest((HttpServletRequest) req, (HttpServletResponse) resp);
 		} catch (ClassCastException cce) {
@@ -84,8 +99,8 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 			LambdaResponse<?> response = createJoyResponse(resp);
 
 			/*
-			 * Processes the given client's request and using ConsumerResponse automatically populate
-			 * HttpServletResponse. There is no need of an additional response population.
+			 * Processes the given client's request and using ConsumerResponse automatically populate HttpServletResponse. There is no need
+			 * of an additional response population.
 			 */
 			processor.process(request, response);
 		} catch (Exception e) {
@@ -95,7 +110,7 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 
 	private LambdaResponse<?> createJoyResponse(HttpServletResponse response) throws IOException {
 		LambdaResponse<?> joyResponse = new LambdaResponse<>(response::addHeader,
-			status -> response.setStatus(status.code()));
+				status -> response.setStatus(status.code()));
 		joyResponse.setOutputStream(response.getOutputStream());
 		return joyResponse;
 	}
@@ -108,19 +123,5 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		joyRequest.setQueryParamNames(list(request.getParameterNames()));
 		joyRequest.setHeaderNames(list(request.getHeaderNames()));
 		return joyRequest;
-	}
-
-	private static Object getInstanceFromClazz(String clazzName) throws ServletException {
-		return getInstanceFromClazz(clazzName, Object.class);
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T> T getInstanceFromClazz(String clazzName, Class<T> expectedClazz) throws ServletException {
-		try {
-			Class<?> clazz = Class.forName(clazzName);
-			return (T) clazz.newInstance();
-		} catch (Exception e) {
-			throw new ServletException("Invalid expected class", e);
-		}
 	}
 }

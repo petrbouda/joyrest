@@ -1,5 +1,14 @@
 package org.joyrest.examples.combiner.service;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
 import org.joyrest.examples.combiner.ApplicationProperties;
 import org.joyrest.examples.combiner.generator.IdGenerator;
 import org.joyrest.examples.combiner.model.CombinedFeed;
@@ -7,14 +16,6 @@ import org.joyrest.examples.combiner.model.CombinedFeed.CombinedFeedBuilder;
 import org.joyrest.examples.combiner.store.InMemoryDataStore;
 import org.joyrest.examples.combiner.store.ReadWriteLockDataStore;
 import org.joyrest.hk2.extension.property.Property;
-
-import javax.inject.Inject;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class CombinedFeedService implements CrudService<CombinedFeed> {
 
@@ -73,7 +74,7 @@ public class CombinedFeedService implements CrudService<CombinedFeed> {
 	 */
 	@Override
 	public List<CombinedFeed> getAll() {
-		//TODO ugly, for purposes of CRUD controller
+		// TODO ugly, for purposes of CRUD controller
 		if (datastore instanceof ReadWriteLockDataStore) {
 			ReadWriteLockDataStore rwDatastore = (ReadWriteLockDataStore) datastore;
 			Collection<Serializable> entities = rwDatastore.getAll();

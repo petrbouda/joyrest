@@ -20,11 +20,11 @@ public class Path2RouteIT extends AbstractBasicIT {
 	@Test
 	public void testPath_WithSlash() {
 		given()
-				.contentType(ContentType.ANY)
+			.contentType(ContentType.ANY)
 			.when()
-				.post("/ittest/path2")
+			.post("/ittest/path2")
 			.then()
-				.statusCode(HttpStatus.NO_CONTENT.code());
+			.statusCode(HttpStatus.NO_CONTENT.code());
 	}
 
 }

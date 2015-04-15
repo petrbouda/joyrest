@@ -1,15 +1,15 @@
 package org.joyrest.hk2;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.List;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.joyrest.context.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
-
-import java.util.*;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Class that is able to configure JoyREST Framework for HK2 Dependency Injection Framework.

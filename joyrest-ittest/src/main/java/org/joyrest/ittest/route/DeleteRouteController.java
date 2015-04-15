@@ -1,10 +1,10 @@
 package org.joyrest.ittest.route;
 
+import static org.joyrest.routing.entity.RequestType.Req;
+
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.TypedControllerConfiguration;
-
-import static org.joyrest.routing.entity.RequestType.Req;
 
 public class DeleteRouteController extends TypedControllerConfiguration {
 

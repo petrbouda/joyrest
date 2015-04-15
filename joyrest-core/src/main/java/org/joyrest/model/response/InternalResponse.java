@@ -1,12 +1,12 @@
 package org.joyrest.model.response;
 
-import org.joyrest.model.http.HeaderName;
-import org.joyrest.model.http.HttpStatus;
-
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.HttpStatus;
 
 public class InternalResponse<E> implements Response<E> {
 
@@ -36,12 +36,12 @@ public class InternalResponse<E> implements Response<E> {
 		return this;
 	}
 
-	public void setOutputStream(OutputStream responseBody) {
-		this.responseBody = responseBody;
-	}
-
 	public OutputStream getOutputStream() {
 		return responseBody;
+	}
+
+	public void setOutputStream(OutputStream responseBody) {
+		this.responseBody = responseBody;
 	}
 
 	public Map<HeaderName, String> getHeaders() {

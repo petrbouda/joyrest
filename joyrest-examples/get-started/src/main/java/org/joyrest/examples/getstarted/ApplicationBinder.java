@@ -1,19 +1,20 @@
 package org.joyrest.examples.getstarted;
 
+import javax.inject.Singleton;
+
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.transform.*;
-
-import javax.inject.Singleton;
+import org.joyrest.transform.JsonReaderWriter;
+import org.joyrest.transform.Reader;
+import org.joyrest.transform.Writer;
 
 public class ApplicationBinder extends AbstractBinder {
 
 	@Override
 	protected void configure() {
 		bind(JokeServiceImpl.class)
-			.to(new TypeLiteral<JokeService>() {
-			})
+			.to(new TypeLiteral<JokeService>() {})
 			.in(Singleton.class);
 
 		bind(JokeController.class)
