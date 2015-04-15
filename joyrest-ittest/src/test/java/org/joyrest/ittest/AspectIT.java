@@ -4,10 +4,12 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import org.joyrest.model.http.HttpStatus;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
 
+@Ignore
 public class AspectIT extends AbstractBasicIT {
 
 	@Before

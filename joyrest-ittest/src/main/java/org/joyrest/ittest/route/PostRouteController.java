@@ -1,11 +1,14 @@
-package org.joyrest.ittest.routes.route;
+package org.joyrest.ittest.route;
 
+import static java.util.Objects.requireNonNull;
 import static org.joyrest.model.http.MediaType.JSON;
 import static org.joyrest.routing.entity.RequestType.Req;
 
-import org.joyrest.ittest.routes.entity.FeedEntry;
+import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.routing.TypedControllerConfiguration;
+
+import java.util.Objects;
 
 public class PostRouteController extends TypedControllerConfiguration {
 
@@ -27,12 +30,11 @@ public class PostRouteController extends TypedControllerConfiguration {
 		}, Req(FeedEntry.class)).consumes(JSON);
 
 		post("/withBodyAndResponse", (req, resp) -> {
-			if (req.getEntity() == null)
-				throw new RuntimeException("No entity added into the route");
+			requireNonNull(req.getEntity(), "No entity added into the route");
 
 			resp.entity(req.getEntity());
 			resp.status(HttpStatus.CREATED);
-		}, FeedEntry.class, FeedEntry.class)
+		}, FeedEntry.class)
 			.consumes(JSON).produces(JSON);
 	}
 }

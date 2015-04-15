@@ -1,4 +1,4 @@
-package org.joyrest.ittest.routes.route;
+package org.joyrest.ittest.route;
 
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;

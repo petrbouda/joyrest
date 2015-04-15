@@ -1,5 +1,7 @@
 package org.joyrest.model.http;
 
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
 
@@ -56,11 +58,11 @@ public final class MediaType {
 			return WILDCARD;
 		}
 
-		Map<String, String> params = null;
+		Map<String, String> params = new HashMap<>();
 		if (mediaType.contains(";")) {
-            String[] mediaTypeSplit = mediaType.split(";");
-            mediaType = mediaTypeSplit[0];
-            params = Arrays.stream(mediaTypeSplit)
+			String[] mediaTypeSplit = mediaType.split(";");
+			mediaType = mediaTypeSplit[0];
+			params = Arrays.stream(mediaTypeSplit)
 				.skip(1)
 				.filter(Objects::nonNull)
 				.filter(param -> param.contains("="))
@@ -101,14 +103,24 @@ public final class MediaType {
 		return processingType;
 	}
 
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public Optional<String> getParam(String name) {
+		requireNonNull(name, "Param name cannot be null.");
+		return Optional.ofNullable(params.get(name.toLowerCase()));
+	}
+
 	private static final NameValueEntity<String, String> paramToNameValue(String param) {
 		String[] paramSplit = param.split("=");
-		return new NameValueEntity<>(paramSplit[0], paramSplit[1]);
+		return nonNull(paramSplit[0]) && nonNull(paramSplit[1]) ?
+				new NameValueEntity<>(paramSplit[0].toLowerCase(), paramSplit[1].toLowerCase()) : null;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(type);
+		return Objects.hash(type, subType);
 	}
 
 	@Override
@@ -120,7 +132,8 @@ public final class MediaType {
 			return false;
 		}
 		final MediaType other = (MediaType) obj;
-		return Objects.equals(this.type.toLowerCase(), other.type.toLowerCase());
+		return Objects.equals(this.type, other.type)
+			&& Objects.equals(this.subType, other.subType);
 	}
 
 	@Override

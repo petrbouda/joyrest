@@ -1,11 +1,11 @@
-package org.joyrest.ittest.routes.route;
+package org.joyrest.ittest.route;
 
 import static org.joyrest.model.http.MediaType.JSON;
 import static org.joyrest.routing.entity.ResponseType.Resp;
 
 import java.util.Date;
 
-import org.joyrest.ittest.routes.entity.FeedEntry;
+import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.routing.TypedControllerConfiguration;
 

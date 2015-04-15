@@ -1,4 +1,4 @@
-package org.joyrest.ittest.routes.entity;
+package org.joyrest.ittest.entity;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

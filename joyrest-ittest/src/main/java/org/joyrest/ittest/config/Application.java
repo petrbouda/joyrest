@@ -1,4 +1,4 @@
-package org.joyrest.ittest.routes;
+package org.joyrest.ittest.config;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

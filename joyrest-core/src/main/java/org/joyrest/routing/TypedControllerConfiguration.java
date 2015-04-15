@@ -51,18 +51,23 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 		return createEntityRoute(HttpMethod.POST, path, action, new Type<>(req), resp);
 	}
 
-	protected final <REQ, RESP> Route post(
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, Class<RESP> resp) {
+	protected final <R> Route post(BiConsumer<Request<R>, Response<R>> action, Class<R> reqResp) {
+		return createEntityRoute(HttpMethod.POST, "", action, new Type<>(reqResp), new Type<>(reqResp));
+	}
+
+	protected final <R> Route post(String path, BiConsumer<Request<R>, Response<R>> action, Class<R> reqResp) {
+		return createEntityRoute(HttpMethod.POST, path, action, new Type<>(reqResp), new Type<>(reqResp));
+	}
+
+	protected final <REQ, RESP> Route post(BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, Class<RESP> resp) {
 		return createEntityRoute(HttpMethod.POST, "", action, new Type<>(req), new Type<>(resp));
 	}
 
-	protected final <REQ, RESP> Route post(String path,
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, Class<RESP> resp) {
+	protected final <REQ, RESP> Route post(String path, BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, Class<RESP> resp) {
 		return createEntityRoute(HttpMethod.POST, path, action, new Type<>(req), new Type<>(resp));
 	}
 
-	protected final <REQ, RESP> Route post(
-			BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req) {
+	protected final <REQ, RESP> Route post(BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req) {
 		return createEntityRoute(HttpMethod.POST, "", action, req, null);
 	}
 

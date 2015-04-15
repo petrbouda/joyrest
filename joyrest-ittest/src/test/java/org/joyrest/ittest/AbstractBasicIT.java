@@ -2,9 +2,8 @@ package org.joyrest.ittest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.joyrest.ittest.routes.Application;
-import org.joyrest.ittest.routes.ApplicationConfig;
-import org.joyrest.ittest.routes.entity.FeedEntry;
+import org.joyrest.ittest.config.Application;
+import org.joyrest.ittest.entity.FeedEntry;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;

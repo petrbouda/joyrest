@@ -1,4 +1,4 @@
-package org.joyrest.ittest.routes.interceptor;
+package org.joyrest.ittest.interceptor;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.aspect.AspectChain;

@@ -13,13 +13,16 @@ public class StringReaderWriter extends AbstractReaderWriter {
 
     private final MediaType supportedMediaType = MediaType.PLAIN_TEXT;
 
+    private final String DEFAULT_CHARSET = "UTF-8";
+
     @Override
-    public String readFrom(InternalRequest<String> request, Type<String> clazz) {
+    public <T> T readFrom(InternalRequest<T> request, Type<T> clazz) {
         try {
+            String charset = request.getMatchedAccept().getParam("charset").orElse(DEFAULT_CHARSET);
             StringBuilder builder = new BufferedReader(
-                    new InputStreamReader(request.getInputStream(), "UTF-8")).lines()
+                    new InputStreamReader(request.getInputStream(), charset)).lines()
                     .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
-            return builder.toString()
+            return (T) builder.toString();
         } catch (UnsupportedEncodingException e) {
             throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "Unsupported Encoding Exception");
         }
