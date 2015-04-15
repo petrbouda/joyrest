@@ -15,35 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Container for all information about one route {@link EntityRoute}
- *
- * @author pbouda
- */
-public interface Route<REQ, RESP> {
+public interface Route {
 
-    InternalResponse<RESP> execute(InternalRequest<REQ> request, InternalResponse<RESP> response);
+    Route aspect(Aspect... aspect);
 
-	List<Aspect<REQ, RESP>> getAspects();
+    Route consumes(MediaType... consumes);
 
-    HttpMethod getHttpMethod();
-
-    List<RoutePart<?>> getRouteParts();
-
-    String getPath();
-
-    Map<String, RoutePart<?>> getPathParams();
-
-    List<MediaType> getConsumes();
-
-    List<MediaType> getProduces();
-
-    Type<REQ> getRequestType();
-
-    Type<RESP> getResponseType();
-
-    Optional<Reader> getReader(MediaType mediaType);
-
-    Optional<Writer> getWriter(MediaType mediaType);
+    Route produces(MediaType... produces);
 
 }

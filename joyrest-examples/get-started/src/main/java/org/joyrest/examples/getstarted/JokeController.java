@@ -21,7 +21,7 @@ public class JokeController extends TypedControllerConfiguration {
 	protected void configure() {
 		setGlobalPath("jokes");
 
-		EntityRoute<Joke, List<Joke>> route = post((request, response) -> {
+		post((request, response) -> {
 			Joke savedJoke = service.save(request.getEntity());
 			response.entity(Arrays.asList(savedJoke))
 				.status(HttpStatus.CREATED)

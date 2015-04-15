@@ -8,6 +8,6 @@ import org.joyrest.utils.OptionalChain;
 @FunctionalInterface
 public interface RouteResolver {
 
-	OptionalChain<EntityRoute<?, ?>> resolveRoute(InternalRequest<?> request);
+	OptionalChain<EntityRoute> resolveRoute(InternalRequest<?> request);
 
 }

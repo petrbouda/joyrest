@@ -41,12 +41,12 @@ public class ApplicationConfig {
 
 	@Bean
 	Reader jsonReaderRegistrar() {
-		return new JsonReader();
+		return new JsonReaderWriter();
 	}
 
 	@Bean
 	Writer jsonWriterRegistrar() {
-		return new JsonWriter();
+		return new JsonReaderWriter();
 	}
 
 	@Bean

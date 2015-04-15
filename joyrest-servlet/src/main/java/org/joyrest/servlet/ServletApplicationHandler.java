@@ -5,7 +5,6 @@ import org.joyrest.context.Configurer;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.request.*;
 import org.joyrest.model.response.LambdaResponse;
-import org.joyrest.model.response.InternalResponse;
 import org.joyrest.processor.RequestProcessor;
 import org.joyrest.processor.RequestProcessorImpl;
 
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
 import java.util.function.Function;
 
 import static java.util.Collections.list;
@@ -106,7 +104,7 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		LambdaRequest<?> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
 		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
 		joyRequest.setMethod(HttpMethod.of(request.getMethod()));
-		joyRequest.setRequestBody(request.getInputStream());
+		joyRequest.setInputStream(request.getInputStream());
 		joyRequest.setQueryParamNames(list(request.getParameterNames()));
 		joyRequest.setHeaderNames(list(request.getHeaderNames()));
 		return joyRequest;

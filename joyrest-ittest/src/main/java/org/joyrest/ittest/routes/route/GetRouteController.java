@@ -1,14 +1,13 @@
 package org.joyrest.ittest.routes.route;
 
 import static org.joyrest.model.http.MediaType.JSON;
-import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseType.Resp;
+
+import java.util.Date;
 
 import org.joyrest.ittest.routes.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.routing.TypedControllerConfiguration;
-
-import java.util.Date;
 
 public class GetRouteController extends TypedControllerConfiguration {
 
@@ -24,7 +23,7 @@ public class GetRouteController extends TypedControllerConfiguration {
 			resp.status(HttpStatus.OK);
 		});
 
-		get("/withBodyAndResponse",(req, resp) -> {
+		get("/withResponse", (req, resp) -> {
 			FeedEntry f = new FeedEntry();
 			f.setLink("http://localhost:8080");
 			f.setPublishDate(new Date());

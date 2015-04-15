@@ -4,10 +4,10 @@ import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.EntityRoute;
 
-public interface AspectChain<REQ, RESP> {
+public interface AspectChain {
 
-	InternalResponse<RESP> proceed(InternalRequest<REQ> request, InternalResponse<RESP> response);
+	InternalResponse<?> proceed(InternalRequest<?> request, InternalResponse<?> response);
 
-	EntityRoute<REQ, RESP> getRoute();
+	EntityRoute getRoute();
 
 }

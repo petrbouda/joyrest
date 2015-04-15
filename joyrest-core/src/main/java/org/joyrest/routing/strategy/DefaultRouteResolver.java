@@ -16,20 +16,16 @@ public class DefaultRouteResolver implements RouteResolver {
     /* Class which compares path from route and incoming request */
     private final PathComparator pathComparator = new PathComparator();
 
-    /* Config contains everything about routes and other context details in this application */
-    private final ApplicationContext context;
-
     /* All routes configures in an application */
-    private final Set<EntityRoute<?, ?>> routes;
+    private final Set<EntityRoute> routes;
 
     public DefaultRouteResolver(ApplicationContext context) {
         this.routes = context.getRoutes();
-        this.context = context;
     }
 
     @Override
-    public OptionalChain<EntityRoute<?, ?>> resolveRoute(InternalRequest<?> request) {
-        Optional<EntityRoute<?, ?>> route = BiStream.of(routes.stream(), request)
+    public OptionalChain<EntityRoute> resolveRoute(InternalRequest<?> request) {
+        Optional<EntityRoute> route = BiStream.of(routes.stream(), request)
                 .throwFilter(pathComparator, notFoundSupplier())
                 .throwFilter(RequestMatcher::matchNonEmptyList, notFoundSupplier())
                 .throwFilter(RequestMatcher::matchHttpMethod, notFoundSupplier())

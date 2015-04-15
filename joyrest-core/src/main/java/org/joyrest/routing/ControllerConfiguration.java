@@ -26,6 +26,6 @@ public interface ControllerConfiguration {
 	 * @return set of routes which are configured in {@link #initialize()}
 	 *         method
 	 **/
-	Set<EntityRoute<?, ?>> getRoutes();
+	Set<EntityRoute> getRoutes();
 
 }

@@ -12,22 +12,22 @@ import java.util.Queue;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
-public class AspectChainImpl<REQ, RESP> implements AspectChain<REQ, RESP> {
+public class AspectChainImpl implements AspectChain {
 
-	private final Queue<Aspect<REQ, RESP>> aspects = new ArrayDeque<>();
+	private final Queue<Aspect> aspects = new ArrayDeque<>();
 
-	private final EntityRoute<REQ, RESP> route;
+	private final EntityRoute route;
 
-	public AspectChainImpl(EntityRoute<REQ, RESP> route) {
+	public AspectChainImpl(EntityRoute route) {
 		requireNonNull(route);
 		this.route = route;
 		this.aspects.addAll(route.getAspects());
 	}
 
 	@Override
-	public InternalResponse<RESP> proceed(InternalRequest<REQ> request, InternalResponse<RESP> response) {
+	public InternalResponse<?> proceed(InternalRequest<?> request, InternalResponse<?> response) {
 		requireNonNull(request);
-		Aspect<REQ, RESP> aspect = aspects.poll();
+		Aspect aspect = aspects.poll();
 
 		if (nonNull(aspect))
 			return aspect.around(this, request, response);
@@ -36,7 +36,7 @@ public class AspectChainImpl<REQ, RESP> implements AspectChain<REQ, RESP> {
 	}
 
 	@Override
-	public EntityRoute<REQ, RESP> getRoute() {
+	public EntityRoute getRoute() {
 		return route;
 	}
 }

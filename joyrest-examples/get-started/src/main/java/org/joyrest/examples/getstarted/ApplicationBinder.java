@@ -2,7 +2,6 @@ package org.joyrest.examples.getstarted;
 
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.*;
 
@@ -21,10 +20,8 @@ public class ApplicationBinder extends AbstractBinder {
 			.to(ControllerConfiguration.class)
 			.in(Singleton.class);
 
-		bind(new JsonReader())
-			.to(Reader.class);
-
-		bind(new JsonWriter())
+		bind(new JsonReaderWriter())
+			.to(Reader.class)
 			.to(Writer.class);
 	}
 }

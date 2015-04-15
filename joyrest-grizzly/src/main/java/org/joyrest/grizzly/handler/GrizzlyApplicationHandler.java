@@ -50,7 +50,7 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 		LambdaRequest<?> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
 		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
 		joyRequest.setMethod(HttpMethod.of(request.getMethod().getMethodString()));
-		joyRequest.setRequestBody(request.getInputStream());
+		joyRequest.setInputStream(request.getInputStream());
 		joyRequest.setHeaderNames(request.getHeaderNames());
 		joyRequest.setQueryParamNames(request.getParameterNames());
 		return joyRequest;

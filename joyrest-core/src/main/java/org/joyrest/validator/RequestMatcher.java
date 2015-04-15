@@ -1,33 +1,26 @@
 package org.joyrest.validator;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import static org.joyrest.model.http.HeaderName.ACCEPT;
-import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
+import static org.joyrest.model.http.HeaderName.*;
 import static org.joyrest.model.http.MediaType.WILDCARD;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import org.joyrest.model.http.HeaderName;
-import org.joyrest.model.http.MediaType;
+import org.joyrest.model.http.*;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.request.Request;
-import org.joyrest.routing.Route;
-
-import javax.print.attribute.standard.Media;
+import org.joyrest.routing.*;
 
 public final class RequestMatcher {
 
 	private RequestMatcher() {
 	}
 
-	public static boolean matchNonEmptyList(Route<?, ?> route) {
+	public static boolean matchNonEmptyList(EntityRoute route) {
 		return Objects.nonNull(route);
 	}
 
-	public static boolean matchAccept(Route<?, ?> route, InternalRequest<?> request) {
+	public static boolean matchAccept(EntityRoute route, InternalRequest<?> request) {
 		Optional<String> optAccept = request.getHeader(ACCEPT);
 
 		if (optAccept.isPresent()) {
@@ -39,10 +32,10 @@ public final class RequestMatcher {
 				.filter(accept -> route.getProduces().contains(accept))
 				.collect(toList());
 
-			if(acceptTypes.isEmpty()) {
+			if (acceptTypes.isEmpty()) {
 				return false;
 			} else {
-				if(acceptTypes.size() == 1) {
+				if (acceptTypes.size() == 1) {
 					request.setMatchedAccept(acceptTypes.get(0));
 				} else {
 					// If there are more than one accept media-type and the incoming request contains also
@@ -50,7 +43,7 @@ public final class RequestMatcher {
 					request.setMatchedAccept(acceptTypes.get(0));
 					request.getHeader(HeaderName.CONTENT_TYPE).ifPresent(contentTypeStr -> {
 						MediaType contentType = MediaType.of(contentTypeStr);
-						if(acceptTypes.contains(contentType))
+						if (acceptTypes.contains(contentType))
 							request.setMatchedAccept(contentType);
 					});
 				}
@@ -62,7 +55,7 @@ public final class RequestMatcher {
 		}
 	}
 
-	public static boolean matchContentType(Route<?, ?> route, InternalRequest<?> request) {
+	public static boolean matchContentType(EntityRoute route, InternalRequest<?> request) {
 		Optional<String> optContentType = request.getHeader(CONTENT_TYPE);
 		MediaType contentType;
 		if (!optContentType.isPresent()) {
@@ -76,13 +69,13 @@ public final class RequestMatcher {
 		}
 
 		try {
-			return request.getRequestBody().available() != 0 ^ contentType.equals(MediaType.WILDCARD);
+			return request.getInputStream().available() != 0 ^ contentType.equals(MediaType.WILDCARD);
 		} catch (IOException e) {
 			throw new RuntimeException("An exception occurred during getting a body", e);
 		}
 	}
 
-	public static boolean matchHttpMethod(Route<?, ?> route, InternalRequest<?> request) {
+	public static boolean matchHttpMethod(EntityRoute route, InternalRequest<?> request) {
 		return route.getHttpMethod() == request.getMethod();
 	}
 }

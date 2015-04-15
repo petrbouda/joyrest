@@ -29,7 +29,7 @@ public class InternalRequest<E> implements Request<E> {
 
 	protected E entity;
 
-	protected InputStream requestBody;
+	protected InputStream inputStream;
 
 	@Override
 	public Optional<String> getHeader(HeaderName name) {
@@ -83,12 +83,12 @@ public class InternalRequest<E> implements Request<E> {
 		return entity;
 	}
 
-	public InputStream getRequestBody() {
-		return requestBody;
+	public InputStream getInputStream() {
+		return inputStream;
 	}
 
-	public void setRequestBody(InputStream requestBody) {
-		this.requestBody = requestBody;
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
 	}
 
 	public void setHeaders(Map<HeaderName, String> headers) {

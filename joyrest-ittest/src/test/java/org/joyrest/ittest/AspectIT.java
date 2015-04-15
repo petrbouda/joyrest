@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
 
-public class InterceptorIT extends AbstractBasicIT {
+public class AspectIT extends AbstractBasicIT {
 
 	@Before
 	public void setUp() {

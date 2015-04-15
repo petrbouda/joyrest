@@ -1,10 +1,11 @@
 package org.joyrest.transform;
 
-import org.joyrest.common.annotation.General;
 import org.joyrest.model.response.InternalResponse;
+import org.joyrest.routing.EntityRoute;
 
-public interface Writer extends General, Transformer {
+public interface Writer extends Transformer {
 
 	void writeTo(InternalResponse<?> response);
 
+	boolean isWriterCompatible(EntityRoute route);
 }

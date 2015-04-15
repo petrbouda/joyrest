@@ -16,14 +16,13 @@ import org.joyrest.routing.Route;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 
-public class SerializationAspect<REQ, RESP> implements Aspect<REQ, RESP> {
+public class SerializationAspect implements Aspect {
 
 	@Override
-	public InternalResponse<RESP> around(final AspectChain<REQ, RESP> chain,
-			final InternalRequest<REQ> request, final InternalResponse<RESP> response) {
-		EntityRoute<REQ, RESP> route = chain.getRoute();
+	public InternalResponse<?> around(AspectChain chain, InternalRequest request, InternalResponse response) {
+		EntityRoute route = chain.getRoute();
 		if (route.hasRequestBody()) {
-			REQ entity = readEntity(route, request);
+			Object entity = readEntity(route, request);
 			request.setEntity(entity);
 		}
 
@@ -32,7 +31,7 @@ public class SerializationAspect<REQ, RESP> implements Aspect<REQ, RESP> {
 		return response;
 	}
 
-	private void writeEntity(final Route<REQ, RESP> route, final InternalRequest<REQ> request, final InternalResponse<RESP> response) {
+	private void writeEntity(EntityRoute route, InternalRequest<?> request, InternalResponse<?> response) {
 		if (response.getEntity().isPresent()) {
 			MediaType accept = request.getMatchedAccept();
 			response.header(HeaderName.CONTENT_TYPE, accept.get());
@@ -42,7 +41,7 @@ public class SerializationAspect<REQ, RESP> implements Aspect<REQ, RESP> {
 		}
 	}
 
-	private REQ readEntity(final EntityRoute<REQ, RESP> route, final InternalRequest<REQ> request) {
+	private Object readEntity(EntityRoute route, InternalRequest<Object> request) {
 		MediaType contentType = request.getHeader(CONTENT_TYPE).map(MediaType::of).get();
 		Reader reader = route.getReader(contentType)
 			.orElseThrow(unsupportedMediaTypeSupplier());

@@ -7,12 +7,11 @@ import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.model.response.Response;
 
-public class TestAspect<REQ, RESP> implements Aspect<REQ, RESP> {
+public class TestAspect implements Aspect {
 
 	@Override
-	public InternalResponse<RESP> around(AspectChain<REQ, RESP> chain,
-			InternalRequest<REQ> request, InternalResponse<RESP> response) {
-		InternalResponse<RESP> resp = chain.proceed(request, response);
+	public InternalResponse<?> around(AspectChain chain, InternalRequest<?> request, InternalResponse<?> response) {
+		InternalResponse<?> resp = chain.proceed(request, response);
 		return resp;
 	}
 }

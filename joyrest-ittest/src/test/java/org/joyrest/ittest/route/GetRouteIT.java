@@ -37,11 +37,11 @@ public class GetRouteIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testRouteGet_WithBodyAndResponse() {
+	public void testRouteGet_WithResponse() {
 		given()
 				.accept(ContentType.JSON)
 			.when()
-				.get("/ittest/route/withBodyAndResponse")
+				.get("/ittest/route/withResponse")
 			.then()
 				.statusCode(HttpStatus.CREATED.code())
 				.body("title", equalTo("My Feed Title"))

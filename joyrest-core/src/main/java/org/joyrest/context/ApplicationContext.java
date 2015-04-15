@@ -21,7 +21,7 @@ public interface ApplicationContext {
 	 *
 	 * @return collection of {@link org.joyrest.routing.EntityRoute} configured into an application
 	 */
-	Set<EntityRoute<?, ?>> getRoutes();
+	Set<EntityRoute> getRoutes();
 
 	/**
 	 * Returns all instances of exception handlers that were added into an application

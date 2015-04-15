@@ -33,7 +33,7 @@ import org.joyrest.utils.PathUtils;
  *
  * @author pbouda
  */
-public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
+public class EntityRoute implements Route {
 
 	private final static JoyLogger logger = new JoyLogger(EntityRoute.class);
 
@@ -77,14 +77,15 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	private List<MediaType> produces = Collections.singletonList(MediaType.WILDCARD);
 
 	/* Collection of interceptors which will be applied with execution of this route */
-	private List<Aspect<REQ, RESP>> aspects = new ArrayList<>();
+	private List<Aspect> aspects = new ArrayList<>();
 
-	private BiConsumer<Request<REQ>, Response<RESP>> action;
+	@SuppressWarnings("rawtypes")
+	private BiConsumer action;
 
-	private Type<REQ> requestType;
-	private Type<RESP> responseType;
+	private Type<?> requestType;
+	private Type<?> responseType;
 
-	public EntityRoute(String path, HttpMethod httpMethod, BiConsumer<Request<REQ>, Response<RESP>> action,
+	public <REQ, RESP> EntityRoute(String path, HttpMethod httpMethod, BiConsumer<Request<REQ>, Response<RESP>> action,
 			Type<REQ> requestClazz, Type<RESP> responseClazz) {
 		this.path = path;
 		this.httpMethod = httpMethod;
@@ -94,22 +95,22 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 		this.routeParts = createRouteParts(path);
 	}
 
-	public EntityRoute<REQ, RESP> consumes(MediaType... consumes) {
+	@Override
+	public Route consumes(MediaType... consumes) {
 		this.consumes = Arrays.asList(consumes);
 		return this;
 	}
 
-	@Override
 	public List<MediaType> getConsumes() {
 		return Collections.unmodifiableList(consumes);
 	}
 
-	public EntityRoute<REQ, RESP> produces(MediaType... produces) {
+	@Override
+	public Route produces(MediaType... produces) {
 		this.produces = Arrays.asList(produces);
 		return this;
 	}
 
-	@Override
 	public List<MediaType> getProduces() {
 		return Collections.unmodifiableList(produces);
 	}
@@ -129,22 +130,18 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 		return new RoutePart<>(RoutePart.Type.PATH, part, StringPath.INSTANCE);
 	}
 
-	@Override
 	public List<RoutePart<?>> getRouteParts() {
 		return routeParts == null ? new ArrayList<>() : Collections.unmodifiableList(routeParts);
 	}
 
-	@Override
 	public String getPath() {
 		return path;
 	}
 
-	@Override
 	public Map<String, RoutePart<?>> getPathParams() {
 		return Collections.unmodifiableMap(pathParams);
 	}
 
-	@Override
 	public HttpMethod getHttpMethod() {
 		return httpMethod;
 	}
@@ -164,20 +161,18 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 		return SLASH.contains(path) ? basePath : basePath + path;
 	}
 
-	@SafeVarargs
-	public final EntityRoute<REQ, RESP> aspect(Aspect<REQ, RESP>... aspect) {
+	@Override
+	public Route aspect(Aspect... aspect) {
 		requireNonNull(aspect, "An added aspect cannot be null.");
 		aspects.addAll(Arrays.asList(aspect));
 		return this;
 	}
 
-	@Override
-	public Type<REQ> getRequestType() {
+	public Type getRequestType() {
 		return requestType;
 	}
 
-	@Override
-	public Type<RESP> getResponseType() {
+	public Type<?> getResponseType() {
 		return responseType;
 	}
 
@@ -190,22 +185,19 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	 *
 	 * @param request
 	 */
-
-	@Override
-	public InternalResponse<RESP> execute(InternalRequest<REQ> request, InternalResponse<RESP> response) {
+	@SuppressWarnings("unchecked")
+	public  InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response) {
 		action.accept(ImmutableRequest.of(request), response);
 		return response;
 	}
 
-	@Override
-	public List<Aspect<REQ, RESP>> getAspects() {
+	public List<Aspect> getAspects() {
 		return Collections.unmodifiableList(aspects);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Optional<Reader> getReader(MediaType mediaType) {
 		return Optional.ofNullable(readers.get(mediaType));
 	}
@@ -223,7 +215,6 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Optional<Writer> getWriter(MediaType mediaType) {
 		return Optional.ofNullable(writers.get(mediaType));
 	}
@@ -252,7 +243,7 @@ public class EntityRoute<REQ, RESP> implements Route<REQ, RESP> {
 			return false;
 		}
 		@SuppressWarnings("unchecked")
-		final EntityRoute<REQ, RESP> other = (EntityRoute<REQ, RESP>) obj;
+		final EntityRoute other = (EntityRoute) obj;
 		return Objects.equals(this.httpMethod, other.httpMethod)
 				&& Objects.equals(this.path, other.path);
 	}

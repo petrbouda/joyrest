@@ -14,7 +14,7 @@ import java.util.function.BiPredicate;
  *
  * @author pbouda
  */
-public class PathComparator implements BiPredicate<EntityRoute<?, ?>, InternalRequest<?>> {
+public class PathComparator implements BiPredicate<EntityRoute, InternalRequest<?>> {
 
     /**
      * Compares a configured route with the given path which comes from the client call.
@@ -24,7 +24,7 @@ public class PathComparator implements BiPredicate<EntityRoute<?, ?>, InternalRe
      * @return returns true if all parts are equal
      **/
     @Override
-    public boolean test(EntityRoute<?, ?> route, InternalRequest<?> request) {
+    public boolean test(EntityRoute route, InternalRequest<?> request) {
         List<String> pathParts = request.getPathParts();
         List<RoutePart<?>> routeParts = route.getRouteParts();
         if(routeParts.size() != pathParts.size()){

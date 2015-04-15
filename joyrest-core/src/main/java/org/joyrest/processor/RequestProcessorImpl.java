@@ -67,7 +67,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 	@SuppressWarnings("unchecked")
 	private InternalResponse<?> processRequest(final InternalRequest<?> request, final InternalResponse<?> response) {
-		final EntityRoute<?, ?> route = cachedRouteResolver.resolveRoute(request)
+		final EntityRoute route = cachedRouteResolver.resolveRoute(request)
 			.chainEmpty(defaultRouteResolver.resolveRoute(request))
 			.orElseThrow(notFoundSupplier());
 
@@ -77,7 +77,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 		return chain.proceed(request, response);
 	}
 
-	private Map<String, PathParam> resolvePathParams(final Route<?, ?> route, final Request<?> request) {
+	private Map<String, PathParam> resolvePathParams(final EntityRoute route, final Request<?> request) {
 		return StreamUtils
 			.zip(route.getRouteParts().stream(), request.getPathParts().stream(), pathParamExtractor)
 			.filter(Objects::nonNull)

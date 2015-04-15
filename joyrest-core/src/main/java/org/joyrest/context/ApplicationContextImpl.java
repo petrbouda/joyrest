@@ -13,7 +13,7 @@ import org.joyrest.transform.Writer;
 public class ApplicationContextImpl implements ApplicationContext {
 
 	/* Set of all configured items in this application */
-	private Set<EntityRoute<?, ?>> routes = new HashSet<>();
+	private Set<EntityRoute> routes = new HashSet<>();
 
 	private Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 *
 	 * @param routes set of routes defined in application
 	 */
-	public void setRoutes(Set<EntityRoute<?, ?>> routes) {
+	public void setRoutes(Set<EntityRoute> routes) {
 		requireNonNull(routes);
 		this.routes = routes;
 	}
@@ -53,7 +53,7 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<EntityRoute<?, ?>> getRoutes() {
+	public Set<EntityRoute> getRoutes() {
 		return Collections.unmodifiableSet(routes);
 	}
 

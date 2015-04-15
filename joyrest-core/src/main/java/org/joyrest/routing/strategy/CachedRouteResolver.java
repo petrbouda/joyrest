@@ -18,7 +18,7 @@ public class CachedRouteResolver implements RouteResolver {
 	}
 
 	@Override
-	public OptionalChain<EntityRoute<?,?>> resolveRoute(InternalRequest<?> request) {
+	public OptionalChain<EntityRoute> resolveRoute(InternalRequest<?> request) {
 		// TODO cache values into the ConcurrentHashMap
 		return new OptionalChain<>(Optional.empty());
 	}
