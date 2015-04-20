@@ -1,22 +1,20 @@
 package org.joyrest.ittest;
 
-import java.io.IOException;
+import static org.joyrest.routing.entity.RequestType.Req;
+import static org.joyrest.routing.entity.ResponseType.Resp;
 
-import org.joyrest.exception.AbstractExceptionConfiguration;
+import org.joyrest.exception.TypedExceptionConfiguration;
+import org.joyrest.ittest.entity.FeedEntry;
 
-public class TestExceptionConfiguration extends AbstractExceptionConfiguration {
+public class TestExceptionConfiguration extends TypedExceptionConfiguration {
 
 	@Override
 	protected void configure() {
 
-		/*
-		 * exception((IOException ex, JoyRequest req, JoyResponse resp) -> {
-		 * 
-		 * });
-		 */
+		exception(NumberFormatException.class, (req, resp, ex) -> {
 
-		exception(IOException.class, (ex, req, resp) -> {
+		}, Req(FeedEntry.class), Resp(FeedEntry.class));
 
-		});
 	}
+
 }

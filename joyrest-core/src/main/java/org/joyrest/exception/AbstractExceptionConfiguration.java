@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.joyrest.exception.handler.ExceptionHandler;
+import org.joyrest.function.TriConsumer;
+import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.response.InternalResponse;
 
 public abstract class AbstractExceptionConfiguration implements ExceptionConfiguration {
 
 	/* Map of routes which are configured in an inherited class */
-	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers = new HashMap<>();
+	protected final Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>>
+		handlers = new HashMap<>();
+
 	/* RoutingConfiguration's initialization should be executed only once */
 	private boolean isInitialized = false;
 
@@ -23,12 +28,12 @@ public abstract class AbstractExceptionConfiguration implements ExceptionConfigu
 		}
 	}
 
-	public <T extends Exception> void exception(Class<T> clazz, ExceptionHandler<? super Exception> handler) {
-		handlers.put(clazz, handler);
+	public <T extends Exception> void putHandler(Class<T> clazz, TriConsumer<?, ?, T> handler) {
+		handlers.put(clazz, (TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>) handler);
 	}
 
 	@Override
-	public Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> getExceptionHandlers() {
+	public Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> getExceptionHandlers() {
 		return handlers;
 	}
 }

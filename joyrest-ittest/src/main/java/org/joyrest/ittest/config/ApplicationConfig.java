@@ -3,6 +3,8 @@ package org.joyrest.ittest.config;
 import org.joyrest.ittest.ContentTypeController;
 import org.joyrest.ittest.RequestResponseDataController;
 import org.joyrest.ittest.StatusController;
+import org.joyrest.ittest.TestExceptionConfiguration;
+import org.joyrest.ittest.exception.ExceptionController;
 import org.joyrest.ittest.path.PathRouteController1;
 import org.joyrest.ittest.path.PathRouteController2;
 import org.joyrest.ittest.path.PathRouteController3;
@@ -79,6 +81,18 @@ public class ApplicationConfig {
 	@Bean
 	ControllerConfiguration requestResponseController() {
 		return new RequestResponseDataController();
+	}
+
+	// EXCEPTION-TEST ---------------------------------
+
+	@Bean
+	ControllerConfiguration exceptionController() {
+		return new ExceptionController();
+	}
+
+	@Bean
+	TestExceptionConfiguration testExceptionConfiguration() {
+		return new TestExceptionConfiguration();
 	}
 
 	@Bean

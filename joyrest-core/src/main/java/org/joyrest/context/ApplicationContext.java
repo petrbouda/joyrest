@@ -4,7 +4,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.joyrest.exception.handler.ExceptionHandler;
+import org.joyrest.function.TriConsumer;
 import org.joyrest.model.http.MediaType;
+import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.EntityRoute;
 import org.joyrest.transform.Writer;
 
@@ -28,7 +31,7 @@ public interface ApplicationContext {
 	 *
 	 * @return map of exception handlers configured into an application
 	 */
-	Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> getExceptionHandlers();
+	Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> getExceptionHandlers();
 
 	/**
 	 * Returns all instances of exception writers that were added into an application

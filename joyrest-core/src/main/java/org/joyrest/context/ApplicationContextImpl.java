@@ -5,7 +5,10 @@ import static java.util.Objects.requireNonNull;
 import java.util.*;
 
 import org.joyrest.exception.handler.ExceptionHandler;
+import org.joyrest.function.TriConsumer;
 import org.joyrest.model.http.MediaType;
+import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.EntityRoute;
 import org.joyrest.routing.Route;
 import org.joyrest.transform.Writer;
@@ -15,7 +18,7 @@ public class ApplicationContextImpl implements ApplicationContext {
 	/* Set of all configured items in this application */
 	private Set<EntityRoute> routes = new HashSet<>();
 
-	private Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers = new HashMap<>();
+	private Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> exceptionHandlers = new HashMap<>();
 
 	private Map<MediaType, Writer> exceptionWriters;
 
@@ -41,18 +44,20 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> getExceptionHandlers() {
+	public Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>>
+			getExceptionHandlers() {
 		return Collections.unmodifiableMap(exceptionHandlers);
 	}
 
 	/**
 	 * Adds a map of {@link ExceptionHandler} into the application
 	 *
-	 * @param exceptionHandlers configurations which keep given handlers
+	 * @param handlers configurations which keep given handlers
 	 */
-	public void setExceptionHandlers(Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> exceptionHandlers) {
-		requireNonNull(exceptionHandlers);
-		this.exceptionHandlers = exceptionHandlers;
+	public void setExceptionHandlers(Map<Class<? extends Exception>,
+			TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> handlers) {
+		requireNonNull(handlers);
+		this.exceptionHandlers = handlers;
 	}
 
 	/**

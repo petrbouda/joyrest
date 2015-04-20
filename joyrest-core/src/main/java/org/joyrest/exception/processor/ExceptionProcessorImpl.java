@@ -1,5 +1,7 @@
 package org.joyrest.exception.processor;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
 import static org.joyrest.model.http.HeaderName.ACCEPT;
 
@@ -7,8 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.exception.handler.ExceptionHandler;
-import org.joyrest.exception.type.RestException;
+import org.joyrest.function.TriConsumer;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
@@ -16,7 +17,7 @@ import org.joyrest.transform.Writer;
 
 public class ExceptionProcessorImpl implements ExceptionProcessor {
 
-	private final Map<Class<? extends Exception>, ExceptionHandler<? super Exception>> handlers;
+	private final Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> handlers;
 
 	private final Map<MediaType, Writer> writers;
 
@@ -25,63 +26,31 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 		this.writers = config.getExceptionWriters();
 	}
 
-	private static Writer chooseWriter(Map<MediaType, Writer> writers, MediaType acceptHeader) {
-		Writer writer = writers.get(acceptHeader);
-		if (writer == null)
-			writers.get(acceptHeader.getProcessingType()
-				.orElseThrow(internalServerErrorSupplier()));
-
-		if (writer == null)
-			throw internalServerErrorSupplier().get();
-
-		return writer;
-	}
-
 	@Override
 	public <T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request, InternalResponse<?> response)
 			throws Exception {
-		if (ex instanceof RestException) {
-			InternalResponse<?> exResponse = ((RestException) ex).getResponse();
-			response.status(exResponse.getStatus());
-			exResponse.getHeaders().forEach(response::header);
-			exResponse.setOutputStream(response.getOutputStream());
-			writeEntity(request, response);
-			return response;
-		} else {
-			return callHandler(ex, request, response);
-		}
-	}
-
-	private <T extends Exception> InternalResponse<?> callHandler(T ex, InternalRequest<?> request, InternalResponse<?> response)
-			throws Exception {
 		Class<? extends Exception> clazz = ex.getClass();
-		ExceptionHandler<? super Exception> handler = handlers.get(clazz);
+		@SuppressWarnings("rawtypes")
+		TriConsumer handler = handlers.get(ex.getClass());
 
-		if (handler == null) {
-			Optional<ExceptionHandler<? super Exception>> optHandler = getHandlerFromParent(clazz);
-			handler = optHandler.orElseThrow(() -> ex);
-		}
+		if (isNull(handler))
+			handler = getHandlerFromParent(clazz).orElseThrow(() -> ex);
 
 		handler.accept(request, response, ex);
+		writeEntity(request, response);
 		return response;
 	}
 
-	private Optional<ExceptionHandler<? super Exception>> getHandlerFromParent(Class<? extends Exception> clazz) {
-		if (clazz == Exception.class) {
-			return Optional.empty();
-		}
+	private static Writer chooseWriter(Map<MediaType, Writer> writers, MediaType acceptHeader) {
+		Writer writer = writers.get(acceptHeader);
+		if (isNull(writer))
+			writer = writers.get(acceptHeader.getProcessingType()
+				.orElseThrow(internalServerErrorSupplier()));
 
-		Class<?> superClazz = clazz.getSuperclass();
-		while (superClazz != Exception.class) {
-			ExceptionHandler<? super Exception> handler = handlers.get(clazz);
-			if (handler != null) {
-				return Optional.of(handler);
-			}
+		if (isNull(writer))
+			throw internalServerErrorSupplier().get();
 
-			superClazz = superClazz.getSuperclass();
-		}
-
-		return Optional.empty();
+		return writer;
 	}
 
 	private void writeEntity(final InternalRequest<?> request, final InternalResponse<?> response) {
@@ -90,5 +59,23 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 			Writer writer = chooseWriter(writers, acceptHeader);
 			writer.writeTo(response);
 		}
+	}
+
+	private Optional<TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>>
+			getHandlerFromParent(Class<? extends Exception> clazz) {
+		if (clazz == Exception.class) {
+			return Optional.empty();
+		}
+
+		Class<?> superClazz = clazz.getSuperclass();
+		while (superClazz != Exception.class) {
+			TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception> handler = handlers.get(clazz);
+			if (nonNull(handler))
+				return Optional.of(handler);
+
+			superClazz = superClazz.getSuperclass();
+		}
+
+		return Optional.empty();
 	}
 }

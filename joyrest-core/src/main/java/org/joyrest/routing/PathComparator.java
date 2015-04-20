@@ -14,7 +14,7 @@ import com.codepoetics.protonpack.StreamUtils;
  *
  * @author pbouda
  */
-public class PathComparator implements BiPredicate<EntityRoute, InternalRequest<?>> {
+public class  PathComparator implements BiPredicate<EntityRoute, InternalRequest<?>> {
 
 	/**
 	 * Compares the route part (part which is configured) and the path part (part which is gained from the client).
