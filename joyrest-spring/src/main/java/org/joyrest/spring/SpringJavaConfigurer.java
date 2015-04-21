@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joyrest.context.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.DependencyInjectionConfigurer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author pbouda
  */
-public final class SpringJavaConfigurer extends AbstractConfigurer<Object> {
+public final class SpringJavaConfigurer extends DependencyInjectionConfigurer<Object> {
 
 	private org.springframework.context.ApplicationContext context = null;
 
