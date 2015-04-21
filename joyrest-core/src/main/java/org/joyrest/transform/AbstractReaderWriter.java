@@ -1,16 +1,16 @@
 package org.joyrest.transform;
 
-import org.joyrest.routing.EntityRoute;
+import org.joyrest.routing.InternalRoute;
 
 public abstract class AbstractReaderWriter implements Reader, Writer {
 
 	@Override
-	public boolean isReaderCompatible(EntityRoute route) {
+	public boolean isReaderCompatible(InternalRoute route) {
 		return route.getConsumes().contains(getMediaType());
 	}
 
 	@Override
-	public boolean isWriterCompatible(EntityRoute route) {
+	public boolean isWriterCompatible(InternalRoute route) {
 		return route.getProduces().contains(getMediaType());
 	}
 

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.function.TriConsumer;
+import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
@@ -17,59 +17,43 @@ import org.joyrest.transform.Writer;
 
 public class ExceptionProcessorImpl implements ExceptionProcessor {
 
-	private final Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> handlers;
-
-	private final Map<MediaType, Writer> writers;
+	private final Map<Class<? extends Exception>, InternalExceptionHandler> handlers;
 
 	public ExceptionProcessorImpl(ApplicationContext config) {
 		this.handlers = config.getExceptionHandlers();
-		this.writers = config.getExceptionWriters();
 	}
 
 	@Override
 	public <T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request, InternalResponse<?> response)
 			throws Exception {
 		Class<? extends Exception> clazz = ex.getClass();
-		@SuppressWarnings("rawtypes")
-		TriConsumer handler = handlers.get(ex.getClass());
+		InternalExceptionHandler handler = handlers.get(clazz);
 
 		if (isNull(handler))
 			handler = getHandlerFromParent(clazz).orElseThrow(() -> ex);
 
-		handler.accept(request, response, ex);
-		writeEntity(request, response);
+		handler.execute(request, response, ex);
+		writeEntity(handler, request, response);
 		return response;
 	}
 
-	private static Writer chooseWriter(Map<MediaType, Writer> writers, MediaType acceptHeader) {
-		Writer writer = writers.get(acceptHeader);
-		if (isNull(writer))
-			writer = writers.get(acceptHeader.getProcessingType()
-				.orElseThrow(internalServerErrorSupplier()));
-
-		if (isNull(writer))
-			throw internalServerErrorSupplier().get();
-
-		return writer;
-	}
-
-	private void writeEntity(final InternalRequest<?> request, final InternalResponse<?> response) {
+	private void writeEntity(InternalExceptionHandler handler, InternalRequest<?> request, InternalResponse<?> response) {
 		if (response.getEntity().isPresent()) {
 			MediaType acceptHeader = request.getHeader(ACCEPT).map(MediaType::of).get();
-			Writer writer = chooseWriter(writers, acceptHeader);
+			Writer writer = handler.getWriter(acceptHeader)
+				.orElseThrow(internalServerErrorSupplier());
 			writer.writeTo(response);
 		}
 	}
 
-	private Optional<TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>>
-			getHandlerFromParent(Class<? extends Exception> clazz) {
+	private Optional<InternalExceptionHandler> getHandlerFromParent(Class<? extends Exception> clazz) {
 		if (clazz == Exception.class) {
 			return Optional.empty();
 		}
 
 		Class<?> superClazz = clazz.getSuperclass();
 		while (superClazz != Exception.class) {
-			TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception> handler = handlers.get(clazz);
+			InternalExceptionHandler handler = handlers.get(clazz);
 			if (nonNull(handler))
 				return Optional.of(handler);
 

@@ -3,7 +3,7 @@ package org.joyrest.ittest.config;
 import org.joyrest.ittest.ContentTypeController;
 import org.joyrest.ittest.RequestResponseDataController;
 import org.joyrest.ittest.StatusController;
-import org.joyrest.ittest.TestExceptionConfiguration;
+import org.joyrest.ittest.exception.TestExceptionConfiguration;
 import org.joyrest.ittest.exception.ExceptionController;
 import org.joyrest.ittest.path.PathRouteController1;
 import org.joyrest.ittest.path.PathRouteController2;

@@ -29,13 +29,13 @@ import org.joyrest.transform.Writer;
 import org.joyrest.utils.PathUtils;
 
 /**
- * Container for all information about one route {@link EntityRoute}
+ * Container for all information about one route {@link InternalRoute}
  *
  * @author pbouda
  */
-public class EntityRoute implements Route {
+public class InternalRoute implements Route {
 
-	private final static JoyLogger logger = new JoyLogger(EntityRoute.class);
+	private final static JoyLogger logger = new JoyLogger(InternalRoute.class);
 
 	private final static String SLASH = "/";
 
@@ -50,17 +50,23 @@ public class EntityRoute implements Route {
 	}
 
 	private final HttpMethod httpMethod;
+
 	/* List of the all path's parts which contains this route */
 	private final List<RoutePart<?>> routeParts;
+
 	/* Map of the all path params which contains this route */
 	private final Map<String, RoutePart<?>> pathParams = new HashMap<>();
+
 	/* Parser what is responsible for getting params from the given path */
 	private final ParamParser PARAM_PARSER = new ParamParser();
-	/* All Readers added to the application */
+
+	/* All Readers and Writers added to the application dedicated for this route */
 	private Map<MediaType, Reader> readers = new HashMap<>();
 	private Map<MediaType, Writer> writers = new HashMap<>();
+
 	/* It is not FINAL because of adding a global path */
 	private String path;
+
 	/* Flag that indicates having a resource path in the list of the RouteParts */
 	private boolean hasGlobalPath = false;
 
@@ -79,8 +85,8 @@ public class EntityRoute implements Route {
 	private Type<?> requestType;
 	private Type<?> responseType;
 
-	public <REQ, RESP> EntityRoute(String path, HttpMethod httpMethod, BiConsumer<Request<REQ>, Response<RESP>> action,
-			Type<REQ> requestClazz, Type<RESP> responseClazz) {
+	public <REQ, RESP> InternalRoute(String path, HttpMethod httpMethod, BiConsumer<Request<REQ>, Response<RESP>> action,
+		Type<REQ> requestClazz, Type<RESP> responseClazz) {
 		this.path = path;
 		this.httpMethod = httpMethod;
 		this.action = action;
@@ -174,12 +180,6 @@ public class EntityRoute implements Route {
 		return Objects.nonNull(requestType);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @param request
-	 */
-	@SuppressWarnings("unchecked")
 	public InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response) {
 		action.accept(ImmutableRequest.of(request), response);
 		return response;
@@ -189,11 +189,16 @@ public class EntityRoute implements Route {
 		return Collections.unmodifiableList(aspects);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Optional<Reader> getReader(MediaType mediaType) {
 		return Optional.ofNullable(readers.get(mediaType));
+	}
+
+	public Map<MediaType, Reader> getReaders() {
+		return readers;
+	}
+
+	public Map<MediaType, Writer> getWriters() {
+		return writers;
 	}
 
 	public void setReaders(Map<MediaType, Reader> readers) {
@@ -206,9 +211,6 @@ public class EntityRoute implements Route {
 		this.readers.put(reader.getMediaType(), reader);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Optional<Writer> getWriter(MediaType mediaType) {
 		return Optional.ofNullable(writers.get(mediaType));
 	}
@@ -237,7 +239,7 @@ public class EntityRoute implements Route {
 			return false;
 		}
 		@SuppressWarnings("unchecked")
-		final EntityRoute other = (EntityRoute) obj;
+		final InternalRoute other = (InternalRoute) obj;
 		return Objects.equals(this.httpMethod, other.httpMethod)
 				&& Objects.equals(this.path, other.path);
 	}

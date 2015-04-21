@@ -3,12 +3,9 @@ package org.joyrest.context;
 import java.util.Map;
 import java.util.Set;
 
-import org.joyrest.exception.handler.ExceptionHandler;
-import org.joyrest.function.TriConsumer;
+import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.model.http.MediaType;
-import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.response.InternalResponse;
-import org.joyrest.routing.EntityRoute;
+import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.Writer;
 
 /**
@@ -20,23 +17,17 @@ import org.joyrest.transform.Writer;
 public interface ApplicationContext {
 
 	/**
-	 * Returns all instances of {@link org.joyrest.routing.EntityRoute} that were added into an application
+	 * Returns all instances of {@link InternalRoute} that were added into an application
 	 *
-	 * @return collection of {@link org.joyrest.routing.EntityRoute} configured into an application
+	 * @return collection of {@link InternalRoute} configured into an application
 	 */
-	Set<EntityRoute> getRoutes();
+	Set<InternalRoute> getRoutes();
 
 	/**
 	 * Returns all instances of exception handlers that were added into an application
 	 *
 	 * @return map of exception handlers configured into an application
 	 */
-	Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> getExceptionHandlers();
+	Map<Class<? extends Exception>, InternalExceptionHandler> getExceptionHandlers();
 
-	/**
-	 * Returns all instances of exception writers that were added into an application
-	 *
-	 * @return map of exception writers configured into an application
-	 */
-	Map<MediaType, Writer> getExceptionWriters();
 }

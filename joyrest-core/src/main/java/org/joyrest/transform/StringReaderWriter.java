@@ -2,6 +2,7 @@ package org.joyrest.transform;
 
 import java.io.*;
 import java.io.Writer;
+import java.util.Optional;
 
 import org.joyrest.exception.type.RestException;
 import org.joyrest.model.http.HttpStatus;
@@ -40,6 +41,11 @@ public class StringReaderWriter extends AbstractReaderWriter {
 		} catch (IOException e) {
 			throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "IO Exception occurred during writing from String");
 		}
+	}
+
+	@Override
+	public Optional<Class<?>> getWriterCompatibleClass() {
+		return Optional.empty();
 	}
 
 	@Override

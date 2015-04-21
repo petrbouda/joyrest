@@ -8,15 +8,15 @@ import java.util.Queue;
 
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.routing.EntityRoute;
+import org.joyrest.routing.InternalRoute;
 
 public class AspectChainImpl implements AspectChain {
 
 	private final Queue<Aspect> aspects = new ArrayDeque<>();
 
-	private final EntityRoute route;
+	private final InternalRoute route;
 
-	public AspectChainImpl(EntityRoute route) {
+	public AspectChainImpl(InternalRoute route) {
 		requireNonNull(route);
 		this.route = route;
 		this.aspects.addAll(route.getAspects());
@@ -34,7 +34,7 @@ public class AspectChainImpl implements AspectChain {
 	}
 
 	@Override
-	public EntityRoute getRoute() {
+	public InternalRoute getRoute() {
 		return route;
 	}
 }

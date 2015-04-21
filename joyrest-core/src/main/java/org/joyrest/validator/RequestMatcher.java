@@ -14,18 +14,18 @@ import java.util.Optional;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.routing.EntityRoute;
+import org.joyrest.routing.InternalRoute;
 
 public final class RequestMatcher {
 
 	private RequestMatcher() {
 	}
 
-	public static boolean matchNonEmptyList(EntityRoute route) {
+	public static boolean matchNonEmptyList(InternalRoute route) {
 		return Objects.nonNull(route);
 	}
 
-	public static boolean matchAccept(EntityRoute route, InternalRequest<?> request) {
+	public static boolean matchAccept(InternalRoute route, InternalRequest<?> request) {
 		Optional<String> optAccept = request.getHeader(ACCEPT);
 
 		if (optAccept.isPresent()) {
@@ -60,7 +60,7 @@ public final class RequestMatcher {
 		}
 	}
 
-	public static boolean matchContentType(EntityRoute route, InternalRequest<?> request) {
+	public static boolean matchContentType(InternalRoute route, InternalRequest<?> request) {
 		Optional<String> optContentType = request.getHeader(CONTENT_TYPE);
 		MediaType contentType;
 		if (!optContentType.isPresent()) {
@@ -80,7 +80,7 @@ public final class RequestMatcher {
 		}
 	}
 
-	public static boolean matchHttpMethod(EntityRoute route, InternalRequest<?> request) {
+	public static boolean matchHttpMethod(InternalRoute route, InternalRequest<?> request) {
 		return route.getHttpMethod() == request.getMethod();
 	}
 }

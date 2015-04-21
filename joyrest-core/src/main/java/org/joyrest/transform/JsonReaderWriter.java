@@ -1,6 +1,7 @@
 package org.joyrest.transform;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
@@ -30,6 +31,11 @@ public class JsonReaderWriter extends AbstractReaderWriter {
 		} catch (IOException e) {
 			throw new RuntimeException("An error occurred during unmarshalling from JSON.");
 		}
+	}
+
+	@Override
+	public Optional<Class<?>> getWriterCompatibleClass() {
+		return Optional.empty();
 	}
 
 	@Override

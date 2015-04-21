@@ -14,7 +14,7 @@ import com.codepoetics.protonpack.StreamUtils;
  *
  * @author pbouda
  */
-public class  PathComparator implements BiPredicate<EntityRoute, InternalRequest<?>> {
+public class  PathComparator implements BiPredicate<InternalRoute, InternalRequest<?>> {
 
 	/**
 	 * Compares the route part (part which is configured) and the path part (part which is gained from the client).
@@ -50,7 +50,7 @@ public class  PathComparator implements BiPredicate<EntityRoute, InternalRequest
 	 * @return returns true if all parts are equal
 	 **/
 	@Override
-	public boolean test(EntityRoute route, InternalRequest<?> request) {
+	public boolean test(InternalRoute route, InternalRequest<?> request) {
 		List<String> pathParts = request.getPathParts();
 		List<RoutePart<?>> routeParts = route.getRouteParts();
 		if (routeParts.size() != pathParts.size()) {

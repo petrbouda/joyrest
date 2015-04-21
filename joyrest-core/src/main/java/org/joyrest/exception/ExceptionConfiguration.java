@@ -1,15 +1,13 @@
 package org.joyrest.exception;
 
-import java.util.Map;
+import java.util.Set;
 
-import org.joyrest.function.TriConsumer;
-import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.response.InternalResponse;
+import org.joyrest.exception.handler.InternalExceptionHandler;
 
 public interface ExceptionConfiguration {
 
 	void initialize();
 
-	Map<Class<? extends Exception>, TriConsumer<InternalRequest<?>, InternalResponse<?>, ? extends Exception>> getExceptionHandlers();
+	Set<InternalExceptionHandler> getExceptionHandlers();
 
 }

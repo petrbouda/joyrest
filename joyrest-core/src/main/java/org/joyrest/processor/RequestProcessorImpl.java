@@ -17,7 +17,7 @@ import org.joyrest.model.http.PathParam;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.routing.EntityRoute;
+import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.strategy.CachedRouteResolver;
 import org.joyrest.routing.strategy.DefaultRouteResolver;
 import org.joyrest.routing.strategy.RouteResolver;
@@ -63,7 +63,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 	@SuppressWarnings("unchecked")
 	private InternalResponse<?> processRequest(final InternalRequest<?> request, final InternalResponse<?> response) {
-		final EntityRoute route = cachedRouteResolver.resolveRoute(request)
+		final InternalRoute route = cachedRouteResolver.resolveRoute(request)
 			.chainEmpty(defaultRouteResolver.resolveRoute(request))
 			.orElseThrow(notFoundSupplier());
 
@@ -73,7 +73,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 		return chain.proceed(request, response);
 	}
 
-	private Map<String, PathParam> resolvePathParams(final EntityRoute route, final Request<?> request) {
+	private Map<String, PathParam> resolvePathParams(final InternalRoute route, final Request<?> request) {
 		return StreamUtils
 			.zip(route.getRouteParts().stream(), request.getPathParts().stream(), pathParamExtractor)
 			.filter(Objects::nonNull)

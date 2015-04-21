@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.routing.EntityRoute;
+import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.PathComparator;
 import org.joyrest.stream.BiStream;
 import org.joyrest.utils.OptionalChain;
@@ -19,15 +19,15 @@ public class DefaultRouteResolver implements RouteResolver {
 	private final PathComparator pathComparator = new PathComparator();
 
 	/* All routes configures in an application */
-	private final Set<EntityRoute> routes;
+	private final Set<InternalRoute> routes;
 
 	public DefaultRouteResolver(ApplicationContext context) {
 		this.routes = context.getRoutes();
 	}
 
 	@Override
-	public OptionalChain<EntityRoute> resolveRoute(InternalRequest<?> request) {
-		Optional<EntityRoute> route = BiStream.of(routes.stream(), request)
+	public OptionalChain<InternalRoute> resolveRoute(InternalRequest<?> request) {
+		Optional<InternalRoute> route = BiStream.of(routes.stream(), request)
 			.throwFilter(pathComparator, notFoundSupplier())
 			.throwFilter(RequestMatcher::matchNonEmptyList, notFoundSupplier())
 			.throwFilter(RequestMatcher::matchHttpMethod, notFoundSupplier())

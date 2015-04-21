@@ -1,23 +1,33 @@
 package org.joyrest.exception;
 
+import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.function.TriConsumer;
-import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.response.InternalResponse;
-import org.joyrest.routing.entity.RequestType;
+import org.joyrest.model.request.Request;
+import org.joyrest.model.response.Response;
+import org.joyrest.routing.entity.ResponseCollectionType;
 import org.joyrest.routing.entity.ResponseType;
+import org.joyrest.routing.entity.Type;
 
 public abstract class TypedExceptionConfiguration extends AbstractExceptionConfiguration {
 
-	protected final <T extends Exception> void exception(Class<T> clazz,
-			TriConsumer<InternalRequest<?>, InternalResponse<?>, T> handler) {
-		putHandler(clazz, handler);
+	protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
+			TriConsumer<Request<?>, Response<RESP>, T> handler) {
+		return putHandler(clazz, handler, null);
 	}
 
-	protected final <T extends Exception, REQ, RESP> void exception(Class<T> clazz,
-			TriConsumer<InternalRequest<REQ>, InternalResponse<RESP>, T> handler, RequestType<REQ> req, ResponseType<RESP> resp) {
-		putHandler(clazz, handler);
+	protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
+			TriConsumer<Request<?>, Response<RESP>, T> handler, Class<RESP> reqResp) {
+		return putHandler(clazz, handler, new Type<>(reqResp));
 	}
 
-	// TODO Rest of the exceptions
+	protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
+			TriConsumer<Request<?>, Response<RESP>, T> handler, ResponseType<RESP> resp) {
+		return putHandler(clazz, handler, resp);
+	}
+
+	protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
+			TriConsumer<Request<?>, Response<RESP>, T> handler, ResponseCollectionType<RESP> resp) {
+		return putHandler(clazz, handler, resp);
+	}
 
 }

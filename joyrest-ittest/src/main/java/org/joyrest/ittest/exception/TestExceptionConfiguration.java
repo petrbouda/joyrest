@@ -1,6 +1,5 @@
-package org.joyrest.ittest;
+package org.joyrest.ittest.exception;
 
-import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseType.Resp;
 
 import org.joyrest.exception.TypedExceptionConfiguration;
@@ -11,9 +10,9 @@ public class TestExceptionConfiguration extends TypedExceptionConfiguration {
 	@Override
 	protected void configure() {
 
-		exception(NumberFormatException.class, (req, resp, ex) -> {
+		handle(NumberFormatException.class, (req, resp, ex) -> {
 
-		}, Req(FeedEntry.class), Resp(FeedEntry.class));
+		}, Resp(FeedEntry.class));
 
 	}
 

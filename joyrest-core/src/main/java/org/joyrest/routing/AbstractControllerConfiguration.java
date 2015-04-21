@@ -27,7 +27,7 @@ import org.joyrest.utils.PathUtils;
 public abstract class AbstractControllerConfiguration implements ControllerConfiguration {
 
 	/* Set of routes which are configured in an inherited class */
-	private final Set<EntityRoute> routes = new HashSet<>();
+	private final Set<InternalRoute> routes = new HashSet<>();
 
 	/* Class validates and customized given path */
 	private final PathCorrector pathCorrector = new PathCorrector();
@@ -79,14 +79,14 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<EntityRoute> getRoutes() {
+	public Set<InternalRoute> getRoutes() {
 		return routes;
 	}
 
-	protected <REQ, RESP> EntityRoute createEntityRoute(HttpMethod method, String path,
+	protected <REQ, RESP> InternalRoute createEntityRoute(HttpMethod method, String path,
 			BiConsumer<Request<REQ>, Response<RESP>> action, Type<REQ> reqClazz, Type<RESP> respClazz) {
 		final String correctPath = pathCorrector.apply(path);
-		final EntityRoute route = new EntityRoute(correctPath, method, action, reqClazz, respClazz);
+		final InternalRoute route = new InternalRoute(correctPath, method, action, reqClazz, respClazz);
 		routes.add(route);
 		return route;
 	}

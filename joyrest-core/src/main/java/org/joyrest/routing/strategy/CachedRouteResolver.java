@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.routing.EntityRoute;
+import org.joyrest.routing.InternalRoute;
 import org.joyrest.utils.OptionalChain;
 
 public class CachedRouteResolver implements RouteResolver {
@@ -17,7 +17,7 @@ public class CachedRouteResolver implements RouteResolver {
 	}
 
 	@Override
-	public OptionalChain<EntityRoute> resolveRoute(InternalRequest<?> request) {
+	public OptionalChain<InternalRoute> resolveRoute(InternalRequest<?> request) {
 		// TODO cache values into the ConcurrentHashMap
 		return new OptionalChain<>(Optional.empty());
 	}
