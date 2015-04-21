@@ -1,5 +1,6 @@
 package org.joyrest.examples.getstarted;
 
+import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseCollectionType.RespList;
 
 import java.util.Arrays;
@@ -25,7 +26,8 @@ public class JokeController extends TypedControllerConfiguration {
 			response.entity(Arrays.asList(savedJoke))
 				.status(HttpStatus.CREATED)
 				.header(HeaderName.LOCATION, getEntityLocation(savedJoke.getId(), request.getPath()));
-		}, Joke.class, RespList(Joke.class)).consumes(MediaType.JSON).produces(MediaType.JSON);
+		}, Req(Joke.class), RespList(Joke.class))
+			.consumes(MediaType.JSON).produces(MediaType.JSON);
 
 		// post((request, response) -> {
 		// Joke savedJoke = service.save(null);

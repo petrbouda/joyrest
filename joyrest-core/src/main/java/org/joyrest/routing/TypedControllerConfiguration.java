@@ -22,13 +22,13 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	/* --------------- POST ROUTES --------------- */
 
 	protected final <REQ, RESP> Route post(
-			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, Class<RESP> resp) {
-		return createEntityRoute(HttpMethod.POST, "", action, req, new Type<>(resp));
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route post(String path,
-			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, Class<RESP> resp) {
-		return createEntityRoute(HttpMethod.POST, path, action, req, new Type<>(resp));
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route post(
@@ -42,13 +42,13 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	}
 
 	protected final <REQ, RESP> Route post(
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseCollectionType<RESP> resp) {
-		return createEntityRoute(HttpMethod.POST, "", action, new Type<>(req), resp);
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseCollectionType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route post(String path,
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseCollectionType<RESP> resp) {
-		return createEntityRoute(HttpMethod.POST, path, action, new Type<>(req), resp);
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseCollectionType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, resp);
 	}
 
 	protected final <R> Route post(BiConsumer<Request<R>, Response<R>> action, Class<R> reqResp) {
@@ -119,13 +119,13 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	/* ---------------- GET ROUTES ---------------- */
 
 	protected final <REQ, RESP> Route get(
-			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, Class<RESP> resp) {
-		return createEntityRoute(HttpMethod.GET, "", action, req, new Type<>(resp));
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.GET, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route get(String path,
-			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, Class<RESP> resp) {
-		return createEntityRoute(HttpMethod.GET, path, action, req, new Type<>(resp));
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.GET, path, action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route get(
@@ -139,13 +139,13 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	}
 
 	protected final <REQ, RESP> Route get(
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseCollectionType<RESP> resp) {
-		return createEntityRoute(HttpMethod.GET, "", action, new Type<>(req), resp);
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseCollectionType<RESP> resp) {
+		return createEntityRoute(HttpMethod.GET, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route get(String path,
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseCollectionType<RESP> resp) {
-		return createEntityRoute(HttpMethod.GET, path, action, new Type<>(req), resp);
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseCollectionType<RESP> resp) {
+		return createEntityRoute(HttpMethod.GET, path, action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route get(
@@ -211,13 +211,13 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	/* ---------------- PUT ROUTES ---------------- */
 
 	protected final <REQ, RESP> Route put(
-			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, Class<RESP> resp) {
-		return createEntityRoute(HttpMethod.PUT, "", action, req, new Type<>(resp));
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.PUT, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route put(String path,
-			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, Class<RESP> resp) {
-		return createEntityRoute(HttpMethod.PUT, path, action, req, new Type<>(resp));
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.PUT, path, action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route put(
@@ -231,13 +231,13 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	}
 
 	protected final <REQ, RESP> Route put(
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseCollectionType<RESP> resp) {
-		return createEntityRoute(HttpMethod.PUT, "", action, new Type<>(req), resp);
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseCollectionType<RESP> resp) {
+		return createEntityRoute(HttpMethod.PUT, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route put(String path,
-			BiConsumer<Request<REQ>, Response<RESP>> action, Class<REQ> req, ResponseCollectionType<RESP> resp) {
-		return createEntityRoute(HttpMethod.PUT, path, action, new Type<>(req), resp);
+			BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseCollectionType<RESP> resp) {
+		return createEntityRoute(HttpMethod.PUT, path, action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route put(
