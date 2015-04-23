@@ -2,13 +2,13 @@ package org.joyrest.ittest;
 
 import static com.jayway.restassured.RestAssured.given;
 
-import org.joyrest.ittest.setup.AbstractBasicIT;
+import org.joyrest.ittest.setup.AbstractRestIntegrationTest;
 import org.joyrest.model.http.HttpStatus;
 import org.junit.Test;
 
 import com.jayway.restassured.http.ContentType;
 
-public class ContentTypeIT extends AbstractBasicIT {
+public class ContentTypeIT extends AbstractRestIntegrationTest {
 
 	@Test
 	public void content_type_wildcard() {

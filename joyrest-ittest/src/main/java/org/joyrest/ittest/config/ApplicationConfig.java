@@ -3,8 +3,7 @@ package org.joyrest.ittest.config;
 import org.joyrest.ittest.ContentTypeController;
 import org.joyrest.ittest.RequestResponseDataController;
 import org.joyrest.ittest.StatusController;
-import org.joyrest.ittest.exception.TestExceptionConfiguration;
-import org.joyrest.ittest.exception.ExceptionController;
+import org.joyrest.ittest.exception.ExceptionConfig;
 import org.joyrest.ittest.path.PathRouteController1;
 import org.joyrest.ittest.path.PathRouteController2;
 import org.joyrest.ittest.path.PathRouteController3;
@@ -19,8 +18,10 @@ import org.joyrest.transform.JsonReaderWriter;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import({ ExceptionConfig.class })
 public class ApplicationConfig {
 
 	// STATUS -----------------------------------------
@@ -84,16 +85,6 @@ public class ApplicationConfig {
 	}
 
 	// EXCEPTION-TEST ---------------------------------
-
-	@Bean
-	ControllerConfiguration exceptionController() {
-		return new ExceptionController();
-	}
-
-	@Bean
-	TestExceptionConfiguration testExceptionConfiguration() {
-		return new TestExceptionConfiguration();
-	}
 
 	@Bean
 	JsonReaderWriter jsonReaderRegistrar() {

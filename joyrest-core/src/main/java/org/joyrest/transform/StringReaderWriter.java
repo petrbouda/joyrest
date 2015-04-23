@@ -2,7 +2,6 @@ package org.joyrest.transform;
 
 import java.io.*;
 import java.io.Writer;
-import java.util.Optional;
 
 import org.joyrest.exception.type.RestException;
 import org.joyrest.model.http.HttpStatus;
@@ -44,8 +43,8 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	}
 
 	@Override
-	public Optional<Class<?>> getWriterCompatibleClass() {
-		return Optional.empty();
+	public boolean isWriterClassCompatible(Class<?> clazz) {
+		return true;
 	}
 
 	@Override

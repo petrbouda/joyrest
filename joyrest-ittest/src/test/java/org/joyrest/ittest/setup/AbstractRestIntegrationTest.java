@@ -5,17 +5,17 @@ import java.util.Date;
 import org.joyrest.ittest.config.Application;
 import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.logging.JoyLogger;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.*;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.IntegrationTestPropertiesListener;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,18 +29,11 @@ import com.jayway.restassured.RestAssured;
 @TestExecutionListeners(listeners = {
 		IntegrationTestPropertiesListener.class,
 		DependencyInjectionTestExecutionListener.class })
-public abstract class AbstractBasicIT {
-
-	private static JoyLogger log = new JoyLogger(AbstractBasicIT.class);
+public abstract class AbstractRestIntegrationTest {
 
 	public static final ObjectMapper mapper = new ObjectMapper();
 	public static String feedEntity = null;
-
-	@Value("${local.server.port}")
-	protected int port;
-
-	@Rule
-	public TestName name = new TestName();
+	private static JoyLogger log = new JoyLogger(AbstractRestIntegrationTest.class);
 
 	static {
 		try {
@@ -55,14 +48,19 @@ public abstract class AbstractBasicIT {
 		}
 	}
 
+	@Rule
+	public TestName name = new TestName();
+	@Value("${local.server.port}")
+	protected int port;
+
 	@Before
 	public void setUp() {
 		RestAssured.port = port;
 
 		log.debug(() ->
 			"\n ------------------------------------------------------ \n " +
-			"# Run test: " + name.getMethodName() +
-			"\n ------------------------------------------------------");
+					"# Run test: " + name.getMethodName() +
+					"\n ------------------------------------------------------");
 	}
 
 }

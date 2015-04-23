@@ -48,6 +48,10 @@ public class RestException extends RuntimeException {
 		return () -> new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
 	}
 
+	public static Supplier<RestException> internalServerErrorSupplier(String msg) {
+		return () -> new RestException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
+	}
+
 	public InternalResponse<?> getResponse() {
 		return response;
 	}

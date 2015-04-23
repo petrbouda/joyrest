@@ -3,12 +3,13 @@ package org.joyrest.ittest.route;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-import org.joyrest.ittest.setup.AbstractBasicIT;
+import org.joyrest.ittest.setup.AbstractRestIntegrationTest;
 import org.joyrest.model.http.HttpStatus;
 import org.junit.Test;
+
 import com.jayway.restassured.http.ContentType;
 
-public class GetRouteIT extends AbstractBasicIT {
+public class GetRouteIT extends AbstractRestIntegrationTest {
 
 	@Test
 	public void get_route_no_path() {

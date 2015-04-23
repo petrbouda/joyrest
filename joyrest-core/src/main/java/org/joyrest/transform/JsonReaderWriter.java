@@ -1,7 +1,6 @@
 package org.joyrest.transform;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
@@ -34,8 +33,8 @@ public class JsonReaderWriter extends AbstractReaderWriter {
 	}
 
 	@Override
-	public Optional<Class<?>> getWriterCompatibleClass() {
-		return Optional.empty();
+	public boolean isWriterClassCompatible(Class<?> clazz) {
+		return true;
 	}
 
 	@Override

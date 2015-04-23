@@ -29,16 +29,90 @@ import org.joyrest.transform.aspect.SerializationAspect;
 @SuppressWarnings("rawtypes")
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
-	private final static JoyLogger log = new JoyLogger(AbstractConfigurer.class);
-
 	/* ServiceLocator name in its own context */
 	public static final String JOYREST_BEAN_CONTEXT = "JoyRestBeanContext";
-
-	private final StringReaderWriter stringReaderWriter = new StringReaderWriter();
-
+	private final static JoyLogger log = new JoyLogger(AbstractConfigurer.class);
 	protected final List<Aspect> REQUIRED_ASPECTS = singletonList(new SerializationAspect());
+	private final StringReaderWriter stringReaderWriter = new StringReaderWriter();
 	protected final List<Reader> REQUIRED_READERS = singletonList(stringReaderWriter);
 	protected final List<Writer> REQUIRED_WRITERS = singletonList(stringReaderWriter);
+
+	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform, List<T> additional) {
+		transform.addAll(additional);
+		return transform.stream()
+			.collect(partitioningBy(General::isGeneral));
+	}
+
+	private static void populateRouteReaders(Map<Boolean, List<Reader>> readers, InternalRoute route, boolean condition) {
+		if (condition) {
+			readers.get(Boolean.TRUE).stream().distinct()
+				.filter(transformer -> transformer.isReaderCompatible(route))
+				.forEach(route::addReader);
+
+			readers.get(Boolean.FALSE).stream().distinct()
+				.filter(reader -> reader.isReaderCompatible(route))
+				.forEach(route::addReader);
+		}
+	}
+
+	private static void populateRouteWriters(Map<Boolean, List<Writer>> writers, InternalRoute route, boolean condition) {
+		if (condition) {
+			writers.get(Boolean.TRUE).stream().distinct()
+				.filter(writer -> writer.isWriterCompatible(route))
+				.forEach(route::addWriter);
+
+			writers.get(Boolean.FALSE).stream().distinct()
+				.filter(writer -> writer.isWriterCompatible(route))
+				.forEach(route::addWriter);
+		}
+	}
+
+	private static void populateHandlerWriters(Map<Boolean, List<Writer>> writers, InternalExceptionHandler handler, boolean condition) {
+		if (condition) {
+			writers.get(Boolean.TRUE).stream().distinct()
+				.forEach(handler::addWriter);
+
+			writers.get(Boolean.FALSE).stream().distinct()
+				.filter(writer -> writer.isWriterClassCompatible(handler.getResponseType().getType()))
+				.forEach(handler::addWriter);
+		}
+	}
+
+	private static void logRoute(InternalRoute route) {
+		log.info(() -> String.format(
+				"Route instantiated: METHOD[%s], PATH[%s], CONSUMES[%s], PRODUCES[%s], REQ-CLASS[%s], RESP-CLASS[%s]",
+				route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
+				route.getRequestType(), route.getResponseType()));
+	}
+
+	private static void logExceptionHandler(InternalExceptionHandler handler) {
+		log.info(() -> String.format("Exception Handler instantiated: EXCEPTION-CLASS[%s], RESP-CLASS[%s]",
+				handler.getExceptionClass(), handler.getResponseType()));
+	}
+
+	private static void logRouteReaders(InternalRoute route) {
+		route.getReaders().forEach((type, reader) ->
+				log.debug(() -> String.format("Reader [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
+						reader.getClass().getSimpleName(), reader.getMediaType(), route.getHttpMethod(), route.getPath())));
+	}
+
+	private static void logRouteWriters(InternalRoute route) {
+		route.getWriters().forEach((type, writer) ->
+				log.debug(() -> String.format("Writer [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
+						writer.getClass().getSimpleName(), writer.getMediaType(), route.getHttpMethod(), route.getPath())));
+	}
+
+	private static void logHandlerWriters(InternalExceptionHandler handler) {
+		handler.getWriters().forEach((type, writer) ->
+				log.debug(() -> String.format("Writer [%s, %s] added to the Exception Handler [EXCEPTION-CLASS[%s]]",
+						writer.getClass().getSimpleName(), writer.getMediaType(), handler.getExceptionClass())));
+	}
+
+	private static void logAspects(InternalRoute route) {
+		route.getAspects().forEach(aspect ->
+				log.debug(() -> String.format("Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
+						aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
+	}
 
 	protected abstract Collection<Aspect> getAspects();
 
@@ -95,84 +169,6 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		context.setRoutes(routes);
 		context.setExceptionHandlers(handlers);
 		return context;
-	}
-
-	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform, List<T> additional) {
-		transform.addAll(additional);
-		return transform.stream()
-			.collect(partitioningBy(General::isGeneral));
-	}
-
-	private static void populateRouteReaders(Map<Boolean, List<Reader>> readers, InternalRoute route, boolean condition) {
-		if (condition) {
-			readers.get(Boolean.TRUE).stream().distinct()
-				.filter(transformer -> transformer.isReaderCompatible(route))
-				.forEach(route::addReader);
-
-			readers.get(Boolean.FALSE).stream().distinct()
-				.filter(reader -> reader.isReaderCompatible(route))
-				.forEach(route::addReader);
-		}
-	}
-
-	private static void populateRouteWriters(Map<Boolean, List<Writer>> writers, InternalRoute route, boolean condition) {
-		if (condition) {
-			writers.get(Boolean.TRUE).stream().distinct()
-				.filter(writer -> writer.isWriterCompatible(route))
-				.forEach(route::addWriter);
-
-			writers.get(Boolean.FALSE).stream().distinct()
-				.filter(writer -> writer.isWriterCompatible(route))
-				.forEach(route::addWriter);
-		}
-	}
-
-	private static void populateHandlerWriters(Map<Boolean, List<Writer>> writers, InternalExceptionHandler handler, boolean condition) {
-		if (condition) {
-			writers.get(Boolean.TRUE).stream().distinct()
-				.forEach(handler::addWriter);
-
-			writers.get(Boolean.FALSE).stream().distinct()
-				.filter(writer -> writer.getWriterCompatibleClass().isPresent())
-				.filter(writer -> writer.getWriterCompatibleClass().get() == handler.getExceptionClass())
-				.forEach(handler::addWriter);
-		}
-	}
-
-	private static void logRoute(InternalRoute route) {
-		log.info(() -> String.format(
-				"Route instantiated: METHOD[%s], PATH[%s], CONSUMES[%s], PRODUCES[%s], REQ-CLASS[%s], RESP-CLASS[%s]",
-				route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
-				route.getRequestType(), route.getResponseType()));
-	}
-
-	private static void logExceptionHandler(InternalExceptionHandler handler) {
-		log.info(() -> String.format("Exception Handler instantiated: EXCEPTION-CLASS[%s], RESP-CLASS[%s]",
-				handler.getExceptionClass(), handler.getResponseType()));
-	}
-
-	private static void logRouteReaders(InternalRoute route) {
-		route.getReaders().forEach((type, reader) ->
-				log.debug(() -> String.format("Reader [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
-						reader.getClass().getSimpleName(), reader.getMediaType(), route.getHttpMethod(), route.getPath())));
-	}
-
-	private static void logRouteWriters(InternalRoute route) {
-		route.getWriters().forEach((type, writer) ->
-				log.debug(() -> String.format("Writer [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
-						writer.getClass().getSimpleName(), writer.getMediaType(), route.getHttpMethod(), route.getPath())));
-	}
-
-	private static void logHandlerWriters(InternalExceptionHandler handler) {
-		handler.getWriters().forEach((type, writer) ->
-				log.debug(() -> String.format("Writer [%s, %s] added to the Exception Handler [EXCEPTION-CLASS[%s]]",
-						writer.getClass().getSimpleName(), writer.getMediaType(), handler.getExceptionClass())));
-	}
-
-	private static void logAspects(InternalRoute route) {
-		route.getAspects().forEach(aspect ->
-				log.debug(() -> String.format("Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
-						aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
 	}
 
 	private class InternalExceptionConfiguration extends TypedExceptionConfiguration {

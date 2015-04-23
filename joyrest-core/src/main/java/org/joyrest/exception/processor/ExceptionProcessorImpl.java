@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.handler.InternalExceptionHandler;
-import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
@@ -43,9 +42,13 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 		if (response.getEntity().isPresent()) {
 			String acceptHeader = request.getHeader(ACCEPT).get();
 			Writer writer = MediaType.list(acceptHeader).stream()
-				.map(accept -> handler.getWriter(accept).get())
+				.filter(accept -> handler.getWriter(accept).isPresent())
 				.findFirst()
-				.orElseThrow(internalServerErrorSupplier());
+				.flatMap(handler::getWriter)
+				.orElseThrow(internalServerErrorSupplier(
+						String.format("No writer registered for Accept[%s] and Exception Response-Type[%s]",
+								acceptHeader, handler.getExceptionClass())));
+
 			response.header(CONTENT_TYPE, writer.getMediaType().get());
 			writer.writeTo(response);
 		}
@@ -58,7 +61,7 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 
 		Class<?> superClazz = clazz.getSuperclass();
 		while (superClazz != Exception.class) {
-			InternalExceptionHandler handler = handlers.get(clazz);
+			InternalExceptionHandler handler = handlers.get(superClazz);
 			if (nonNull(handler))
 				return Optional.of(handler);
 
