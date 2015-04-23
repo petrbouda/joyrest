@@ -3,22 +3,15 @@ package org.joyrest.ittest;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+import org.joyrest.ittest.setup.AbstractBasicIT;
 import org.joyrest.model.http.HttpStatus;
-import org.junit.Before;
 import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
 public class ExceptionIT extends AbstractBasicIT {
 
-	@Before
-	public void setUp() {
-		RestAssured.port = port;
-	}
-
 	@Test
-	public void badRequest() {
+	public void handle_rest_exception() {
 		given()
 				.contentType(ContentType.ANY)
 			.when()
@@ -28,7 +21,7 @@ public class ExceptionIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void numberFormatWithBody() {
+	public void handle_number_format() {
 		given()
 				.accept(ContentType.JSON)
 				.contentType(ContentType.ANY)

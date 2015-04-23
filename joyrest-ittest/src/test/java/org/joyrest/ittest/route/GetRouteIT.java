@@ -3,23 +3,15 @@ package org.joyrest.ittest.route;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-import org.joyrest.ittest.AbstractBasicIT;
+import org.joyrest.ittest.setup.AbstractBasicIT;
 import org.joyrest.model.http.HttpStatus;
-import org.junit.Before;
 import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
 public class GetRouteIT extends AbstractBasicIT {
 
-	@Before
-	public void setUp() {
-		RestAssured.port = port;
-	}
-
 	@Test
-	public void testRouteGet_WithoutPath() {
+	public void get_route_no_path() {
 		given()
 			.when()
 			.get("/ittest/route")
@@ -28,7 +20,7 @@ public class GetRouteIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testRouteGet_WithPath() {
+	public void get_route_with_path() {
 		given()
 			.when()
 			.get("/ittest/route/withPath")
@@ -37,7 +29,7 @@ public class GetRouteIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testRouteGet_WithResponse() {
+	public void get_route_with_path_with_response() {
 		given()
 			.accept(ContentType.JSON)
 			.when()

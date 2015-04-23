@@ -3,23 +3,15 @@ package org.joyrest.ittest.route;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-import org.joyrest.ittest.AbstractBasicIT;
+import org.joyrest.ittest.setup.AbstractBasicIT;
 import org.joyrest.model.http.HttpStatus;
-import org.junit.Before;
 import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
 public class PutRouteIT extends AbstractBasicIT {
 
-	@Before
-	public void setUp() {
-		RestAssured.port = port;
-	}
-
 	@Test
-	public void testRoutePut_NoPathNoBody() {
+	public void put_route_no_path_no_body() {
 		given()
 			.when()
 			.put("/ittest/route")
@@ -28,7 +20,7 @@ public class PutRouteIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testRoutePut_WithPathWithBody() {
+	public void put_route_with_path_with_body() {
 		given()
 			.body(feedEntity)
 			.contentType(ContentType.JSON)
@@ -39,7 +31,7 @@ public class PutRouteIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testRoutePut_WithPathWithResponse() {
+	public void put_route_with_path_with_response() {
 		given()
 			.accept(ContentType.JSON)
 			.when()
@@ -52,7 +44,7 @@ public class PutRouteIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testRoutePut_WithPathWithBoth() {
+	public void put_route_with_path_with_request_and_response() {
 		given()
 			.body(feedEntity)
 			.contentType(ContentType.JSON)

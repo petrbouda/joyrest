@@ -12,6 +12,8 @@
     <artifactId>joyrest-ittest</artifactId>
 
     <properties>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <spring.version>1.2.3.RELEASE</spring.version>
     </properties>
 

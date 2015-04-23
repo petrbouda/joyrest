@@ -2,29 +2,22 @@ package org.joyrest.ittest;
 
 import static com.jayway.restassured.RestAssured.given;
 
+import org.joyrest.ittest.setup.AbstractBasicIT;
 import org.joyrest.model.http.HttpStatus;
-import org.junit.Before;
 import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
 public class StatusIT extends AbstractBasicIT {
 
-	@Before
-	public void setUp() {
-		RestAssured.port = port;
-	}
-
 	@Test
-	public void testStatusGet200() {
+	public void status_get_200() {
 		given()
 			.when().get("/ittest/status/200")
 			.then().statusCode(HttpStatus.OK.code());
 	}
 
 	@Test
-	public void testStatusPost201() {
+	public void status_post_201() {
 		given().body(feedEntity)
 			.contentType(ContentType.JSON)
 			.when().post("/ittest/status/201")
@@ -32,7 +25,7 @@ public class StatusIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testStatusPost204() {
+	public void status_post_204() {
 		given()
 			.contentType(ContentType.ANY)
 			.when().post("/ittest/status/204")
@@ -40,14 +33,14 @@ public class StatusIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testStatusGet302() {
+	public void status_get_302() {
 		given()
 			.when().get("/ittest/status/302")
 			.then().statusCode(HttpStatus.FOUND.code());
 	}
 
 	@Test
-	public void testStatusPost400() {
+	public void status_post_400() {
 		given().body(feedEntity)
 			.contentType(ContentType.JSON)
 			.when().post("/ittest/status/400")
@@ -55,28 +48,28 @@ public class StatusIT extends AbstractBasicIT {
 	}
 
 	@Test
-	public void testStatusGet403() {
+	public void status_get_403() {
 		given()
 			.when().get("/ittest/status/403")
 			.then().statusCode(HttpStatus.FORBIDDEN.code());
 	}
 
 	@Test
-	public void testStatusGet404() {
+	public void status_get_404() {
 		given()
 			.when().get("/ittest/status/404")
 			.then().statusCode(HttpStatus.NOT_FOUND.code());
 	}
 
 	@Test
-	public void testStatusGet500() {
+	public void status_get_500() {
 		given()
 			.when().get("/ittest/status/500")
 			.then().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.code());
 	}
 
 	@Test
-	public void testStatusGet501() {
+	public void status_get_501() {
 		given()
 			.when().get("/ittest/status/501")
 			.then().statusCode(HttpStatus.NOT_IMPLEMENTED.code());
