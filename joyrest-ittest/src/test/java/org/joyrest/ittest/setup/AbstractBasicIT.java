@@ -42,14 +42,17 @@ public abstract class AbstractBasicIT {
 	@Rule
 	public TestName name = new TestName();
 
-	@BeforeClass
-	public static void initClass() throws JsonProcessingException {
-		FeedEntry f = new FeedEntry();
-		f.setLink("http://localhost:8080");
-		f.setPublishDate(new Date());
-		f.setTitle("My Feed Title");
-		f.setDescription("My Feed Description");
-		feedEntity = mapper.writeValueAsString(f);
+	static {
+		try {
+			FeedEntry f = new FeedEntry();
+			f.setLink("http://localhost:8080");
+			f.setPublishDate(new Date());
+			f.setTitle("My Feed Title");
+			f.setDescription("My Feed Description");
+			feedEntity = mapper.writeValueAsString(f);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("An error occurred during parsing the testing FeedEntry entity.");
+		}
 	}
 
 	@Before
@@ -58,8 +61,8 @@ public abstract class AbstractBasicIT {
 
 		log.debug(() ->
 			"\n ------------------------------------------------------ \n " +
-					"# Run test: " + name.getMethodName() +
-					"\n ------------------------------------------------------");
+			"# Run test: " + name.getMethodName() +
+			"\n ------------------------------------------------------");
 	}
 
 }
