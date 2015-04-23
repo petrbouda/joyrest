@@ -25,6 +25,12 @@ public final class JoyLogger {
 		}
 	}
 
+	public void warnException(Supplier<Exception> message) {
+		if (logger.isWarnEnabled()) {
+			logger.warn("", message.get());
+		}
+	}
+
 	public void info(Supplier<String> message) {
 		if (logger.isInfoEnabled()) {
 			logger.info(message.get());

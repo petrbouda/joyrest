@@ -16,7 +16,7 @@ public class InternalResponse<E> implements Response<E> {
 
 	private E entity;
 
-	private OutputStream responseBody;
+	private OutputStream outputStream;
 
 	@Override
 	public InternalResponse<E> header(HeaderName name, String value) {
@@ -37,11 +37,11 @@ public class InternalResponse<E> implements Response<E> {
 	}
 
 	public OutputStream getOutputStream() {
-		return responseBody;
+		return outputStream;
 	}
 
-	public void setOutputStream(OutputStream responseBody) {
-		this.responseBody = responseBody;
+	public void setOutputStream(OutputStream outputStream) {
+		this.outputStream = outputStream;
 	}
 
 	public Map<HeaderName, String> getHeaders() {

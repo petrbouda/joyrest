@@ -1,7 +1,11 @@
 package org.joyrest.model.http;
 
+import javax.print.attribute.standard.Media;
+
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
 
@@ -53,8 +57,16 @@ public final class MediaType {
 		this.params = params;
 	}
 
+	public static List<MediaType> list(String mediaTypes) {
+		return Arrays.stream(mediaTypes.split(","))
+			.filter(Objects::nonNull)
+			.map(String::trim)
+			.map(MediaType::of)
+			.collect(toList());
+	}
+
 	public static MediaType of(String mediaType) {
-		if (mediaType == null || mediaType.isEmpty()) {
+		if (isNull(mediaType) || mediaType.isEmpty()) {
 			return WILDCARD;
 		}
 

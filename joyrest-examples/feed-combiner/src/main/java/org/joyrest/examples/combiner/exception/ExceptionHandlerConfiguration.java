@@ -1,6 +1,6 @@
 package org.joyrest.examples.combiner.exception;
 
-import org.joyrest.exception.AbstractExceptionConfiguration;
+import org.joyrest.exception.configuration.AbstractExceptionConfiguration;
 
 public class ExceptionHandlerConfiguration extends AbstractExceptionConfiguration {
 

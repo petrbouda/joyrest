@@ -5,15 +5,19 @@ import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.common.annotation.General;
-import org.joyrest.exception.ExceptionConfiguration;
+import org.joyrest.exception.configuration.ExceptionConfiguration;
+import org.joyrest.exception.configuration.TypedExceptionConfiguration;
 import org.joyrest.exception.handler.InternalExceptionHandler;
+import org.joyrest.exception.type.RestException;
 import org.joyrest.logging.JoyLogger;
+import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.Reader;
@@ -36,17 +40,24 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	protected final List<Reader> REQUIRED_READERS = singletonList(stringReaderWriter);
 	protected final List<Writer> REQUIRED_WRITERS = singletonList(stringReaderWriter);
 
-	protected abstract List<Aspect> getAspects();
-	protected abstract List<Reader> getReaders();
-	protected abstract List<Writer> getWriters();
-	protected abstract List<ExceptionConfiguration> getExceptionConfigurations();
-	protected abstract List<ControllerConfiguration> getControllerConfiguration();
+	protected abstract Collection<Aspect> getAspects();
+
+	protected abstract Collection<Reader> getReaders();
+
+	protected abstract Collection<Writer> getWriters();
+
+	protected abstract Collection<ExceptionConfiguration> getExceptionConfigurations();
+
+	protected abstract Collection<ControllerConfiguration> getControllerConfiguration();
 
 	protected ApplicationContext initializeContext() {
 		Map<Boolean, List<Reader>> readers = createTransformers(getReaders(), REQUIRED_READERS);
 		Map<Boolean, List<Writer>> writers = createTransformers(getWriters(), REQUIRED_WRITERS);
 
-		Map<Class<? extends Exception>, InternalExceptionHandler> handlers = getExceptionConfigurations().stream()
+		Collection<ExceptionConfiguration> exceptionConfigurations = getExceptionConfigurations();
+		exceptionConfigurations.add(new InternalExceptionConfiguration());
+
+		Map<Class<? extends Exception>, InternalExceptionHandler> handlers = exceptionConfigurations.stream()
 			.peek(ExceptionConfiguration::initialize)
 			.flatMap(config -> config.getExceptionHandlers().stream())
 			.peek(handler -> {
@@ -57,7 +68,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 			})
 			.collect(toMap(InternalExceptionHandler::getExceptionClass, identity()));
 
-		List<Aspect> aspects = getAspects();
+		Collection<Aspect> aspects = getAspects();
 		aspects.addAll(REQUIRED_ASPECTS);
 
 		// List<Integer> numbers = Arrays.asList(1, 2, 1, 3, 4, 4);
@@ -86,9 +97,9 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		return context;
 	}
 
-	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(List<T> writers, List<T> additional) {
-		writers.addAll(additional);
-		return writers.stream()
+	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform, List<T> additional) {
+		transform.addAll(additional);
+		return transform.stream()
 			.collect(partitioningBy(General::isGeneral));
 	}
 
@@ -162,6 +173,18 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		route.getAspects().forEach(aspect ->
 				log.debug(() -> String.format("Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
 						aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
+	}
+
+	private class InternalExceptionConfiguration extends TypedExceptionConfiguration {
+
+		@Override
+		protected void configure() {
+			handle(RestException.class, (req, resp, ex) -> {
+				InternalResponse<?> exResp = ex.getResponse();
+				resp.status(exResp.getStatus());
+				exResp.getHeaders().forEach(resp::header);
+			});
+		}
 	}
 
 }

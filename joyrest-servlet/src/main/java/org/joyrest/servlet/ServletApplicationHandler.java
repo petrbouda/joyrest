@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.Configurer;
+import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.request.LambdaRequest;
 import org.joyrest.model.response.LambdaResponse;
@@ -24,6 +25,8 @@ import org.joyrest.processor.RequestProcessorImpl;
 public class ServletApplicationHandler extends HttpServlet implements Filter {
 
 	private static final long serialVersionUID = -4298969347996942699L;
+
+	private final static JoyLogger log = new JoyLogger(ServletApplicationHandler.class);
 
 	/* Class for processing an incoming request and generated response */
 	private RequestProcessor processor;
@@ -93,29 +96,25 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		processRequest(req, resp);
 	}
 
-	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			LambdaRequest<?> request = createJoyRequest(req);
-			LambdaResponse<?> response = createJoyResponse(resp);
+			if(req.getDispatcherType() == DispatcherType.ERROR)
+				return;
 
-			/*
-			 * Processes the given client's request and using ConsumerResponse automatically populate HttpServletResponse. There is no need
-			 * of an additional response population.
-			 */
-			processor.process(request, response);
+			processor.process(createRequest(req), createResponse(resp));
 		} catch (Exception e) {
-			throw new ServletException("Error occurs during processing a request.", e);
+			throw new ServletException(e);
 		}
 	}
 
-	private LambdaResponse<?> createJoyResponse(HttpServletResponse response) throws IOException {
+	private LambdaResponse<?> createResponse(HttpServletResponse response) throws IOException {
 		LambdaResponse<?> joyResponse = new LambdaResponse<>(response::addHeader,
 				status -> response.setStatus(status.code()));
 		joyResponse.setOutputStream(response.getOutputStream());
 		return joyResponse;
 	}
 
-	private LambdaRequest<?> createJoyRequest(HttpServletRequest request) throws IOException {
+	private LambdaRequest<?> createRequest(HttpServletRequest request) throws IOException {
 		LambdaRequest<?> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
 		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
 		joyRequest.setMethod(HttpMethod.of(request.getMethod()));

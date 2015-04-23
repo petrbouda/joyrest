@@ -1,4 +1,4 @@
-package org.joyrest.exception;
+package org.joyrest.exception.configuration;
 
 import java.util.Set;
 

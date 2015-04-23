@@ -8,14 +8,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.joyrest.aspect.Aspect;
-import org.joyrest.context.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.DependencyInjectionConfigurer;
-import org.joyrest.exception.ExceptionConfiguration;
-import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.transform.Reader;
-import org.joyrest.transform.Writer;
 
 /**
  * Class that is able to configure JoyREST Framework for HK2 Dependency Injection Framework.
