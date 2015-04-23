@@ -42,6 +42,9 @@
         <module>joyrest-grizzly</module>
         <module>joyrest-servlet</module>
         <module>joyrest-ittest</module>
+        <module>joyrest-dagger</module>
+        <module>joyrest-guice</module>
+        <module>joyrest-undertow</module>
     </modules>
 
     <properties>
