@@ -16,7 +16,7 @@
     <modules>
         <module>feed-combiner</module>
         <module>servlet-support</module>
-        <module>get-started</module>
+        <module>di-examples</module>
     </modules>
 
     <build>

@@ -1,4 +1,4 @@
-package org.joyrest.examples.getstarted;
+package org.joyrest.examples.jokeapp.hk2;
 
 import javax.inject.Inject;
 

@@ -19,6 +19,24 @@
         </dependency>
 
         <dependency>
+            <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-spring</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-guice</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-dagger</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>

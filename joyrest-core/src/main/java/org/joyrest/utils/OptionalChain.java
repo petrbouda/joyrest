@@ -12,7 +12,7 @@ public class OptionalChain<T> {
 		this.optional = optional;
 	}
 
-	public OptionalChain<T> chainEmpty(OptionalChain<T> next) {
+	public OptionalChain<T> chainIfEmpty(OptionalChain<T> next) {
 		Objects.requireNonNull(next);
 		return optional.isPresent() ? this : next;
 	}

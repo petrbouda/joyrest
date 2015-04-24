@@ -5,10 +5,7 @@ import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.common.annotation.General;
@@ -20,10 +17,7 @@ import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.InternalRoute;
-import org.joyrest.transform.Reader;
-import org.joyrest.transform.StringReaderWriter;
-import org.joyrest.transform.Transformer;
-import org.joyrest.transform.Writer;
+import org.joyrest.transform.*;
 import org.joyrest.transform.aspect.SerializationAspect;
 
 @SuppressWarnings("rawtypes")
@@ -37,7 +31,8 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	protected final List<Reader> REQUIRED_READERS = singletonList(stringReaderWriter);
 	protected final List<Writer> REQUIRED_WRITERS = singletonList(stringReaderWriter);
 
-	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform, List<T> additional) {
+	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform,
+			List<T> additional) {
 		transform.addAll(additional);
 		return transform.stream()
 			.collect(partitioningBy(General::isGeneral));
@@ -67,7 +62,8 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		}
 	}
 
-	private static void populateHandlerWriters(Map<Boolean, List<Writer>> writers, InternalExceptionHandler handler, boolean condition) {
+	private static void populateHandlerWriters(Map<Boolean, List<Writer>> writers, InternalExceptionHandler handler,
+			boolean condition) {
 		if (condition) {
 			writers.get(Boolean.TRUE).stream().distinct()
 				.forEach(handler::addWriter);
@@ -91,15 +87,19 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	}
 
 	private static void logRouteReaders(InternalRoute route) {
-		route.getReaders().forEach((type, reader) ->
+		route.getReaders().forEach(
+				(type, reader) ->
 				log.debug(() -> String.format("Reader [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
-						reader.getClass().getSimpleName(), reader.getMediaType(), route.getHttpMethod(), route.getPath())));
+						reader.getClass().getSimpleName(), reader.getMediaType(), route.getHttpMethod(),
+						route.getPath())));
 	}
 
 	private static void logRouteWriters(InternalRoute route) {
-		route.getWriters().forEach((type, writer) ->
+		route.getWriters().forEach(
+				(type, writer) ->
 				log.debug(() -> String.format("Writer [%s, %s] added to the Route [METHOD[%s], PATH[%s]]",
-						writer.getClass().getSimpleName(), writer.getMediaType(), route.getHttpMethod(), route.getPath())));
+						writer.getClass().getSimpleName(), writer.getMediaType(), route.getHttpMethod(),
+						route.getPath())));
 	}
 
 	private static void logHandlerWriters(InternalExceptionHandler handler) {
