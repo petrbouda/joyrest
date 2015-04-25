@@ -1,18 +1,15 @@
-package org.joyrest.examples.jokeapp;
+package org.joyrest.examples.nondi.jokeapp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
-
 public class JokeServiceImpl implements JokeService {
 
 	private Map<String, Joke> store = new ConcurrentHashMap<>();
 
-	@PostConstruct
-	public void init() {
+	public JokeServiceImpl() {
 		Joke joke1 = new Joke("Nice One!!", "Petr Bouda");
 		Joke joke2 = new Joke("Almost Better One!!", "Sensei");
 

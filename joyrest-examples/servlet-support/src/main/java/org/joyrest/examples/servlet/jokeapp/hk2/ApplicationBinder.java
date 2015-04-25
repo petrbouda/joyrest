@@ -1,14 +1,10 @@
-package org.joyrest.examples.jokeapp.hk2;
+package org.joyrest.examples.servlet.jokeapp.hk2;
 
 import javax.inject.Singleton;
 
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.joyrest.examples.jokeapp.*;
 import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.transform.JsonReaderWriter;
-import org.joyrest.transform.Reader;
-import org.joyrest.transform.Writer;
 
 public class ApplicationBinder extends AbstractBinder {
 
@@ -21,9 +17,5 @@ public class ApplicationBinder extends AbstractBinder {
 		bind(JokeController.class)
 			.to(ControllerConfiguration.class)
 			.in(Singleton.class);
-
-		bind(new JsonReaderWriter())
-			.to(Reader.class)
-			.to(Writer.class);
 	}
 }

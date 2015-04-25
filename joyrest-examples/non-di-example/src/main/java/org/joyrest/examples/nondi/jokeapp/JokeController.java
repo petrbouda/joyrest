@@ -1,4 +1,4 @@
-package org.joyrest.examples.jokeapp;
+package org.joyrest.examples.nondi.jokeapp;
 
 import static org.joyrest.model.http.HeaderName.LOCATION;
 import static org.joyrest.model.http.HttpStatus.CREATED;
@@ -7,17 +7,18 @@ import static org.joyrest.model.http.MediaType.XML;
 import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseCollectionType.RespList;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import org.joyrest.routing.TypedControllerConfiguration;
 
 public class JokeController extends TypedControllerConfiguration {
 
-	@Inject
-	JokeService service;
+	private final JokeService service;
+
+	public JokeController(JokeService service) {
+		this.service = service;
+	}
 
 	@Override
 	protected void configure() {
@@ -25,7 +26,7 @@ public class JokeController extends TypedControllerConfiguration {
 
 		post((request, response) -> {
 			Joke savedJoke = service.save(request.getEntity());
-			response.entity(Arrays.asList(savedJoke))
+			response.entity(Collections.singletonList(savedJoke))
 				.status(CREATED)
 				.header(LOCATION, getEntityLocation(savedJoke.getId(), request.getPath()));
 		}, Req(Joke.class), RespList(Joke.class))

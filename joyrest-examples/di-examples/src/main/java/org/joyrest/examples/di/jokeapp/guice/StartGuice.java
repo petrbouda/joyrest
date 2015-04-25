@@ -1,4 +1,4 @@
-package org.joyrest.examples.jokeapp.guice;
+package org.joyrest.examples.di.jokeapp.guice;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.Configurer;

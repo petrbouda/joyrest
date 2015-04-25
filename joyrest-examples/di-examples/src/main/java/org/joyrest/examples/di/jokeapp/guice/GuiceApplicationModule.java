@@ -1,11 +1,11 @@
-package org.joyrest.examples.jokeapp.guice;
+package org.joyrest.examples.di.jokeapp.guice;
 
 
 import static com.google.inject.multibindings.Multibinder.newSetBinder;
 
-import org.joyrest.examples.jokeapp.JokeController;
-import org.joyrest.examples.jokeapp.JokeService;
-import org.joyrest.examples.jokeapp.JokeServiceImpl;
+import org.joyrest.examples.di.jokeapp.JokeController;
+import org.joyrest.examples.di.jokeapp.JokeService;
+import org.joyrest.examples.di.jokeapp.JokeServiceImpl;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.JsonReaderWriter;
 import org.joyrest.transform.Reader;

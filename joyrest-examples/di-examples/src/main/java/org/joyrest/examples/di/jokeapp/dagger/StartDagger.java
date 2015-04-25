@@ -1,4 +1,4 @@
-package org.joyrest.examples.jokeapp.dagger;
+package org.joyrest.examples.di.jokeapp.dagger;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.dagger.DaggerConfigurer;

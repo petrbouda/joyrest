@@ -1,4 +1,4 @@
-package org.joyrest.examples.jokeapp.hk2;
+package org.joyrest.examples.di.jokeapp.hk2;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.grizzly.GrizzlyServer;

@@ -1,4 +1,4 @@
-package org.joyrest.examples.jokeapp;
+package org.joyrest.examples.servlet.jokeapp.hk2;
 
 import java.io.Serializable;
 import java.util.UUID;

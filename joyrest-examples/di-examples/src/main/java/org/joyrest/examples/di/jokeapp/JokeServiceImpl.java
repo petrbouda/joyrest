@@ -1,0 +1,38 @@
+package org.joyrest.examples.di.jokeapp;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.PostConstruct;
+
+public class JokeServiceImpl implements JokeService {
+
+	private Map<String, Joke> store = new ConcurrentHashMap<>();
+
+	@PostConstruct
+	public void init() {
+		Joke joke1 = new Joke("Nice One!!", "Petr Bouda");
+		Joke joke2 = new Joke("Almost Better One!!", "Sensei");
+
+		store.put(joke1.getId(), joke1);
+		store.put(joke2.getId(), joke2);
+	}
+
+	@Override
+	public Joke save(Joke joke) {
+		store.put(joke.getId(), joke);
+		return joke;
+	}
+
+	@Override
+	public Joke get(String id) {
+		return store.get(id);
+	}
+
+	@Override
+	public List<Joke> getAll() {
+		return new ArrayList<>(store.values());
+	}
+}

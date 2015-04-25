@@ -1,10 +1,10 @@
-package org.joyrest.examples.jokeapp.dagger;
+package org.joyrest.examples.di.jokeapp.dagger;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.dagger.DaggerConfigurer;
-import org.joyrest.examples.jokeapp.JokeController;
-import org.joyrest.examples.jokeapp.JokeService;
-import org.joyrest.examples.jokeapp.JokeServiceImpl;
+import org.joyrest.examples.di.jokeapp.JokeController;
+import org.joyrest.examples.di.jokeapp.JokeService;
+import org.joyrest.examples.di.jokeapp.JokeServiceImpl;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.JsonReaderWriter;

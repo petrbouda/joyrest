@@ -17,6 +17,7 @@
         <module>feed-combiner</module>
         <module>servlet-support</module>
         <module>di-examples</module>
+        <module>non-di-example</module>
     </modules>
 
     <build>
