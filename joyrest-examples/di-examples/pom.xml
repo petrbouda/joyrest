@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>get-started</artifactId>
+    <artifactId>di-examples</artifactId>
 
     <dependencies>
         <dependency>

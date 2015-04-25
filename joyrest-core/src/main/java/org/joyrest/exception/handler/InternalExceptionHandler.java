@@ -18,14 +18,11 @@ import org.joyrest.transform.Writer;
 
 public class InternalExceptionHandler implements ExceptionHandler {
 
-	private Map<MediaType, Writer> writers = new HashMap<>();
-
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private final TriConsumer action;
-
 	private final Type<?> responseType;
-
 	private final Class<? extends Exception> exceptionClass;
+	private Map<MediaType, Writer> writers = new HashMap<>();
 
 	public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz,
 		TriConsumer<Request<?>, Response<RESP>, T> action, Type<RESP> resp) {

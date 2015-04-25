@@ -5,7 +5,10 @@ import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.common.annotation.General;
@@ -17,7 +20,10 @@ import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.InternalRoute;
-import org.joyrest.transform.*;
+import org.joyrest.transform.Reader;
+import org.joyrest.transform.StringReaderWriter;
+import org.joyrest.transform.Transformer;
+import org.joyrest.transform.Writer;
 import org.joyrest.transform.aspect.SerializationAspect;
 
 @SuppressWarnings("rawtypes")
@@ -31,8 +37,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	protected final List<Reader> REQUIRED_READERS = singletonList(stringReaderWriter);
 	protected final List<Writer> REQUIRED_WRITERS = singletonList(stringReaderWriter);
 
-	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform,
-			List<T> additional) {
+	private static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform, List<T> additional) {
 		transform.addAll(additional);
 		return transform.stream()
 			.collect(partitioningBy(General::isGeneral));
@@ -109,9 +114,10 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	}
 
 	private static void logAspects(InternalRoute route) {
-		route.getAspects().forEach(aspect ->
-				log.debug(() -> String.format("Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
-						aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
+		route.getAspects().stream()
+			.forEach(aspect ->
+					log.debug(() -> String.format("Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
+							aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));
 	}
 
 	protected abstract Collection<Aspect> getAspects();

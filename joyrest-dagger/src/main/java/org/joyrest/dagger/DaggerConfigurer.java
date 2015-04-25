@@ -1,8 +1,10 @@
 package org.joyrest.dagger;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -25,9 +27,43 @@ public class DaggerConfigurer extends AbstractConfigurer<Object> {
 	public ApplicationContext initialize(Object applicationConfig) {
 		requireNonNull(applicationConfig, "Application module must be non-null for configuring Dagger.");
 
-		ObjectGraph objectGraph = ObjectGraph.create(applicationConfig);
-		provider = objectGraph.inject(new DaggerConfigurationProvider());
+		ObjectGraph graph = ObjectGraph.create(applicationConfig);
+		provider = graph.inject(new DaggerConfigurationProvider());
 		return initializeContext();
+	}
+
+	@Override
+	protected Collection<Aspect> getAspects() {
+		return createList(provider.aspects);
+	}
+
+	@Override
+	protected Collection<Reader> getReaders() {
+		return createList(provider.readers);
+	}
+
+	@Override
+	protected Collection<Writer> getWriters() {
+		return createList(provider.writers);
+	}
+
+	@Override
+	protected Collection<ExceptionConfiguration> getExceptionConfigurations() {
+		return createList(provider.exceptionConfigurations);
+	}
+
+	@Override
+	protected Collection<ControllerConfiguration> getControllerConfiguration() {
+		return createList(provider.controllerConfiguration);
+	}
+
+	/*
+	 * dagger provides an unmodifiable nullable set and this method convert this to modifiable list with non-null elements
+	 */
+	private <E> Collection<E> createList(Collection<E> collection) {
+		return collection.stream()
+			.filter(Objects::nonNull)
+			.collect(toList());
 	}
 
 	public static class DaggerConfigurationProvider {
@@ -43,30 +79,4 @@ public class DaggerConfigurer extends AbstractConfigurer<Object> {
 		@Inject
 		Set<ControllerConfiguration> controllerConfiguration;
 	}
-
-	@Override
-	protected Collection<Aspect> getAspects() {
-		return provider.aspects;
-	}
-
-	@Override
-	protected Collection<Reader> getReaders() {
-		return provider.readers;
-	}
-
-	@Override
-	protected Collection<Writer> getWriters() {
-		return provider.writers;
-	}
-
-	@Override
-	protected Collection<ExceptionConfiguration> getExceptionConfigurations() {
-		return provider.exceptionConfigurations;
-	}
-
-	@Override
-	protected Collection<ControllerConfiguration> getControllerConfiguration() {
-		return provider.controllerConfiguration;
-	}
-
 }

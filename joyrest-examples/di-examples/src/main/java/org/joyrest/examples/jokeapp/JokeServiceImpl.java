@@ -1,8 +1,11 @@
 package org.joyrest.examples.jokeapp;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.PostConstruct;
 
 public class JokeServiceImpl implements JokeService {
 
@@ -10,8 +13,8 @@ public class JokeServiceImpl implements JokeService {
 
 	@PostConstruct
 	public void init() {
-		Joke joke1 = new Joke("Petr Bouda", "Nice One!!");
-		Joke joke2 = new Joke("Sensei", "Almost Better One!!");
+		Joke joke1 = new Joke("Nice One!!", "Petr Bouda");
+		Joke joke2 = new Joke("Almost Better One!!", "Sensei");
 
 		store.put(joke1.getId(), joke1);
 		store.put(joke2.getId(), joke2);

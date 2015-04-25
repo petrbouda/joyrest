@@ -17,7 +17,7 @@ import org.joyrest.routing.TypedControllerConfiguration;
 public class JokeController extends TypedControllerConfiguration {
 
 	@Inject
-	private JokeService service;
+	JokeService service;
 
 	@Override
 	protected void configure() {
