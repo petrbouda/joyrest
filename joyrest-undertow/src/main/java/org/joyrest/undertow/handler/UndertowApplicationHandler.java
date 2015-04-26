@@ -33,8 +33,8 @@ public class UndertowApplicationHandler implements HttpHandler {
 		processor.process(createRequest(exchange), createResponse(exchange));
 	}
 
-	private LambdaRequest<?> createRequest(HttpServerExchange exchange) {
-		LambdaRequest<?> joyRequest = new LambdaRequest<>(
+	private LambdaRequest<Object> createRequest(HttpServerExchange exchange) {
+		LambdaRequest<Object> joyRequest = new LambdaRequest<>(
 				headerName -> exchange.getRequestHeaders().getFirst(headerName),
 				paramName -> (String[]) exchange.getQueryParameters().get(paramName).toArray());
 		joyRequest.setPath(exchange.getRequestPath());
@@ -47,8 +47,8 @@ public class UndertowApplicationHandler implements HttpHandler {
 		return joyRequest;
 	}
 
-	private LambdaResponse<?> createResponse(HttpServerExchange exchange) throws IOException {
-		LambdaResponse<?> resp = new LambdaResponse<>(
+	private LambdaResponse<Object> createResponse(HttpServerExchange exchange) throws IOException {
+		LambdaResponse<Object> resp = new LambdaResponse<>(
 				(headerName, headerValue) -> exchange.getResponseHeaders().put(new HttpString(headerName), headerValue),
 				status -> exchange.setResponseCode(status.code()));
 		resp.setOutputStream(exchange.getOutputStream());

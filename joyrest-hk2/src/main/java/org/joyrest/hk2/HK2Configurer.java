@@ -18,6 +18,8 @@ import org.joyrest.context.DependencyInjectionConfigurer;
  */
 public final class HK2Configurer extends DependencyInjectionConfigurer<Binder> {
 
+	public static final String JOYREST_BEAN_CONTEXT = "JoyrestContext";
+
 	private ServiceLocator locator = null;
 
 	@Override

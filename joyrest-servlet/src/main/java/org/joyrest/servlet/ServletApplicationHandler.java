@@ -107,15 +107,15 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		}
 	}
 
-	private LambdaResponse<?> createResponse(HttpServletResponse response) throws IOException {
-		LambdaResponse<?> joyResponse = new LambdaResponse<>(response::addHeader,
+	private LambdaResponse<Object> createResponse(HttpServletResponse response) throws IOException {
+		LambdaResponse<Object> joyResponse = new LambdaResponse<>(response::addHeader,
 				status -> response.setStatus(status.code()));
 		joyResponse.setOutputStream(response.getOutputStream());
 		return joyResponse;
 	}
 
-	private LambdaRequest<?> createRequest(HttpServletRequest request) throws IOException {
-		LambdaRequest<?> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
+	private LambdaRequest<Object> createRequest(HttpServletRequest request) throws IOException {
+		LambdaRequest<Object> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
 		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
 		joyRequest.setMethod(HttpMethod.of(request.getMethod()));
 		joyRequest.setInputStream(request.getInputStream());

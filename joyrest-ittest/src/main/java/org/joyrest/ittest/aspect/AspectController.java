@@ -1,6 +1,5 @@
 package org.joyrest.ittest.aspect;
 
-import org.joyrest.ittest.aspect.TestAspect;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.TypedControllerConfiguration;
@@ -11,8 +10,6 @@ public class AspectController extends TypedControllerConfiguration {
 	protected void configure() {
 		setGlobalPath("/ittest/aspect");
 
-		post((req, resp) -> {
-			resp.status(HttpStatus.OK);
-		}).consumes(MediaType.JSON).aspect(new TestAspect());
+		get((req, resp) -> resp.status(HttpStatus.OK));
 	}
 }

@@ -6,6 +6,7 @@ import org.joyrest.model.response.InternalResponse;
 @FunctionalInterface
 public interface ExceptionProcessor {
 
-	<T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request, InternalResponse<?> response) throws Exception;
+	<T extends Exception> InternalResponse<Object> process(T ex, InternalRequest<Object> request,
+			InternalResponse<Object> response) throws Exception;
 
 }

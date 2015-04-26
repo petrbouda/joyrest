@@ -25,7 +25,7 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 	}
 
 	@Override
-	public <T extends Exception> InternalResponse<?> process(T ex, InternalRequest<?> request, InternalResponse<?> response)
+	public <T extends Exception> InternalResponse<Object> process(T ex, InternalRequest<Object> request, InternalResponse<Object> response)
 			throws Exception {
 		Class<? extends Exception> clazz = ex.getClass();
 		InternalExceptionHandler handler = handlers.get(clazz);

@@ -16,6 +16,8 @@ import org.joyrest.transform.Writer;
 
 public class SerializationAspect implements Aspect {
 
+	public static final int SERIALIZATION_ASPECT_ORDER = 0;
+
 	@Override
 	public InternalResponse<?> around(AspectChain chain, InternalRequest request, InternalResponse response) {
 		InternalRoute route = chain.getRoute();
@@ -46,4 +48,8 @@ public class SerializationAspect implements Aspect {
 		return reader.readFrom(request, route.getRequestType());
 	}
 
+	@Override
+	public int getOrder() {
+		return SERIALIZATION_ASPECT_ORDER;
+	}
 }

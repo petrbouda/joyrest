@@ -192,7 +192,7 @@ public class InternalRoute implements Route {
 		return Objects.nonNull(requestType);
 	}
 
-	public InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response) {
+	public InternalResponse<Object> execute(InternalRequest<Object> request, InternalResponse<Object> response) {
 		action.accept(ImmutableRequest.of(request), response);
 		return response;
 	}

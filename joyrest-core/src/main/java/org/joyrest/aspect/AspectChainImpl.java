@@ -23,7 +23,7 @@ public class AspectChainImpl implements AspectChain {
 	}
 
 	@Override
-	public InternalResponse<?> proceed(InternalRequest<?> request, InternalResponse<?> response) {
+	public InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response) {
 		requireNonNull(request);
 		Aspect aspect = aspects.poll();
 

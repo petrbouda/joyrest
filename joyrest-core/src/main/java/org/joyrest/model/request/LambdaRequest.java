@@ -1,7 +1,8 @@
 package org.joyrest.model.request;
 
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.*;
 import static java.util.stream.Collectors.toMap;
+import static org.joyrest.common.annotation.UnmodifiableMapCollector.toUnmodifiableMap;
 
 import java.util.Map;
 import java.util.Optional;
@@ -39,16 +40,14 @@ public class LambdaRequest<E> extends InternalRequest<E> {
 
 	@Override
 	public Map<HeaderName, String> getHeaders() {
-		if (super.headers != null) {
+		if (nonNull(headers))
 			return super.getHeaders();
-		}
 
-		if (headerNames == null) {
+		if (isNull(headerNames))
 			throw new InvalidConfigurationException("Header names cannot be null.");
-		}
 
 		super.headers = StreamSupport.stream(headerNames.spliterator(), false)
-			.collect(toMap(HeaderName::of, name -> getHeader(HeaderName.of(name)).get()));
+			.collect(toUnmodifiableMap(HeaderName::of, name -> getHeader(HeaderName.of(name)).get()));
 		return super.headers;
 	}
 
@@ -60,16 +59,14 @@ public class LambdaRequest<E> extends InternalRequest<E> {
 
 	@Override
 	public Map<String, String[]> getQueryParams() {
-		if (super.queryParams != null) {
+		if (nonNull(queryParams))
 			return super.getQueryParams();
-		}
 
-		if (queryParamNames == null) {
+		if (isNull(queryParamNames))
 			throw new InvalidConfigurationException("Query param names cannot be null.");
-		}
 
 		super.queryParams = StreamSupport.stream(queryParamNames.spliterator(), false)
-			.collect(toMap(Function.identity(), name -> getQueryParams(name).get()));
+			.collect(toUnmodifiableMap(Function.identity(), name -> getQueryParams(name).get()));
 		return super.queryParams;
 	}
 

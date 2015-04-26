@@ -6,8 +6,6 @@ import static org.joyrest.exception.type.RestException.notFoundSupplier;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.joyrest.aspect.AspectChain;
 import org.joyrest.aspect.AspectChainImpl;
@@ -55,7 +53,8 @@ public class RequestProcessorImpl implements RequestProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InternalResponse<?> process(final InternalRequest<?> request, final InternalResponse<?> response) throws Exception {
+	public InternalResponse<Object> process(final InternalRequest<Object> request,
+			final InternalResponse<Object> response) throws Exception {
 		try {
 			return processRequest(request, response);
 		} catch (Exception ex) {
@@ -64,7 +63,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 	}
 
 	@SuppressWarnings("unchecked")
-	private InternalResponse<?> processRequest(final InternalRequest<?> request, final InternalResponse<?> response) {
+	private InternalResponse<Object> processRequest(final InternalRequest<Object> request, final InternalResponse<Object> response) {
 		final InternalRoute route = cachedRouteResolver.resolveRoute(request)
 			.chainIfEmpty(defaultRouteResolver.resolveRoute(request))
 			.orElseThrow(notFoundSupplier());

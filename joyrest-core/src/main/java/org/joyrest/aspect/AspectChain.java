@@ -6,7 +6,7 @@ import org.joyrest.routing.InternalRoute;
 
 public interface AspectChain {
 
-	InternalResponse<?> proceed(InternalRequest<?> request, InternalResponse<?> response);
+	InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response);
 
 	InternalRoute getRoute();
 
