@@ -40,6 +40,14 @@ It is necessary to use any REST Framework with some kind of server. Modules ment
 |org.joyrest	|joyrest-undertow	|0.1-SNAPSHOT	|
 |org.joyrest	|joyrest-servlet	|0.1-SNAPSHOT	|
 
+#### Repository for Snapshots
+```xml
+<repository>
+    <id>oss-sonatype</id>
+    <url>https://oss.sonatype.org/content/groups/public</url>
+</repository>
+```
+
 ### Easy Integration
 One of the main requirements of this framework is easy integration with other tools such as DI framework or Servers. A clue how to integrate a new DI or Server is covered in a particular section **_Integration_**.
 
