@@ -24,22 +24,22 @@ public class JokeController extends TypedControllerConfiguration {
 	protected void configure() {
 		setGlobalPath("jokes");
 
-		post((request, response) -> {
-			Joke savedJoke = service.save(request.getEntity());
-			response.entity(Collections.singletonList(savedJoke))
+		post((req, resp) -> {
+			Joke savedJoke = service.save(req.getEntity());
+			resp.entity(Collections.singletonList(savedJoke))
 				.status(CREATED)
-				.header(LOCATION, getEntityLocation(savedJoke.getId(), request.getPath()));
+				.header(LOCATION, getEntityLocation(savedJoke.getId(), req.getPath()));
 		}, Req(Joke.class), RespList(Joke.class))
 			.consumes(JSON).produces(JSON);
 
-		get((request, response) -> {
+		get((req, resp) -> {
 			List<Joke> jokes = service.getAll();
-			response.entity(jokes);
+			resp.entity(jokes);
 		}, RespList(Joke.class)).produces(JSON, XML);
 
-		get(":id", (request, response) -> {
-			Joke joke = service.get(request.getPathParam("id"));
-			response.entity(joke);
+		get("{id}", (req, resp) -> {
+			Joke joke = service.get(req.getPathParam("id"));
+			resp.entity(joke);
 		}).produces(JSON, XML);
 	}
 

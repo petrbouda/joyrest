@@ -37,7 +37,7 @@ public class JokeController extends TypedControllerConfiguration {
 			response.entity(jokes);
 		}, RespList(Joke.class)).produces(JSON, XML);
 
-		get(":id", (request, response) -> {
+		get("{id}", (request, response) -> {
 			Joke joke = service.get(request.getPathParam("id"));
 			response.entity(joke);
 		}).produces(JSON, XML);
