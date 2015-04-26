@@ -1,6 +1,6 @@
-package org.joyrest.ittest;
+package org.joyrest.ittest.aspect;
 
-import org.joyrest.ittest.interceptor.TestAspect;
+import org.joyrest.ittest.aspect.TestAspect;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.TypedControllerConfiguration;

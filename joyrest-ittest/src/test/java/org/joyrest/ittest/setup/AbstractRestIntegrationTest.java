@@ -2,7 +2,7 @@ package org.joyrest.ittest.setup;
 
 import java.util.Date;
 
-import org.joyrest.ittest.config.Application;
+import org.joyrest.ittest.ApplicationConfig;
 import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.logging.JoyLogger;
 import org.junit.Before;
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = ApplicationConfig.class)
 @WebAppConfiguration
 @IntegrationTest("server.port=0")
 @TestExecutionListeners(listeners = {

@@ -23,12 +23,6 @@ public class TestExceptionConfiguration extends TypedExceptionConfiguration {
 		entry.setTitle("My Feed Title");
 		entry.setDescription("My Feed Description");
 
-		handle(NumberFormatException.class, (req, resp, ex) -> {
-			resp.status(HttpStatus.BAD_REQUEST);
-			resp.header(HeaderName.of("x-special-header"), "SPECIAL");
-			resp.entity(entry);
-		}, Resp(FeedEntry.class));
-
 		handle(FirstException.class, (req, resp, ex) -> {
 			resp.status(HttpStatus.PRECONDITION_FAILED);
 			resp.header(HeaderName.of("x-special-header"), "SPECIAL");

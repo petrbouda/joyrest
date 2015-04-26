@@ -1,4 +1,4 @@
-package org.joyrest.ittest;
+package org.joyrest.ittest.requestResponseData;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.sameInstance;

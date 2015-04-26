@@ -27,12 +27,9 @@ public class PathParamExtractor implements BiFunction<RoutePart<?>, String, Path
 	 **/
 	@Override
 	public PathParam apply(RoutePart<?> routePart, String pathPart) {
-		if (routePart.getType() == RoutePart.Type.PARAM) {
-			PathType<?> routePathType = routePart.getPathType();
-			if (routePathType.isAssignableFromString(pathPart))
-				throw RestException.badRequestSupplier().get();
+		if (routePart.getType() == RoutePart.Type.PARAM)
 			return new PathParam(routePart.getValue(), pathPart);
-		}
+
 		return null;
 	}
 

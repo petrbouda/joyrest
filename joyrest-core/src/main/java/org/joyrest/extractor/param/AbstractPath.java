@@ -4,6 +4,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Objects.nonNull;
+
 public abstract class AbstractPath<T> implements PathType<T> {
 
 	private final String name;
@@ -27,7 +29,7 @@ public abstract class AbstractPath<T> implements PathType<T> {
 
 	@Override
 	public boolean isAssignableFromString(String value) {
-		return Optional.ofNullable(extractor.apply(value)).isPresent();
+		return nonNull(extractor.apply(value));
 	}
 
 	@Override

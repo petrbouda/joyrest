@@ -31,9 +31,8 @@ public class ExceptionIT extends AbstractRestIntegrationTest {
 			.then()
 			.contentType(ContentType.JSON)
 			.statusCode(HttpStatus.BAD_REQUEST.code())
-			.body("title", equalTo("My Feed Title"))
-			.body("description", equalTo("My Feed Description"))
-			.body("link", equalTo("http://localhost:8080"));
+			.body("reason", equalTo("NumberFormatException"))
+			.body("description", equalTo("Bad number format exception"));
 
 	}
 

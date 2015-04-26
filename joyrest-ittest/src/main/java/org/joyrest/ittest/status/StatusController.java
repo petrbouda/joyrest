@@ -1,4 +1,4 @@
-package org.joyrest.ittest;
+package org.joyrest.ittest.status;
 
 import static org.joyrest.model.http.HttpStatus.*;
 

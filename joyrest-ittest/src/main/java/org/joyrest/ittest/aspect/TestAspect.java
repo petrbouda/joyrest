@@ -1,4 +1,4 @@
-package org.joyrest.ittest.interceptor;
+package org.joyrest.ittest.aspect;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.aspect.AspectChain;

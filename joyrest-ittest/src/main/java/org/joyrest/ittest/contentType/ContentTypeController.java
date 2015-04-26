@@ -1,4 +1,4 @@
-package org.joyrest.ittest;
+package org.joyrest.ittest.contentType;
 
 import static java.util.Objects.requireNonNull;
 import static org.joyrest.model.http.HttpStatus.NO_CONTENT;
