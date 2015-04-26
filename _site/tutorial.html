@@ -39,7 +39,7 @@
           <a href="../index.html">Home</a>
         </li>
         <li>
-          <a href="../getstarted.html">Get Started</a>
+          <a href="../download.html">Download</a>
         </li>
         <li>
           <a href="../tutorial.html">Tutorial</a>
@@ -59,6 +59,9 @@
         <li>
           <a href="../contact.html">Contact</a>
         </li>
+        <li>
+          <a href="../license.html">License</a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -77,8 +80,7 @@
     <div class="well">
         <ul class="nav nav-stacked" id="sidebar">
             <li><a href="#run-sec">How to Run Application</a></li>
-            <li><a href="#controller-sec">How to Create Controller</a></li>
-            <li><a href="#route-sec">How to Create Route</a></li>
+            <li><a href="#controller-sec">How to Create Controller and Route</a></li>
             <li><a href="#exception-sec">How to Handle Exception</a></li>
             <li><a href="#rw-sec">How to Create Writer/Reader</a></li>
         </ul>
@@ -92,24 +94,59 @@
 </div>
 <div class="col-md-9">
     <h3 id="run-sec">How to Run Application</h3>
-
+<pre><code class="language-java">
+public class Start {
+    public static void main(String... args) throws Exception {
+        Configurer configurer = new HK2Configurer();
+        ApplicationContext applicationContext = configurer.initialize(new ApplicationBinder());
+        GrizzlyServer.start(applicationContext, "/services", 5000);
+    }
+}
+</code></pre>
     <hr>
 
-    <h3 id="controller-sec">How to Create Controller</h3>
+    <h3 id="controller-sec">How to Create Controller and Route</h3>
+    Controllers are configuration classes which provides all information about routes that have something similar to each other. For example
+    resource <code>Joke</code> should have one controller configuration with all operations which are available to do with this resource.
+    There is one abstract class <code>TypedControllerConfiguration</code> which makes route creation very easy and its usage is shown below.
 
-    <hr>
+<pre><code class="language-java">
+public class JokeController extends TypedControllerConfiguration {
 
-    <h3 id="route-sec">How to Create Route</h3>
+    @Inject
+    private JokeService service;
 
+    get((req, resp) -> {
+        List<Joke> jokes = service.getAll();
+        resp.entity(jokes);
+    }, RespList(Joke.class)).produces(JSON, XML);
+}</code></pre>
+    <code>TypedControllerConfiguration</code> contains various combinations of HTTP methods to make a route creation as simple as possible.
     <hr>
 
     <h3 id="exception-sec">How to Handle Exception</h3>
+    As well as <code>TypedControllerConfiguration</code> class is determined for creation of routes there is also
+    <code>TypedExceptionConfiguration</code> abstract class which makes easy a handling of exceptions occurred during request processing
+    (e.g. no suitable route was found for a given request - framework exceptions) or which is thrown in route processing
+    (developers exceptions).
+
+<pre><code class="language-java">
+public class TestExceptionConfiguration extends TypedExceptionConfiguration {
+
+    @Override
+    protected void configure() {
+        handle(SomeException.class, (req, resp, ex) -> {
+            resp.status(HttpStatus.BAD_REQUEST);
+            resp.header(HeaderName.of("x-exception-header"), "error");
+            resp.entity(new ErrorResponse("reason", "some description"));
+        }, Resp(ErrorResponse.class));
+    }
+}</code></pre>
 
     <hr>
 
     <h3 id="rw-sec">How to Create Writer/Reader</h3>
-
-
+    <code>Reader</code> and <code>Writer</code> are used to process (marshall or unmarshall) a body of request/response.
     <hr>
 </div>
 

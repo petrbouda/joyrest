@@ -39,7 +39,7 @@
           <a href="../index.html">Home</a>
         </li>
         <li>
-          <a href="../getstarted.html">Get Started</a>
+          <a href="../download.html">Download</a>
         </li>
         <li>
           <a href="../tutorial.html">Tutorial</a>
@@ -58,6 +58,9 @@
         </li>
         <li>
           <a href="../contact.html">Contact</a>
+        </li>
+        <li>
+          <a href="../license.html">License</a>
         </li>
       </ul>
     </nav>
@@ -101,36 +104,35 @@
 
     <h3 id="sec2">Example</h3>
 <pre><code class="language-java">
-public class CombinedFeedController extends AbstractControllerConfiguration {
+public class JokeController extends TypedControllerConfiguration {
 
     @Inject
-    private CrudService&lt;CombinedFeed&gt; feedService;
+    private JokeService service;
 
     @Override
     protected void configure() {
-        setGlobalPath("feeds");
+        setGlobalPath("jokes");
 
-        post((Request request, Response response, CombinedFeed feed) -> {
-            CombinedFeed savedFeed = feedService.save(feed);
-            response.entityClass(savedFeed)
-                .status(HttpStatus.CREATED)
-                .header(HeaderName.LOCATION, getEntityLocation(savedFeed.getId(), request.getPath()));
-        }).consumes(MediaType.JSON).produces(MediaType.JSON);
+        post((req, resp) -> {
+            Joke savedJoke = service.save(req.getEntity());
+            resp.entity(singletonList(savedJoke))
+                .status(CREATED)
+                .header(LOCATION, getEntityLocation(savedJoke.getId(), req.getPath()));
+        }, Req(Joke.class), RespList(Joke.class))
+                .consumes(JSON).produces(JSON);
 
-        delete("/:id", (request, response) -> {
-            feedService.delete(request.getPathParam("id"))
-                .orElseThrow(RestException.notFoundSupplier());
-            response.status(HttpStatus.NO_CONTENT);
-        });
+        get((req, resp) -> {
+            List<Joke> jokes = service.getAll();
+            resp.entity(jokes);
+        }, RespList(Joke.class)).produces(JSON, XML);
 
-        get("/:id/entries", (request, response) -> {
-            CombinedFeed feed = feedService.get(request.getPathParam("id"))
-                .orElseThrow(RestException.notFoundSupplier());
-            response.entityClass(feed);
-        }).produces(MediaType.JSON, MediaType.XML);
+        get("{id}", (req, resp) -> {
+            Joke joke = service.get(req.getPathParam("id"));
+            resp.entity(joke);
+        }).produces(JSON, XML);
     }
 
-    private String getEntityLocation(String entityId, String path){
+    private String getEntityLocation(String entityId, String path) {
         return path + "/" + entityId;
     }
 }</code></pre>
@@ -142,17 +144,13 @@ public class CombinedFeedController extends AbstractControllerConfiguration {
     Servers.
     A clue how to integrate a new DI or Server is covered in a particular section <a href="">Integration</a>.
     <h4>Dependency Injection Frameworks</h4>
-    Primarily JoyRest was developed using <code>HK2</code> DI but is very easy to integrate JoyRest with
-    whatever
-    dependency framework you want. A support for most famous DI framework such as <code>Spring, Guice,
-    Dagger</code>
-    will be developed implicitly.
+    Primarily JoyRest was developed using <code>HK2</code> DI but also supports most of the popular DI framework such as
+    <code>Spring, Guice, Dagger</code>. To make a support for whatever DI framework is very easy and takes no more than one
+    additional special class determined to the given DI framework. Joyrest can be used also without any DI Framework.
 
     <h4>Servers</h4>
-    A Support for both types of servers <code>HTTP Server and NIO Server</code> is covered and whatever server
-    can be used
-    for running an application with JoyRest framework.
-
+    A Support for both types of servers <code>HTTP Server and Servlet-based Server</code> is covered and whatever server
+    can be used for running an application with JoyRest framework.
     <hr>
 
 </div>
