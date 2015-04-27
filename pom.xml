@@ -45,6 +45,8 @@
         <module>joyrest-dagger</module>
         <module>joyrest-guice</module>
         <module>joyrest-undertow</module>
+        <module>joyrest-jetty</module>
+        <module>joyrest-netty</module>
     </modules>
 
     <properties>

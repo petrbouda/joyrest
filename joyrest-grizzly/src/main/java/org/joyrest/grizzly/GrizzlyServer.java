@@ -20,8 +20,6 @@ public class GrizzlyServer {
 			InputStream loggingStream = GrizzlyServer.class.getResourceAsStream("/logging.properties");
 			LogManager.getLogManager().readConfiguration(loggingStream);
 
-			// Automatically set the SelectorRunner count value equal to
-			// Runtime.getRuntime().availableProcessors()
 			HttpServer server = HttpServer.createSimpleServer(null, port);
 			server.getServerConfiguration().addHttpHandler(
 					new GrizzlyApplicationHandler(applicationConfig), path);
@@ -29,7 +27,7 @@ public class GrizzlyServer {
 			Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
 
 			server.start();
-			LOG.info("Feed Combine Application started. Stop the application using ^C.");
+			LOG.info("Grizzly Server started. Stop the application using ^C.");
 			Thread.currentThread().join();
 		} catch (IOException | InterruptedException e) {
 			LOG.log(Level.SEVERE, null, e);

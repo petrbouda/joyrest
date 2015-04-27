@@ -5,7 +5,7 @@ import org.joyrest.routing.ControllerConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class AspectConfig {
 
 	@Bean

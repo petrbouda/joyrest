@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.jayway.restassured.http.ContentType;
 
+@Ignore
 public class AspectIT extends AbstractRestIntegrationTest {
 
 	@Test

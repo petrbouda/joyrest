@@ -22,6 +22,16 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	/* --------------- POST ROUTES --------------- */
 
 	protected final <REQ, RESP> Route post(
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
+	}
+
+	protected final <REQ, RESP> Route post(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, resp);
+	}
+
+	protected final <REQ, RESP> Route post(
 			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
 		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
 	}
@@ -119,6 +129,16 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	/* ---------------- GET ROUTES ---------------- */
 
 	protected final <REQ, RESP> Route get(
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
+	}
+
+	protected final <REQ, RESP> Route get(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, resp);
+	}
+
+	protected final <REQ, RESP> Route get(
 			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
 		return createEntityRoute(HttpMethod.GET, "", action, req, resp);
 	}
@@ -209,6 +229,16 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 	}
 
 	/* ---------------- PUT ROUTES ---------------- */
+
+	protected final <REQ, RESP> Route put(
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
+	}
+
+	protected final <REQ, RESP> Route put(String path,
+		BiConsumer<Request<REQ>, Response<RESP>> action, RequestType<REQ> req, ResponseType<RESP> resp) {
+		return createEntityRoute(HttpMethod.POST, path, action, req, resp);
+	}
 
 	protected final <REQ, RESP> Route put(
 			BiConsumer<Request<REQ>, Response<RESP>> action, RequestCollectionType<REQ> req, ResponseType<RESP> resp) {
