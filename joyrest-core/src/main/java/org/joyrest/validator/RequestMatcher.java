@@ -21,10 +21,6 @@ public final class RequestMatcher {
 	private RequestMatcher() {
 	}
 
-	public static boolean matchNonEmptyList(InternalRoute route) {
-		return Objects.nonNull(route);
-	}
-
 	public static boolean matchAccept(InternalRoute route, InternalRequest<?> request) {
 		Optional<String> optAccept = request.getHeader(ACCEPT);
 
