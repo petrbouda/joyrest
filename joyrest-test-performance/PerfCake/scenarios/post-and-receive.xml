@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scenario xmlns="urn:perfcake:scenario:4.0">
+    <generator class="DefaultMessageGenerator" threads="${perfcake.thread.count:20}">
+        <run type="${perfcake.run.type:time}" value="${perfcake.run.duration:20000}"/>
+    </generator>
+    <sender class="HttpSender">
+        <property name="target" value="http://localhost:5000/services/feeds"/>
+        <property name="method" value="POST"/>
+        <property name="expectedResponseCodes" value="200"/>
+    </sender>
+    <reporting>
+        <reporter class="ThroughputStatsReporter">
+            <destination class="ChartDestination">
+                <period type="time" value="500"/>
+                <property name="name" value="${framework:unknown}"/>
+                <property name="group" value="PerfTest_get-all"/>
+                <property name="yAxis" value="Throughput"/>
+                <property name="outputDir" value="${perfcake.scenario}-charts"/>
+                <property name="attributes" value="Minimum, Maximum, Average, Result"/>
+            </destination>
+        </reporter>
+        <reporter class="ResponseTimeStatsReporter">
+            <destination class="ChartDestination">
+                <period type="time" value="500"/>
+                <property name="name" value="${framework:unknown}"/>
+                <property name="group" value="PerfTest_get-all"/>
+                <property name="yAxis" value="Response Time"/>
+                <property name="outputDir" value="${perfcake.scenario}-charts"/>
+                <property name="attributes" value="Minimum, Maximum, Average, Result"/>
+            </destination>
+        </reporter>
+    </reporting>
+    <messages>
+        <message uri="joyrest/feed-entry.json">
+            <header name="content-type" value="application/json" />
+            <header name="accept" value="application/json" />
+        </message>
+    </messages>
+</scenario>
