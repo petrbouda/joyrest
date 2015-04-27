@@ -1,6 +1,8 @@
 package org.joyrest.routing.strategy;
 
 import static org.joyrest.exception.type.RestException.*;
+import static org.joyrest.model.http.HeaderName.ACCEPT;
+import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
 import java.util.Optional;
 import java.util.Set;
@@ -28,11 +30,18 @@ public class DefaultRouteResolver implements RouteResolver {
 	@Override
 	public OptionalChain<InternalRoute> resolveRoute(InternalRequest<?> request) {
 		Optional<InternalRoute> route = BiStream.of(routes.stream(), request)
-			.throwFilter(pathComparator, notFoundSupplier())
-			.throwFilter(RequestMatcher::matchNonEmptyList, notFoundSupplier())
-			.throwFilter(RequestMatcher::matchHttpMethod, notFoundSupplier())
-			.throwFilter(RequestMatcher::matchContentType, unsupportedMediaTypeSupplier())
-			.throwFilter(RequestMatcher::matchAccept, notAcceptableSupplier())
+			.throwFilter(pathComparator, notFoundSupplier(String.format(
+					"There is no route fits for path [%s]",
+					request.getPath())))
+			.throwFilter(RequestMatcher::matchHttpMethod, notFoundSupplier(String.format(
+					"There is no route fits for path [%s], method [%s]",
+					request.getPath(), request.getMethod())))
+			.throwFilter(RequestMatcher::matchContentType, unsupportedMediaTypeSupplier(String.format(
+					"There is no route fits for path [%s], method [%s], content-type [%s]",
+					request.getPath(), request.getMethod(), request.getHeader(CONTENT_TYPE))))
+			.throwFilter(RequestMatcher::matchAccept, notAcceptableSupplier(String.format(
+					"There is no route fits for path [%s], method [%s], accept [%s]",
+					request.getPath(), request.getMethod(), request.getHeader(ACCEPT))))
 			.findAny();
 
 		return new OptionalChain<>(route);

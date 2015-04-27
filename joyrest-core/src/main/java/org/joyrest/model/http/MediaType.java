@@ -1,10 +1,6 @@
 package org.joyrest.model.http;
 
-import javax.print.attribute.standard.Media;
-
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.*;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
@@ -84,9 +80,9 @@ public final class MediaType {
 		}
 
 		String[] typeSplit = mediaType.split("/");
-		if (typeSplit.length != 2) {
-			throw internalServerErrorSupplier().get();
-		}
+		if (typeSplit.length != 2)
+			throw internalServerErrorSupplier(
+					String.format("Invalid MediaType [%s]", mediaType)).get();
 
 		MediaType processingType = null;
 		if (typeSplit[1].contains("+")) {

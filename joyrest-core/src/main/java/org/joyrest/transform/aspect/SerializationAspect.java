@@ -34,9 +34,10 @@ public class SerializationAspect implements Aspect {
 	private void writeEntity(InternalRoute route, InternalRequest<?> request, InternalResponse<?> response) {
 		if (response.getEntity().isPresent()) {
 			MediaType accept = request.getMatchedAccept();
-			response.header(HeaderName.CONTENT_TYPE, accept.get());
 			Writer writer = route.getWriter(accept)
-				.orElseThrow(notAcceptableSupplier());
+				.orElseThrow(notAcceptableSupplier(String.format(
+					"No suitable Writer for accept header [%s] is registered.", accept)));
+			response.header(HeaderName.CONTENT_TYPE, accept.get());
 			writer.writeTo(response);
 		}
 	}
@@ -44,7 +45,8 @@ public class SerializationAspect implements Aspect {
 	private Object readEntity(InternalRoute route, InternalRequest<Object> request) {
 		MediaType contentType = request.getHeader(CONTENT_TYPE).map(MediaType::of).get();
 		Reader reader = route.getReader(contentType)
-			.orElseThrow(unsupportedMediaTypeSupplier());
+			.orElseThrow(unsupportedMediaTypeSupplier(String.format(
+				"No suitable Reader for content-type header [%s] is registered.", contentType)));
 		return reader.readFrom(request, route.getRequestType());
 	}
 

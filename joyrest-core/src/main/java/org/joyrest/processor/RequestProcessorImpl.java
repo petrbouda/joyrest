@@ -66,7 +66,8 @@ public class RequestProcessorImpl implements RequestProcessor {
 	private InternalResponse<Object> processRequest(final InternalRequest<Object> request, final InternalResponse<Object> response) {
 		final InternalRoute route = cachedRouteResolver.resolveRoute(request)
 			.chainIfEmpty(defaultRouteResolver.resolveRoute(request))
-			.orElseThrow(notFoundSupplier());
+			.orElseThrow(notFoundSupplier(String.format(
+				"No suitable route was found for path [%s] and method [%s]", request.getPath(), request.getMethod())));
 
 		request.setPathParams(resolvePathParams(route, request));
 

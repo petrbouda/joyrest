@@ -1,10 +1,11 @@
 package org.joyrest.examples.combiner.routes;
 
+import static org.joyrest.exception.type.RestException.notFoundSupplier;
+
 import javax.inject.Inject;
 
 import org.joyrest.examples.combiner.model.CombinedFeed;
 import org.joyrest.examples.combiner.service.CrudService;
-import org.joyrest.exception.type.RestException;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
@@ -28,13 +29,13 @@ public class CombinedFeedRoute extends TypedControllerConfiguration {
 
 		delete("/{id}", (request, response) -> {
 			feedService.delete(request.getPathParam("id"))
-				.orElseThrow(RestException.notFoundSupplier());
+				.orElseThrow(notFoundSupplier("No Feed was found for deletion."));
 			response.status(HttpStatus.NO_CONTENT);
 		});
 
 		get("/{id}/entries", (request, response) -> {
 			CombinedFeed feed = feedService.get(request.getPathParam("id"))
-				.orElseThrow(RestException.notFoundSupplier());
+				.orElseThrow(notFoundSupplier("No Feed was found."));
 			response.entity(feed);
 		}).produces(MediaType.JSON, MediaType.XML);
 	}
