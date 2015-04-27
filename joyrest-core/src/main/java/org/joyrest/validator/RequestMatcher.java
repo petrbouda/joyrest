@@ -63,15 +63,13 @@ public final class RequestMatcher {
 	public static boolean matchContentType(InternalRoute route, InternalRequest<?> request) {
 		Optional<String> optContentType = request.getHeader(CONTENT_TYPE);
 		MediaType contentType;
-		if (!optContentType.isPresent()) {
+		if (!optContentType.isPresent())
 			return route.getConsumes().contains(WILDCARD);
-		} else {
+		else
 			contentType = MediaType.of(optContentType.get());
-		}
 
-		if (!route.getConsumes().contains(contentType)) {
+		if (!route.getConsumes().contains(contentType))
 			return false;
-		}
 
 		try {
 			return request.getInputStream().available() != 0 ^ contentType.equals(MediaType.WILDCARD);

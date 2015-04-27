@@ -31,16 +31,16 @@ public class DefaultRouteResolver implements RouteResolver {
 	public OptionalChain<InternalRoute> resolveRoute(InternalRequest<?> request) {
 		Optional<InternalRoute> route = BiStream.of(routes.stream(), request)
 			.throwFilter(pathComparator, notFoundSupplier(String.format(
-					"There is no route fits for path [%s]",
+					"There is no route suitable for path [%s]",
 					request.getPath())))
 			.throwFilter(RequestMatcher::matchHttpMethod, notFoundSupplier(String.format(
-					"There is no route fits for path [%s], method [%s]",
+					"There is no route suitable for path [%s], method [%s]",
 					request.getPath(), request.getMethod())))
 			.throwFilter(RequestMatcher::matchContentType, unsupportedMediaTypeSupplier(String.format(
-					"There is no route fits for path [%s], method [%s], content-type [%s]",
-					request.getPath(), request.getMethod(), request.getHeader(CONTENT_TYPE))))
+					"There is no route suitable for path [%s], method [%s], content-type [%s]",
+					request.getPath(), request.getMethod(), request.getHeader(CONTENT_TYPE).get())))
 			.throwFilter(RequestMatcher::matchAccept, notAcceptableSupplier(String.format(
-					"There is no route fits for path [%s], method [%s], accept [%s]",
+					"There is no route suitable for path [%s], method [%s], accept [%s]",
 					request.getPath(), request.getMethod(), request.getHeader(ACCEPT))))
 			.findAny();
 
