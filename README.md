@@ -4,53 +4,58 @@
 ### About
 JoyRest is a lightweight and convenient tool for **_creating REST services_** by a concise way. The main intention is to provide framework which is simply extensible for different types of DI and servers. JoyRest is purely developed using **_Java programming language 8 and with lambdas_**. Thank to this technology the framework is able to provide very clear API which allows you to defined your endpoints through a **_functional way_**.
 
-### Example
-```java
-public class JokeController extends AbstractControllerConfiguration {
+### Download
 
-	@Inject
-	private JokeService service;
+```xml
+<dependency>
+    <groupId>org.joyrest</groupId>
+    <artifactId>joyrest-{module name}</artifactId>
+    <version>{version}</version>
+</dependency>
+```
 
-	@Override
-	protected void configure() {
-		setGlobalPath("jokes");
+#### Core Module
+This is a standalone module with all needed classes for successful running of JoyRest application. But in most cases core module must be combined with other modules such as DI and server-oriented modules for sake of simplicity.
 
-		// Create a new Joke
-		post((Request request, Response response, Joke joke) -> {
-			Joke savedJoke = service.save(joke);
-			response.entityClass(savedJoke)
-				.status(HttpStatus.CREATED)
-				.header(HeaderName.LOCATION, 
-				    getEntityLocation(savedJoke.getId(), request.getPath()));
-		}).consumes(MediaType.JSON).produces(MediaType.JSON);
+| Group ID	| Artifact ID	| Version	|
+| ------------- | ------------- | ------------- |
+|org.joyrest	|joyrest-core	|0.1-SNAPSHOT	|
 
-		// Get a list of all jokes
-		get((request, response) -> {
-			List<Joke> jokes = service.getAll();
-			response.entityClass(jokes);
-		}).produces(MediaType.JSON, MediaType.XML);
+#### Dependency Injection Modules
+These modules provide capabilities of an integration with different types of DI frameworks. JoyRest can be very easy extensible for any other framework, as mention in secion Integration.
 
-		// Get a concrete joke using ID
-		get(":id", (request, response) -> {
-			Joke joke = service.get(request.getPathParam("id"));
-			response.entityClass(joke);
-		}).produces(MediaType.JSON, MediaType.XML);
-	}
+| Group ID	| Artifact ID	| Version	|
+| ------------- | ------------- | ------------- |
+|org.joyrest	|joyrest-hk2	|0.1-SNAPSHOT	|
+|org.joyrest	|joyrest-spring	|0.1-SNAPSHOT	|
+|org.joyrest	|joyrest-guice	|0.1-SNAPSHOT	|
+|org.joyrest	|joyrest-dagger	|0.1-SNAPSHOT	|
 
-	private String getEntityLocation(String entityId, String path) {
-		return path + "/" + entityId;
-	}
-}
+#### Server Modules
+It is necessary to use any REST Framework with some kind of server. Modules mentioned below allow us very simply integrate HTTP Server or Servlet-based Server with an application which contains JoyRest Framework. How to integrate any other server with JoyRest is mentioned in section Integration.
+
+| Group ID	| Artifact ID		| Version	|
+| ------------- | ---------------------	| ------------- |
+|org.joyrest	|joyrest-grizzly	|0.1-SNAPSHOT	|
+|org.joyrest	|joyrest-undertow	|0.1-SNAPSHOT	|
+|org.joyrest	|joyrest-servlet	|0.1-SNAPSHOT	|
+
+#### Repository for Snapshots
+```xml
+<repository>
+    <id>oss-sonatype</id>
+    <url>https://oss.sonatype.org/content/groups/public</url>
+</repository>
 ```
 
 ### Easy Integration
 One of the main requirements of this framework is easy integration with other tools such as DI framework or Servers. A clue how to integrate a new DI or Server is covered in a particular section **_Integration_**.
 
 #### Dependency Injection Frameworks
-Primarily JoyRest was developed using `HK2` DI but is very easy to integrate JoyRest with whatever dependency framework you want. A support for most famous DI framework such as `Spring, Guice, Dagger` will be developed implicitly.
+Primarily JoyRest was developed using `HK2` DI but also supports most of the popular DI framework such as `Spring, Guice, Dagger`. To make a support for whatever DI framework is very easy and takes no more than one additional special class determined to the given DI framework. Joyrest can be used also without any DI Framework.
 
 #### Servers
-A Support for both types of servers `HTTP Server and NIO Server` is covered and whatever server can be used for running an application with JoyRest framework.
+A Support for both types of servers `HTTP Server and Servlet-based Server` is covered and whatever server can be used for running an application with JoyRest framework.
 
 ### License
 ```
