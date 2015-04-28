@@ -2,6 +2,7 @@ package org.joyrest.model.request;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -143,10 +144,25 @@ public class InternalRequest<E> implements Request<E> {
 		}
 		final InternalRequest other = (InternalRequest) obj;
 		return Objects.equals(this.headers, other.headers)
-				&& Objects.equals(this.pathParams, other.pathParams)
-				&& Objects.equals(this.queryParams, other.queryParams)
-				&& Objects.equals(this.path, other.path)
-				&& Objects.equals(this.method, other.method)
-				&& Objects.equals(this.entity, other.entity);
+			&& Objects.equals(this.pathParams, other.pathParams)
+			&& Objects.equals(this.queryParams, other.queryParams)
+			&& Objects.equals(this.path, other.path)
+			&& Objects.equals(this.method, other.method)
+			&& Objects.equals(this.entity, other.entity);
+	}
+
+	@Override
+	public String toString() {
+		try {
+			return "InternalRequest{" +
+				"headers=" + headers +
+				", pathParts=" + pathParts +
+				", path='" + path + '\'' +
+				", method=" + method +
+				", inputStreamAvailable=" + (inputStream.available() > 0) +
+				'}';
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

@@ -13,17 +13,20 @@
             <destination class="ChartDestination">
                 <period type="time" value="500"/>
                 <property name="name" value="${framework:unknown}"/>
-                <property name="group" value="PerfTest_get-all"/>
+                <property name="group" value="PerfTest_post-and-receive"/>
                 <property name="yAxis" value="Throughput"/>
                 <property name="outputDir" value="${perfcake.scenario}-charts"/>
                 <property name="attributes" value="Minimum, Maximum, Average, Result"/>
             </destination>
         </reporter>
         <reporter class="ResponseTimeStatsReporter">
+            <destination class="ConsoleDestination">
+                <period type="time" value="500"/>
+            </destination>
             <destination class="ChartDestination">
                 <period type="time" value="500"/>
                 <property name="name" value="${framework:unknown}"/>
-                <property name="group" value="PerfTest_get-all"/>
+                <property name="group" value="PerfTest_post-and-receive"/>
                 <property name="yAxis" value="Response Time"/>
                 <property name="outputDir" value="${perfcake.scenario}-charts"/>
                 <property name="attributes" value="Minimum, Maximum, Average, Result"/>
@@ -31,9 +34,9 @@
         </reporter>
     </reporting>
     <messages>
-        <message uri="joyrest/feed-entry.json">
-            <header name="content-type" value="application/json" />
-            <header name="accept" value="application/json" />
+        <message uri="${base.path}/messages/feed-entry.json">
+            <header name="content-type" value="application/json"/>
+            <header name="accept" value="application/json"/>
         </message>
     </messages>
 </scenario>

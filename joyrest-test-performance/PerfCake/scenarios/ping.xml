@@ -13,17 +13,20 @@
             <destination class="ChartDestination">
                 <period type="time" value="500"/>
                 <property name="name" value="${framework:unknown}"/>
-                <property name="group" value="PerfTest_get-all"/>
+                <property name="group" value="PerfTest_ping"/>
                 <property name="yAxis" value="Throughput"/>
                 <property name="outputDir" value="${perfcake.scenario}-charts"/>
                 <property name="attributes" value="Minimum, Maximum, Average, Result"/>
             </destination>
         </reporter>
         <reporter class="ResponseTimeStatsReporter">
+	    <destination class="ConsoleDestination">
+                <period type="time" value="500"/>
+            </destination>
             <destination class="ChartDestination">
                 <period type="time" value="500"/>
                 <property name="name" value="${framework:unknown}"/>
-                <property name="group" value="PerfTest_get-all"/>
+                <property name="group" value="PerfTest_ping"/>
                 <property name="yAxis" value="Response Time"/>
                 <property name="outputDir" value="${perfcake.scenario}-charts"/>
                 <property name="attributes" value="Minimum, Maximum, Average, Result"/>

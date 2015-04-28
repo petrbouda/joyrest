@@ -20,6 +20,9 @@
             </destination>
         </reporter>
         <reporter class="ResponseTimeStatsReporter">
+	    <destination class="ConsoleDestination">
+                <period type="time" value="500"/>
+            </destination>
             <destination class="ChartDestination">
                 <period type="time" value="500"/>
                 <property name="name" value="${framework:unknown}"/>
