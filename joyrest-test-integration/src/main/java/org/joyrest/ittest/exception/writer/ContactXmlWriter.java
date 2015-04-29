@@ -44,7 +44,7 @@ public class ContactXmlWriter implements Writer {
 	}
 
 	@Override
-	public boolean isWriterClassCompatible(Class<?> clazz) {
+	public boolean isClassCompatible(Class<?> clazz) {
 		return Objects.equals(clazz, Contact.class);
 	}
 

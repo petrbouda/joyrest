@@ -20,7 +20,7 @@ public class UnknownWriter implements Writer {
 	}
 
 	@Override
-	public boolean isWriterClassCompatible(Class<?> clazz) {
+	public boolean isClassCompatible(Class<?> clazz) {
 		return Objects.equals(clazz, Object.class);
 	}
 
