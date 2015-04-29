@@ -1,6 +1,7 @@
 package org.joyrest.servlet;
 
 import static java.util.Collections.list;
+import static java.util.Objects.isNull;
 import static org.joyrest.servlet.JoyrestProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
 import static org.joyrest.servlet.JoyrestProperties.CONFIGURER_PROPERTY;
 import static org.joyrest.utils.RequestResponseUtils.createPath;
@@ -68,13 +69,11 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 	}
 
 	private void initializeProcessor(Function<String, String> paramProvider) throws ServletException {
-		if (this.applicationConfig == null) {
+		if (isNull(applicationConfig))
 			this.applicationConfig = getInstanceFromClazz(paramProvider.apply(APPLICATION_JAVA_CONFIG_PROPERTY));
-		}
 
-		if (this.configurer == null) {
+		if (isNull(configurer))
 			this.configurer = getInstanceFromClazz(paramProvider.apply(CONFIGURER_PROPERTY), Configurer.class);
-		}
 
 		@SuppressWarnings("unchecked")
 		ApplicationContext context = configurer.initialize(applicationConfig);
@@ -92,13 +91,13 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 	}
 
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		processRequest(req, resp);
+	protected void service(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		processRequest(request, resp);
 	}
 
 	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			if(req.getDispatcherType() == DispatcherType.ERROR)
+			if (req.getDispatcherType() == DispatcherType.ERROR)
 				return;
 
 			processor.process(createRequest(req), createResponse(resp));
@@ -114,13 +113,13 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		return joyResponse;
 	}
 
-	private LambdaRequest<Object> createRequest(HttpServletRequest request) throws IOException {
-		LambdaRequest<Object> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
-		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
-		joyRequest.setMethod(HttpMethod.of(request.getMethod()));
-		joyRequest.setInputStream(request.getInputStream());
-		joyRequest.setQueryParamNames(list(request.getParameterNames()));
-		joyRequest.setHeaderNames(list(request.getHeaderNames()));
+	private LambdaRequest<Object> createRequest(HttpServletRequest req) throws IOException {
+		LambdaRequest<Object> joyRequest = new LambdaRequest<>(req::getHeader, req::getParameterValues);
+		joyRequest.setPath(createPath(req.getRequestURI(), req.getContextPath(), req.getServletPath()));
+		joyRequest.setMethod(HttpMethod.of(req.getMethod()));
+		joyRequest.setInputStream(req.getInputStream());
+		joyRequest.setQueryParamNames(list(req.getParameterNames()));
+		joyRequest.setHeaderNames(list(req.getHeaderNames()));
 		return joyRequest;
 	}
 }

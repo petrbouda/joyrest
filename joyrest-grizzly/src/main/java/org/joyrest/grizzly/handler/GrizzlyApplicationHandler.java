@@ -39,13 +39,13 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 		processor.process(createRequest(request), createResponse(response));
 	}
 
-	private LambdaRequest<Object> createRequest(org.glassfish.grizzly.http.server.Request request) {
-		LambdaRequest<Object> joyRequest = new LambdaRequest<>(request::getHeader, request::getParameterValues);
-		joyRequest.setPath(createPath(request.getRequestURI(), request.getContextPath()));
-		joyRequest.setMethod(HttpMethod.of(request.getMethod().getMethodString()));
-		joyRequest.setInputStream(request.getInputStream());
-		joyRequest.setHeaderNames(request.getHeaderNames());
-		joyRequest.setQueryParamNames(request.getParameterNames());
+	private LambdaRequest<Object> createRequest(org.glassfish.grizzly.http.server.Request req) {
+		LambdaRequest<Object> joyRequest = new LambdaRequest<>(req::getHeader, req::getParameterValues);
+		joyRequest.setPath(createPath(req.getRequestURI(), req.getContextPath()));
+		joyRequest.setMethod(HttpMethod.of(req.getMethod().getMethodString()));
+		joyRequest.setInputStream(req.getInputStream());
+		joyRequest.setHeaderNames(req.getHeaderNames());
+		joyRequest.setQueryParamNames(req.getParameterNames());
 		return joyRequest;
 	}
 

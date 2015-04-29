@@ -32,7 +32,12 @@ public final class RequestResponseUtils {
 	}
 
 	public static String createPath(String requestUri, String contextPath) {
-		return requestUri.replaceFirst(contextPath, "");
+		return requestUri.substring(contextPath.length());
+	}
+
+	public static String createPath(String requestUri, String contextPath, String servletPath) {
+		return requestUri.substring(contextPath.length())
+			.substring(servletPath.length());
 	}
 
 }
