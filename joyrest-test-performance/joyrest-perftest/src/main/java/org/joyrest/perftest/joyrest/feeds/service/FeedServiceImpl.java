@@ -1,10 +1,10 @@
-package org.joyrest.perftest.jersey.feeds.service;
+package org.joyrest.perftest.joyrest.feeds.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.joyrest.perftest.jersey.feeds.model.FeedEntry;
+import org.joyrest.perftest.joyrest.feeds.model.FeedEntry;
 
 public class FeedServiceImpl implements FeedService {
 

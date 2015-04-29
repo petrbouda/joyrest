@@ -1,8 +1,8 @@
 package org.joyrest.servlet;
 
 import static java.util.Collections.list;
-import static org.joyrest.servlet.ServletProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
-import static org.joyrest.servlet.ServletProperties.CONFIGURER_PROPERTY;
+import static org.joyrest.servlet.JoyrestProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
+import static org.joyrest.servlet.JoyrestProperties.CONFIGURER_PROPERTY;
 import static org.joyrest.utils.RequestResponseUtils.createPath;
 
 import java.io.IOException;

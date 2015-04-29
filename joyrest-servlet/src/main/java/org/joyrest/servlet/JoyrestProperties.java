@@ -1,6 +1,6 @@
 package org.joyrest.servlet;
 
-public final class ServletProperties {
+public final class JoyrestProperties {
 
 	public static final String APPLICATION_JAVA_CONFIG_PROPERTY = "applicationJavaConfig";
 

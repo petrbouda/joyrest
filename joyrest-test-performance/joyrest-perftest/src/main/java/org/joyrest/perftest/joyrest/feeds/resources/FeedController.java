@@ -1,4 +1,4 @@
-package org.joyrest.perftest.jersey.feeds.resources;
+package org.joyrest.perftest.joyrest.feeds.resources;
 
 import static org.joyrest.model.http.MediaType.JSON;
 import static org.joyrest.routing.entity.RequestType.Req;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joyrest.perftest.jersey.feeds.model.FeedEntry;
-import org.joyrest.perftest.jersey.feeds.service.FeedService;
+import org.joyrest.perftest.joyrest.feeds.model.FeedEntry;
+import org.joyrest.perftest.joyrest.feeds.service.FeedService;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.routing.TypedControllerConfiguration;
 

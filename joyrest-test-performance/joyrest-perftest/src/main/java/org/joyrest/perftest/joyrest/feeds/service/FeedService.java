@@ -1,8 +1,8 @@
-package org.joyrest.perftest.jersey.feeds.service;
+package org.joyrest.perftest.joyrest.feeds.service;
 
 import java.util.List;
 
-import org.joyrest.perftest.jersey.feeds.model.FeedEntry;
+import org.joyrest.perftest.joyrest.feeds.model.FeedEntry;
 
 public interface FeedService {
 

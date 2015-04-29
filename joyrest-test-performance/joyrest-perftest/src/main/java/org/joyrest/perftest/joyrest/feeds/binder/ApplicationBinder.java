@@ -1,12 +1,12 @@
-package org.joyrest.perftest.jersey.feeds.binder;
+package org.joyrest.perftest.joyrest.feeds.binder;
 
 import javax.inject.Singleton;
 
-import org.joyrest.perftest.jersey.feeds.resources.FeedController;
-import org.joyrest.perftest.jersey.feeds.service.FeedService;
+import org.joyrest.perftest.joyrest.feeds.resources.FeedController;
+import org.joyrest.perftest.joyrest.feeds.service.FeedService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
-import org.joyrest.perftest.jersey.feeds.service.FeedServiceImpl;
+import org.joyrest.perftest.joyrest.feeds.service.FeedServiceImpl;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.JsonReaderWriter;
 import org.joyrest.transform.Reader;

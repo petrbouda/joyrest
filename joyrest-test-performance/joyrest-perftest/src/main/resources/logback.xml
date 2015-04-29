@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Simple logback configuration for STDOUT-only. -->
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <appender name="STOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+        <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder. -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="STOUT"/>
+    </root>
+
+    <!-- For loggers in these namespaces, log all levels. -->
+    <logger name="org.joyrest" level="DEBUG"/>
+
+</configuration>

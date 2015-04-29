@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<groupId>org.joyrest</groupId>
-		<artifactId>joyrest-perftests</artifactId>
+		<artifactId>joyrest-test-performance</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
@@ -26,10 +26,22 @@
 			<version>${joyrest.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.12</version>
-		</dependency>
+        <dependency>
+            <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-servlet</artifactId>
+            <version>${joyrest.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joyrest</groupId>
+            <artifactId>common-perftest</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.3</version>
+        </dependency>
 	</dependencies>
 </project>

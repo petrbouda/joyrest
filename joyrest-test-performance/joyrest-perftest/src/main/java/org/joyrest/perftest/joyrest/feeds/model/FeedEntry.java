@@ -1,4 +1,4 @@
-package org.joyrest.perftest.jersey.feeds.model;
+package org.joyrest.perftest.joyrest.feeds.model;
 
 import java.io.Serializable;
 

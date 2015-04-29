@@ -12,5 +12,6 @@
     <modules>
         <module>joyrest-perftest</module>
         <module>jersey-perftest</module>
+        <module>common-perftest</module>
     </modules>
 </project>

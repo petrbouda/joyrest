@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<groupId>org.joyrest</groupId>
-		<artifactId>joyrest-perftests</artifactId>
+		<artifactId>joyrest-test-performance</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
@@ -10,20 +10,14 @@
 	<artifactId>jersey-perftest</artifactId>
 
 	<properties>
-		<jersey.version>2.14</jersey.version>
+		<jersey.version>2.17</jersey.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-grizzly2-http</artifactId>
-			<version>${jersey.version}</version>
+            <groupId>org.joyrest</groupId>
+            <artifactId>common-perftest</artifactId>
+            <version>0.1-SNAPSHOT</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-moxy</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-	</dependencies>
+    </dependencies>
 </project>
