@@ -8,7 +8,7 @@ import org.joyrest.grizzly.handler.GrizzlyApplicationHandler;
 import org.joyrest.hk2.HK2Configurer;
 import org.joyrest.perftest.joyrest.feeds.binder.ApplicationBinder;
 
-public class JoyrestStart {
+public class GrizzlyStart {
 
 	public static void main(String[] args) {
 		HK2Configurer configurer = new HK2Configurer();

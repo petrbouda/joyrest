@@ -9,7 +9,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
-public class JerseyStart {
+public class GrizzlyStart {
 
 	public static void main(String[] args) {
 		URI baseUri = UriBuilder.fromUri("http://localhost/").port(5000).path("services").build();
