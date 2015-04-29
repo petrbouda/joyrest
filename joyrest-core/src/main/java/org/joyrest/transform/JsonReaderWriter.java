@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonReaderWriter extends AbstractReaderWriter {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
+
 	private final MediaType supportedMediaType = MediaType.JSON;
 
 	@Override
@@ -33,7 +34,7 @@ public class JsonReaderWriter extends AbstractReaderWriter {
 	}
 
 	@Override
-	public boolean isWriterClassCompatible(Class<?> clazz) {
+	public boolean isClassCompatible(Class<?> clazz) {
 		return true;
 	}
 

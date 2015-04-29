@@ -22,6 +22,9 @@ public final class MediaType {
 	public static final MediaType ATOM_XML = new MediaType("application", "atom+xml", XML);
 	public static final MediaType XHTML_XML = new MediaType("application", "xhtml+xml", XML);
 
+	public static final MediaType SERIALIZATION_JAVA = new MediaType("serialization", "java");
+	public static final MediaType SERIALIZATION_HESSIAN = new MediaType("serialization", "hessian");
+
 	private static final Map<String, MediaType> BASIC_MEDIA_TYPE;
 
 	static {

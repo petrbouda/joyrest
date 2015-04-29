@@ -146,7 +146,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 				.forEach(handler::addWriter);
 
 			writers.get(Boolean.FALSE).stream().distinct()
-				.filter(writer -> writer.isWriterClassCompatible(handler.getResponseType().getType()))
+				.filter(writer -> writer.isClassCompatible(handler.getResponseType().getType()))
 				.forEach(handler::addWriter);
 		}
 	}

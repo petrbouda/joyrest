@@ -7,4 +7,6 @@ public interface Transformer extends General {
 
 	MediaType getMediaType();
 
+	boolean isClassCompatible(Class<?> clazz);
+
 }

@@ -14,8 +14,6 @@ public class StringReaderWriter extends AbstractReaderWriter {
 
 	private final MediaType supportedMediaType = MediaType.PLAIN_TEXT;
 
-	private final String DEFAULT_CHARSET = "UTF-8";
-
 	@Override
 	public <T> T readFrom(InternalRequest<T> request, Type<T> clazz) {
 		try {
@@ -43,7 +41,7 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	}
 
 	@Override
-	public boolean isWriterClassCompatible(Class<?> clazz) {
+	public boolean isClassCompatible(Class<?> clazz) {
 		return true;
 	}
 

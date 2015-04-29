@@ -9,6 +9,4 @@ public interface Writer extends Transformer {
 
 	boolean isWriterCompatible(InternalRoute route);
 
-	boolean isWriterClassCompatible(Class<?> clazz);
-
 }

@@ -14,6 +14,7 @@
     <properties>
         <jackson.version>2.5.1</jackson.version>
         <typetools.version>0.4.0</typetools.version>
+        <hessian.version>4.0.38</hessian.version>
     </properties>
 
     <dependencies>
@@ -31,6 +32,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>${hessian.version}</version>
         </dependency>
     </dependencies>
 </project>

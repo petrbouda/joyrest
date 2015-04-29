@@ -4,6 +4,8 @@ import org.joyrest.routing.InternalRoute;
 
 public abstract class AbstractReaderWriter implements Reader, Writer {
 
+	protected final String DEFAULT_CHARSET = "UTF-8";
+
 	@Override
 	public boolean isReaderCompatible(InternalRoute route) {
 		return route.getConsumes().contains(getMediaType());
