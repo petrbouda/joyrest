@@ -1,5 +1,7 @@
 package org.joyrest.examples.combiner.binder;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 
 import java.io.InputStream;
@@ -42,6 +44,10 @@ public class ApplicationBinder extends AbstractBinder {
 	private static Logger LOG = Logger.getLogger(PropertiesBinder.class.getName());
 
 	private final Properties properties;
+
+	public ApplicationBinder() {
+		this("application.properties");
+	}
 
 	public ApplicationBinder(String propertiesFileName) {
 		this.properties = getProperties(propertiesFileName);
@@ -149,7 +155,7 @@ public class ApplicationBinder extends AbstractBinder {
 
 		@Override
 		protected void configure() {
-			if (properties != null) {
+			if (nonNull(properties)) {
 				Map<String, String> propertyMap = properties.stringPropertyNames().stream()
 					.collect(toMap(Function.identity(), properties::getProperty));
 
@@ -160,7 +166,6 @@ public class ApplicationBinder extends AbstractBinder {
 
 				bind(new PropertyResolver(propertyMap, parsers))
 					.to(new TypeLiteral<InjectionResolver<Property>>() {});
-
 			}
 		}
 	}
