@@ -1,73 +1,93 @@
 ---
 layout: default
 ---
-<div class="col-md-3" id="leftCol">
 
-    <div class="well">
-        <ul class="nav nav-stacked" id="sidebar">
-            <li><a href="#run-sec">How to Run Application</a></li>
-            <li><a href="#controller-sec">How to Create Controller and Route</a></li>
-            <li><a href="#exception-sec">How to Handle Exception</a></li>
-            <li><a href="#rw-sec">How to Create Writer/Reader</a></li>
-        </ul>
+<div class="col-md-12">
+    <h2>Welcome to the JoyRest tutorial</h2>
+    <hr/>
+
+    <div class="bs-callout bs-callout-info" id="callout-btn-group-tooltips">
+        <p>
+            This tutorial introduces all functionality provided by the REST Framework. Please, look at the GitHub examples from which
+            are used some snippets shown below.
+        </p>
+        <i class="fa fa-link" style="color: black"></i>&nbsp;&nbsp;
+        <a href="https://github.com/petrbouda/joyrest/tree/master/joyrest-examples">JoyRest Examples</a>
     </div>
 
-    {% include github.html %}
-</div>
-<div class="col-md-9">
-    <h3 id="run-sec">How to Run Application</h3>
-<pre><code class="language-java">
-public class Start {
-    public static void main(String... args) throws Exception {
-        Configurer configurer = new HK2Configurer();
-        ApplicationContext applicationContext = configurer.initialize(new ApplicationBinder());
-        GrizzlyServer.start(applicationContext, "/services", 5000);
-    }
-}
-</code></pre>
-    <hr>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Functionality</th>
+            <th>Introduction</th>
+            <th>Includes</th>
+        </tr>
+        </thead>
 
-    <h3 id="controller-sec">How to Create Controller and Route</h3>
-    Controllers are configuration classes which provides all information about routes that have something similar to each other. For example
-    resource <code>Joke</code> should have one controller configuration with all operations which are available to do with this resource.
-    There is one abstract class <code>TypedControllerConfiguration</code> which makes route creation very easy and its usage is shown below.
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td><a href="tutorial/download.html">Download</a></td>
+            <td>How to download RELEASE dependencies from Maven Central repository and SNAPSHOTs from Sonatype.</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td><a href="tutorial/run.html">Run Application</a></td>
+            <td>How to use a configurer and an application config to create an application context and to run the application.</td>
+            <td><code>Configurer</code>, <code>ApplicationContext</code></td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td><a href="tutorial/handler.html">Server Handlers</a></td>
+            <td>How to integrate JoyRest application with dedicate HTTP or Servlet-base Server.</td>
+            <td><code>InternalRequest</code>, <code>InternalResponse</code>, <code>LambdaRequest</code>, <code>LambdaResponse</code></td>
+        </tr>
+        <tr>
+            <th scope="row">4</th>
+            <td><a href="tutorial/config.html">Application Config</a></td>
+            <td>How to inject all needed objects which is used to build up an application.</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th scope="row">5</th>
+            <td><a href="tutorial/route.html">First Route</a></td>
+            <td>How to define routes using TypedControllerConfiguration.</td>
+            <td><code>Route</code>, <code>TypedControllerConfiguration</code></td>
+        </tr>
+        <tr>
+            <th scope="row">6</th>
+            <td><a href="tutorial/aspect.html">Aspects</a></td>
+            <td>How to implement new behaviour which intercepts requests and responses.</td>
+            <td><code>Aspect</code></td>
+        </tr>
+        <tr>
+            <th scope="row">7</th>
+            <td><a href="tutorial/handling.html">Exception Handling</a></td>
+            <td>How to configure exception handlers to customize responses according to a type of the thrown exception.</td>
+            <td><code>ExceptionHandler</code>, <code>TypedExceptionConfiguration</code></td>
+        </tr>
+        <tr>
+            <th scope="row">8</th>
+            <td><a href="tutorial/writerreader.html">Custom Writer x Reader</a></td>
+            <td>How to customize marshalling and unmarshalling.</td>
+            <td><code>Writer</code><code>Reader</code></td>
+        </tr>
+        <tr>
+            <th scope="row">9</th>
+            <td><a href="tutorial/intserver.html">Integrate Server</a></td>
+            <td>How to integrate still non-integrated HTTP server.</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th scope="row">10</th>
+            <td><a href="tutorial/intdi.html">Integrate DI Framework.</a></td>
+            <td>How to cover new dependency injection framework and use it to bootstrap the application.</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
 
-<pre><code class="language-java">
-public class JokeController extends TypedControllerConfiguration {
-
-    @Inject
-    private JokeService service;
-
-    get((req, resp) -> {
-        List<Joke> jokes = service.getAll();
-        resp.entity(jokes);
-    }, RespList(Joke.class)).produces(JSON, XML);
-}</code></pre>
-    <code>TypedControllerConfiguration</code> contains various combinations of HTTP methods to make a route creation as simple as possible.
-    <hr>
-
-    <h3 id="exception-sec">How to Handle Exception</h3>
-    As well as <code>TypedControllerConfiguration</code> class is determined for creation of routes there is also
-    <code>TypedExceptionConfiguration</code> abstract class which makes easy a handling of exceptions occurred during request processing
-    (e.g. no suitable route was found for a given request - framework exceptions) or which is thrown in route processing
-    (developers exceptions).
-
-<pre><code class="language-java">
-public class TestExceptionConfiguration extends TypedExceptionConfiguration {
-
-    @Override
-    protected void configure() {
-        handle(SomeException.class, (req, resp, ex) -> {
-            resp.status(HttpStatus.BAD_REQUEST);
-            resp.header(HeaderName.of("x-exception-header"), "error");
-            resp.entity(new ErrorResponse("reason", "some description"));
-        }, Resp(ErrorResponse.class));
-    }
-}</code></pre>
-
-    <hr>
-
-    <h3 id="rw-sec">How to Create Writer/Reader</h3>
-    <code>Reader</code> and <code>Writer</code> are used to process (marshall or unmarshall) a body of request/response.
-    <hr>
+    <hr />
 </div>

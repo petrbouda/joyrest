@@ -1,0 +1,23 @@
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+
+.bs-callout-warning {
+    border-left-color: #aa6708;
+}
+
+.bs-callout-info {
+    border-left-color: #1b809e;
+}
+
+.footer {
+    color: #5e5e5e;
+    font-size: 12px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}

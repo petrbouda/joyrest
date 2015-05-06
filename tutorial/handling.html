@@ -1,0 +1,29 @@
+---
+layout: default
+---
+
+<div class="col-md-12">
+
+    <h3 id="exception-sec">How to Handle Exception</h3>
+    <hr/>
+
+    As well as <code>TypedControllerConfiguration</code> class is determined for creation of routes there is also
+    <code>TypedExceptionConfiguration</code> abstract class which makes easy a handling of exceptions occurred during request processing
+    (e.g. no suitable route was found for a given request - framework exceptions) or which is thrown in route processing
+    (developers exceptions).
+
+<pre><code class="language-java">
+public class TestExceptionConfiguration extends TypedExceptionConfiguration {
+
+    @Override
+    protected void configure() {
+        handle(SomeException.class, (req, resp, ex) -> {
+            resp.status(HttpStatus.BAD_REQUEST);
+            resp.header(HeaderName.of("x-exception-header"), "error");
+            resp.entity(new ErrorResponse("reason", "some description"));
+        }, Resp(ErrorResponse.class));
+    }
+}</code></pre>
+
+    <hr>
+</div>

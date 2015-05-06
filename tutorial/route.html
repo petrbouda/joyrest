@@ -1,0 +1,56 @@
+---
+layout: default
+---
+
+<div class="col-md-12">
+    <h3 id="controller-sec">How to Create Controller and Route</h3>
+    <hr/>
+    <p>
+        Controllers are configuration classes which provides all information about routes that have something similar to each other. For example
+        resource <code>Joke</code> should have one controller configuration with all operations which are available to do with this resource.
+        There is one abstract class <code>TypedControllerConfiguration</code> that makes a route creation very easy because contains
+        various combinations of parameters to makes a work with it as convenient as possible. Its usage is shown below.
+    </p>
+    <p>
+        There are several ways to configure the body of the route:
+    </p>
+    <ul>
+        <li>using a lambda expression</li>
+        <li>using a method reference</li>
+        <li>using an implementation of the interface <code>BiConsumer&lt;Request&lt;REQ&gt;, Response&lt;RESP&gt;&gt;</code></li>
+    </ul>
+
+    <div class="bs-callout bs-callout-warning">
+        <p>
+            Maybe someone may find strict declaring of Request/Response types as a verbose and annoying activity, but this is the
+            biggest advantage of JoyRest. Since this strict defining types allows to JoyRest resolve Writes/Readers during
+            an application bootstrapping and not during a Request processing. This is a trade-off between an additional written code
+            and a performance impact.
+        </p>
+        <p>
+            JoyRest chose a better performance !!
+        </p>
+    </div>
+
+    <h4>Lambda expression example</h4>
+<pre><code class="language-java">
+public class JokeController extends TypedControllerConfiguration {
+
+    @Inject
+    private JokeService service;
+
+    @Override
+    protected void configure() {
+        get((req, resp) -> {
+            List&lt;Joke&gt; jokes = service.getAll();
+            resp.entity(jokes);
+        }, RespList(Joke.class)).produces(JSON, XML);
+    }
+}</code></pre>
+
+    <h4>Method reference example</h4>
+
+    <h4>BiConsumer implementation example</h4>
+
+    <hr>
+</div>
