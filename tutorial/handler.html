@@ -7,29 +7,28 @@ layout: default
     <h2>How to integrate JoyRest application with Server</h2>
     <hr/>
 
-    <p>
+    <div class="bs-callout bs-callout-info">
         JoeRest application may use two ways of integration depends on the type of the server -
         <code>HTTP Server</code> or <code>Servlet-based Server</code>.
-    </p>
+    </div>
 
     <h4>HTTP Server Integration</h4>
-    <p>
-        The main component ensured JoyRest <-> HTTP Server integration is called <code>Handler</code>. Every server has a specific way
-        to integrate with JoyRest, every of them provides a different way to find out information about HTTP Requests and Responses.
-        But the idea behind this is always the same:
-    </p>
+    <div class="bs-callout bs-callout-info">
+        <p>
+            The main component ensured JoyRest <-> HTTP Server integration is called <code>Handler</code>. Every server has a specific way
+            to integrate with JoyRest, every of them provides a different way to find out information about HTTP Requests and Responses.
+            But the idea behind this is always the same:
+        </p>
 
-    <ul>
-        <li>to map an HTTP server-specific request to an internal representation (<code>InternalRequest</code>)</li>
-        <li>to process the request using a predefined route</li>
-        <li>to map an internal response (<code>InternalResponse</code>) to a server-specific HTTP response</li>
-    </ul>
+        <ul>
+            <li>to map an HTTP server-specific request to an internal representation (<code>InternalRequest</code>)</li>
+            <li>to process the request using a predefined route</li>
+            <li>to map an internal response (<code>InternalResponse</code>) to a server-specific HTTP response</li>
+        </ul>
 
-    <p>
         Handlers to the individual HTTP servers are included in individual jar files and these files are available as a maven
         dependency. For instance:
-    </p>
-
+    </div>
     <table class="table">
         <caption></caption>
         <thead>
@@ -57,16 +56,15 @@ layout: default
         </tr>
         </tbody>
     </table>
-    <p>
-        The full set of supported servers is published in the <a href="./download.html">Download Section</a>.
-    </p>
+    <div class="bs-callout bs-callout-info">
+        <p>
+            The full set of supported servers is published in the <a href="./download.html">Download Section</a>.
+        </p>
 
-    <p>
         The example mentioned below is a Grizzly-specific handler that uses <code>LambdaRequest</code> and <code>LamdaResponse</code>
         because of better performance and omitting some useless transformations between grizzly-specific requests and responses to/from
         an internal representation.
-    </p>
-
+    </div>
 <pre><code class="language-java">
 public class GrizzlyApplicationHandler extends HttpHandler {
 

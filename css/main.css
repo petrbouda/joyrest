@@ -21,3 +21,12 @@
     padding-left: 15px;
     padding-right: 15px;
 }
+
+h2 {
+    font-weight: bold;
+}
+
+h4, h3 {
+    font-style: oblique;
+    font-weight: bold;
+}

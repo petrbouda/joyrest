@@ -4,14 +4,15 @@ layout: default
 
 <div class="col-md-12">
 
-    <h3 id="exception-sec">How to Handle Exception</h3>
+    <h2 id="exception-sec">How to Handle an Exception</h2>
     <hr/>
 
-    As well as <code>TypedControllerConfiguration</code> class is determined for creation of routes there is also
-    <code>TypedExceptionConfiguration</code> abstract class which makes easy a handling of exceptions occurred during request processing
-    (e.g. no suitable route was found for a given request - framework exceptions) or which is thrown in route processing
-    (developers exceptions).
-
+    <div class="bs-callout bs-callout-info">
+        As well as <code>TypedControllerConfiguration</code> class is determined for creation of routes there is also
+        <code>TypedExceptionConfiguration</code> abstract class which makes easy a handling of exceptions occurred during request processing
+        (e.g. no suitable route was found for a given request - framework exceptions) or which is thrown in route processing
+        (developers exceptions).
+    </div>
 <pre><code class="language-java">
 public class TestExceptionConfiguration extends TypedExceptionConfiguration {
 

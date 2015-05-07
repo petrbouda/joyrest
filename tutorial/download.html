@@ -5,14 +5,17 @@ layout: default
     <h2>How do download JoyRest dependencies</h2>
     <hr/>
 
-    <h3 id="github-sec">GitHub Sources</h3>
+    <h4 id="github-sec">GitHub Sources</h4>
+    <div class="bs-callout bs-callout-info">
     A source code of the framework is able to clone from GitHub: <a href="http://www.github.com/petrbouda/joyrest">http://www.github.com/petrbouda/joyrest</a>
+    </div>
 
-    <h3>Repositories</h3>
+    <h4>Repositories</h4>
     <div class="bs-callout bs-callout-info">
         Releases are available on Maven Central Repository so in this case it is not needed to configure any maven repository.
+        <br />
+        In case of snapshots you must configure Sonatype repository in your POM file:
     </div>
-    <p>In case of snapshots you must configure Sonatype repository in your POM file:</p>
 <pre><code class="language-markup">
 &lt;repository&gt;
     &lt;id&gt;oss-sonatype&lt;/id&gt;
@@ -20,7 +23,7 @@ layout: default
 &lt;/repository&gt;
 </code></pre>
 
-    <h3>Maven Dependency Pattern</h3>
+    <h4>Maven Dependency Pattern</h4>
 <pre><code class="language-markup">
 &lt;dependency&gt;
     &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
@@ -29,11 +32,12 @@ layout: default
 &lt;/dependency&gt;
 </code></pre>
 
-    <h3 id="core-sec">Core Module</h3>
+    <h4 id="core-sec">Core Module</h4>
+    <div class="bs-callout bs-callout-info">
     This is a standalone module with all needed classes for successful running of JoyRest application. But in most
     cases core module must be combined with other modules such as DI and server-oriented modules for sake of
     simplicity.
-
+    </div>
     <table class="table">
         <caption></caption>
         <thead>
@@ -54,10 +58,11 @@ layout: default
 
     <hr/>
 
-    <h3 id="di-sec">Dependency Injection Modules</h3>
+    <h4 id="di-sec">Dependency Injection Modules</h4>
+    <div class="bs-callout bs-callout-info">
     These modules provide capabilities of an integration with different types of DI frameworks.
     JoyRest can be very easy extensible for any other framework, as mention in secion <code>Integration</code>.
-
+    </div>
     <table class="table">
         <caption></caption>
         <thead>
@@ -93,10 +98,12 @@ layout: default
 
     <hr/>
 
-    <h3 id="server-sec">Server Modules</h3>
+    <h4 id="server-sec">Server Modules</h4>
+    <div class="bs-callout bs-callout-info">
     It is necessary to use any REST Framework with some kind of server. Modules mentioned below allow us very simply
     integrate <code>HTTP Server</code> or <code>Servlet-based Server</code> with an application which contains JoyRest Framework.
     How integration any other server with JoyRest is mentioned in section <code>Integration</code>.
+    </div>
     <table class="table">
         <caption></caption>
         <thead>
