@@ -1,20 +1,20 @@
 ---
 layout: default
 ---
-<div class="col-md-3" id="leftCol">
 
-    <div class="well">
-        <ul class="nav nav-stacked" id="sidebar">
-            <li><a href="#sec1">About</a></li>
-            <li><a href="#sec2">Examples</a></li>
-            <li><a href="#sec3">Integration - DI</a></li>
-            <li><a href="#sec3">Integration - Servers</a></li>
-        </ul>
-    </div>
+<div class="col-md-12">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <img alt="Brand" src="...">
+                </a>
 
-    {% include github.html %}
-</div>
-<div class="col-md-9">
+                {% include github.html %}
+            </div>
+        </div>
+    </nav>
+
     <h3 id="sec1">About</h3>
     JoyRest is a lightweight and convenient tool for <code>creating REST services</code> by a concise way.
     The main intention is to provide framework which is simply extensible for different types of DI and servers.
