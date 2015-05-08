@@ -1,6 +1,7 @@
 package org.joyrest.jetty.handler;
 
 import static java.util.Collections.list;
+import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 import static org.joyrest.utils.RequestResponseUtils.createPath;
 
 import java.io.IOException;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.joyrest.context.ApplicationContext;
+import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.LambdaRequest;
 import org.joyrest.model.response.LambdaResponse;
 import org.joyrest.processor.RequestProcessor;
@@ -56,6 +59,7 @@ public class JettyApplicationHandler extends AbstractHandler {
 		joyRequest.setInputStream(req.getInputStream());
 		joyRequest.setQueryParamNames(list(req.getParameterNames()));
 		joyRequest.setHeaderNames(list(req.getHeaderNames()));
+		joyRequest.setContentType(MediaType.of(req.getHeader(CONTENT_TYPE.getValue())));
 		return joyRequest;
 	}
 

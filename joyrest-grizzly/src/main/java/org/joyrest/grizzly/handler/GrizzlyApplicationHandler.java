@@ -1,12 +1,15 @@
 package org.joyrest.grizzly.handler;
 
+import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 import static org.joyrest.utils.RequestResponseUtils.createPath;
 
 import java.io.IOException;
 
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.joyrest.context.ApplicationContext;
+import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.request.LambdaRequest;
 import org.joyrest.model.response.LambdaResponse;
@@ -46,6 +49,7 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 		joyRequest.setInputStream(req.getInputStream());
 		joyRequest.setHeaderNames(req.getHeaderNames());
 		joyRequest.setQueryParamNames(req.getParameterNames());
+		joyRequest.setContentType(MediaType.of(req.getHeader(CONTENT_TYPE.getValue())));
 		return joyRequest;
 	}
 

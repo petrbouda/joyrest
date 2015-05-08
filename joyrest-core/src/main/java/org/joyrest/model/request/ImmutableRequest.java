@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
 
 public final class ImmutableRequest<E> implements Request<E> {
@@ -54,6 +55,11 @@ public final class ImmutableRequest<E> implements Request<E> {
 	@Override
 	public HttpMethod getMethod() {
 		return request.getMethod();
+	}
+
+	@Override
+	public Optional<MediaType> getContentType() {
+		return request.getContentType();
 	}
 
 	@Override

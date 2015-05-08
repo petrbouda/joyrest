@@ -35,8 +35,8 @@ public final class RequestMatcher {
 					// If there are more than one accept media-type and the incoming request contains also
 					// content type, so choose the same one media-type
 					request.setMatchedAccept(acceptTypes.get(0));
-					request.getHeader(HeaderName.CONTENT_TYPE).ifPresent(contentTypeStr -> {
-						MediaType contentType = MediaType.of(contentTypeStr);
+					request.getContentType().ifPresent(contentTypeStr -> {
+						MediaType contentType = contentTypeStr;
 						if (acceptTypes.contains(contentType))
 							request.setMatchedAccept(contentType);
 					});

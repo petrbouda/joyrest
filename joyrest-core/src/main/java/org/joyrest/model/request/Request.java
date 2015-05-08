@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
 
 public interface Request<E> {
@@ -17,6 +18,8 @@ public interface Request<E> {
 	Map<String, PathParam> getPathParams();
 
 	HttpMethod getMethod();
+
+	Optional<MediaType> getContentType();
 
 	String getPath();
 

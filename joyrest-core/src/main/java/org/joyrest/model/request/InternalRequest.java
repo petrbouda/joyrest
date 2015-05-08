@@ -1,5 +1,6 @@
 package org.joyrest.model.request;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
@@ -21,6 +22,8 @@ public class InternalRequest<E> implements Request<E> {
 	protected Map<String, String[]> queryParams;
 
 	protected MediaType matchedAccept;
+
+	protected Optional<MediaType> contentType;
 
 	protected List<String> pathParts;
 
@@ -127,6 +130,18 @@ public class InternalRequest<E> implements Request<E> {
 
 	public void setMatchedAccept(MediaType matchedAccept) {
 		this.matchedAccept = matchedAccept;
+	}
+
+	@Override
+	public Optional<MediaType> getContentType() {
+		if(isNull(contentType))
+			contentType = getHeader(HeaderName.CONTENT_TYPE)
+				.map(MediaType::of);
+		return contentType;
+	}
+
+	public void setContentType(MediaType contentType) {
+		this.contentType = Optional.ofNullable(contentType);
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package org.joyrest.undertow.handler;
 
 import static java.util.stream.Collectors.toList;
+import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
 import java.io.IOException;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.LambdaRequest;
 import org.joyrest.model.response.LambdaResponse;
 import org.joyrest.processor.RequestProcessor;
@@ -44,6 +46,7 @@ public class UndertowApplicationHandler implements HttpHandler {
 			exchange.getRequestHeaders().getHeaderNames().stream()
 				.map(HttpString::toString).collect(toList()));
 		joyRequest.setQueryParamNames(exchange.getQueryParameters().keySet());
+		joyRequest.setContentType(MediaType.of(exchange.getRequestHeaders().get(CONTENT_TYPE.getValue()).getFirst()));
 		return joyRequest;
 	}
 

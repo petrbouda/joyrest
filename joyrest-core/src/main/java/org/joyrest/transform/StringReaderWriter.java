@@ -20,9 +20,8 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	@Override
 	public <T> T readFrom(InternalRequest<T> request, Type<T> clazz) {
 		try {
-			String charset = request.getHeader(HeaderName.CONTENT_TYPE)
+			String charset = request.getContentType()
 				.filter(Objects::nonNull)
-				.map(MediaType::of)
 				.flatMap(mediaType -> mediaType.getParam("charset"))
 				.orElse(DEFAULT_CHARSET);
 
