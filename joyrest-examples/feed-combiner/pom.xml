@@ -60,22 +60,22 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.joyrest</groupId>
-                <artifactId>joyrest-maven-plugin</artifactId>
-                <version>0.1-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>gendoc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <configurerClass>org.joyrest.hk2.HK2Configurer</configurerClass>
-                    <applicationConfigClass>org.joyrest.examples.combiner.binder.ApplicationBinder</applicationConfigClass>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.joyrest</groupId>-->
+                <!--<artifactId>joyrest-maven-plugin</artifactId>-->
+                <!--<version>0.1-SNAPSHOT</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>gendoc</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<configurerClass>org.joyrest.hk2.HK2Configurer</configurerClass>-->
+                    <!--<applicationConfigClass>org.joyrest.examples.combiner.binder.ApplicationBinder</applicationConfigClass>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>

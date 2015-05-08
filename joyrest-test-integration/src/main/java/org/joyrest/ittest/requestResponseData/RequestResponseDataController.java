@@ -2,6 +2,8 @@ package org.joyrest.ittest.requestResponseData;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.joyrest.routing.entity.RequestType.Req;
+import static org.joyrest.routing.entity.ResponseType.Resp;
 import static org.junit.Assert.*;
 
 import org.joyrest.ittest.entity.FeedEntry;
@@ -42,6 +44,7 @@ public class RequestResponseDataController extends TypedControllerConfiguration 
 				request.getQueryParams().isEmpty());
 
 			response.status(HttpStatus.NO_CONTENT);
-		}, FeedEntry.class).consumes(MediaType.JSON);
+		}, Req(FeedEntry.class), Resp(FeedEntry.class))
+			.consumes(MediaType.JSON);
 	}
 }

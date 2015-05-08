@@ -50,7 +50,7 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 								acceptHeader, handler.getExceptionClass())));
 
 			response.header(CONTENT_TYPE, writer.getMediaType().get());
-			writer.writeTo(response);
+			writer.writeTo(response, request);
 		}
 	}
 

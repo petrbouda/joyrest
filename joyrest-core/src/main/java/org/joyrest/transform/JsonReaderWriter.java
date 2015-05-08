@@ -16,7 +16,7 @@ public class JsonReaderWriter extends AbstractReaderWriter {
 	private final MediaType supportedMediaType = MediaType.JSON;
 
 	@Override
-	public void writeTo(InternalResponse<?> response) {
+	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
 		try {
 			mapper.writeValue(response.getOutputStream(), response.getEntity().get());
 		} catch (IOException e) {

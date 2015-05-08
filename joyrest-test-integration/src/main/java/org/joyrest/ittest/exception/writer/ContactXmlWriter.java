@@ -10,6 +10,7 @@ import javax.xml.bind.Marshaller;
 
 import org.joyrest.ittest.entity.Contact;
 import org.joyrest.model.http.MediaType;
+import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.Writer;
@@ -28,7 +29,7 @@ public class ContactXmlWriter implements Writer {
 	}
 
 	@Override
-	public void writeTo(InternalResponse<?> response) {
+	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
 		try {
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

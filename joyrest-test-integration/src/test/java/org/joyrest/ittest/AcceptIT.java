@@ -1,4 +1,4 @@
-package org.joyrest.ittest.route;
+package org.joyrest.ittest;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -9,54 +9,53 @@ import org.junit.Test;
 
 import com.jayway.restassured.http.ContentType;
 
-public class PutRouteIT extends AbstractRestIntegrationTest {
+public class AcceptIT extends AbstractRestIntegrationTest {
 
 	@Test
-	public void put_route_no_path_no_body() {
+	public void accept_wildcard() {
 		given()
+			.contentType(ContentType.ANY)
 			.when()
-			.put("/ittest/route")
+			.post("/ittest/accept/wildcard")
 			.then()
-			.statusCode(HttpStatus.OK.code());
+			.statusCode(HttpStatus.NO_CONTENT.code());
 	}
 
 	@Test
-	public void put_route_with_path_with_body() {
-		given()
-			.body(feedEntity)
-			.contentType(ContentType.JSON)
-			.when()
-			.put("/ittest/route/withBody")
-			.then()
-			.statusCode(HttpStatus.OK.code());
-	}
-
-	@Test
-	public void put_route_with_path_with_response() {
-		given()
-			.accept(ContentType.JSON)
-			.when()
-			.put("/ittest/route/withResponse")
-			.then()
-			.statusCode(HttpStatus.OK.code())
-			.body("title", equalTo("My Feed Title"))
-			.body("description", equalTo("My Feed Description"))
-			.body("link", equalTo("http://localhost:8080"));
-	}
-
-	@Test
-	public void put_route_with_path_with_request_and_response() {
+	public void accept_wildcard_against_json() {
 		given()
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
 			.body(feedEntity)
 			.when()
-			.put("/ittest/route/withBoth")
+			.post("/ittest/accept/wildcard")
 			.then()
-			.statusCode(HttpStatus.OK.code())
+			.statusCode(HttpStatus.NO_CONTENT.code());
+	}
+
+	@Test
+	public void accept_json() {
+		given()
+			.contentType(ContentType.ANY)
+			.accept(ContentType.JSON)
+			.when()
+			.post("/ittest/accept/app-json")
+			.then()
+			.statusCode(HttpStatus.OK.code());
+	}
+
+	@Test
+	public void multiple_accept_json() {
+		given()
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+			.body(feedEntity)
+			.when()
+			.post("/ittest/accept/app-json-xml")
+			.then()
+			.statusCode(HttpStatus.CREATED.code())
 			.body("title", equalTo("My Feed Title"))
 			.body("description", equalTo("My Feed Description"))
 			.body("link", equalTo("http://localhost:8080"));
 	}
-
 }

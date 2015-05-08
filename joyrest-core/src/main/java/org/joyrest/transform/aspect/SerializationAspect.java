@@ -38,7 +38,7 @@ public class SerializationAspect implements Aspect {
 				.orElseThrow(notAcceptableSupplier(String.format(
 					"No suitable Writer for accept header [%s] is registered.", accept)));
 			response.header(HeaderName.CONTENT_TYPE, accept.get());
-			writer.writeTo(response);
+			writer.writeTo(response, request);
 		}
 	}
 

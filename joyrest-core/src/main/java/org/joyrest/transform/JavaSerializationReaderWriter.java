@@ -23,7 +23,7 @@ public class JavaSerializationReaderWriter extends AbstractReaderWriter {
     }
 
     @Override
-    public void writeTo(InternalResponse<?> response) {
+    public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
             out.writeObject(response.getEntity().get());

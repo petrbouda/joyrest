@@ -3,6 +3,7 @@ package org.joyrest.ittest.exception.writer;
 import java.util.Objects;
 
 import org.joyrest.model.http.MediaType;
+import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.Writer;
@@ -10,7 +11,7 @@ import org.joyrest.transform.Writer;
 public class UnknownWriter implements Writer {
 
 	@Override
-	public void writeTo(InternalResponse<?> response) {
+	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
 		throw new RuntimeException("Should never be thrown");
 	}
 

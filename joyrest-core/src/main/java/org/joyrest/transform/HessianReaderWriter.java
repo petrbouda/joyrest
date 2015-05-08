@@ -30,7 +30,7 @@ public class HessianReaderWriter extends AbstractReaderWriter {
 	}
 
 	@Override
-	public void writeTo(InternalResponse<?> response) {
+	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
 		try {
 			Hessian2Output out = new Hessian2Output(response.getOutputStream());
 			out.startMessage();

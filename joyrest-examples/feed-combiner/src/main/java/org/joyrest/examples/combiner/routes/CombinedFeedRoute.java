@@ -1,6 +1,7 @@
 package org.joyrest.examples.combiner.routes;
 
 import static org.joyrest.exception.type.RestException.notFoundSupplier;
+import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseCollectionType.RespList;
 import static org.joyrest.routing.entity.ResponseType.Resp;
 
@@ -28,7 +29,8 @@ public class CombinedFeedRoute extends TypedControllerConfiguration {
 			response.entity(feed)
 				.status(HttpStatus.CREATED)
 				.header(HeaderName.LOCATION, getEntityLocation(feed.getId(), request.getPath()));
-		}, CombinedFeed.class, CombinedFeed.class).consumes(MediaType.JSON).produces(MediaType.JSON);
+		}, Req(CombinedFeed.class), Resp(CombinedFeed.class))
+			.consumes(MediaType.JSON).produces(MediaType.JSON);
 
 		delete("/{id}", (request, response) -> {
 			feedService.delete(request.getPathParam("id"))

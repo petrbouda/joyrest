@@ -44,6 +44,7 @@ public class PutRouteController extends TypedControllerConfiguration {
 
 			resp.entity(req.getEntity());
 			resp.status(HttpStatus.OK);
-		}, FeedEntry.class, FeedEntry.class).produces(JSON).consumes(JSON);
+		}, Req(FeedEntry.class), Resp(FeedEntry.class))
+			.produces(JSON).consumes(JSON);
 	}
 }

@@ -3,6 +3,7 @@ package org.joyrest.ittest.route;
 import static java.util.Objects.requireNonNull;
 import static org.joyrest.model.http.MediaType.JSON;
 import static org.joyrest.routing.entity.RequestType.Req;
+import static org.joyrest.routing.entity.ResponseType.Resp;
 
 import org.joyrest.ittest.entity.FeedEntry;
 import org.joyrest.model.http.HttpStatus;
@@ -32,7 +33,7 @@ public class PostRouteController extends TypedControllerConfiguration {
 
 			resp.entity(req.getEntity());
 			resp.status(HttpStatus.CREATED);
-		}, FeedEntry.class)
+		}, Req(FeedEntry.class), Resp(FeedEntry.class))
 			.consumes(JSON).produces(JSON);
 	}
 }

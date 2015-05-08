@@ -1,11 +1,10 @@
-package org.joyrest.validator;
+package org.joyrest.routing.matcher;
 
 import static java.util.stream.Collectors.toList;
 import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 import static org.joyrest.model.http.MediaType.WILDCARD;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -21,21 +20,15 @@ public final class RequestMatcher {
 	private RequestMatcher() {
 	}
 
-	public static boolean matchAccept(InternalRoute route, InternalRequest<?> request) {
+	public static boolean matchProduces(InternalRoute route, InternalRequest<?> request) {
+		if(route.getProduces().contains(WILDCARD))
+			return true;
+
 		Optional<String> optAccept = request.getHeader(ACCEPT);
-
 		if (optAccept.isPresent()) {
-			List<MediaType> acceptTypes = Arrays.stream(optAccept.get().split(","))
-				.filter(Objects::nonNull)
-				.map(String::trim)
-				.map(MediaType::of)
-				.distinct()
-				.filter(accept -> route.getProduces().contains(accept))
-				.collect(toList());
+			List<MediaType> acceptTypes = getAcceptMediaTypes(route, optAccept);
 
-			if (acceptTypes.isEmpty()) {
-				return false;
-			} else {
+			if (!acceptTypes.isEmpty()) {
 				if (acceptTypes.size() == 1) {
 					request.setMatchedAccept(acceptTypes.get(0));
 				} else {
@@ -51,27 +44,30 @@ public final class RequestMatcher {
 
 				return true;
 			}
-		} else {
-			return route.getProduces().contains(WILDCARD);
 		}
+
+		return false;
 	}
 
-	public static boolean matchContentType(InternalRoute route, InternalRequest<?> request) {
-		Optional<String> optContentType = request.getHeader(CONTENT_TYPE);
-		MediaType contentType;
-		if (!optContentType.isPresent())
-			return route.getConsumes().contains(WILDCARD);
-		else
-			contentType = MediaType.of(optContentType.get());
+	private static List<MediaType> getAcceptMediaTypes(InternalRoute route, Optional<String> optAccept) {
+		return Arrays.stream(optAccept.get().split(","))
+					.filter(Objects::nonNull)
+					.map(String::trim)
+					.map(MediaType::of)
+					.distinct()
+					.filter(accept -> route.getProduces().contains(accept))
+					.collect(toList());
+	}
 
-		if (!route.getConsumes().contains(contentType))
-			return false;
+	public static boolean matchConsumes(InternalRoute route, InternalRequest<?> request) {
+		if(route.getConsumes().contains(WILDCARD))
+			return true;
 
-		try {
-			return request.getInputStream().available() != 0 ^ contentType.equals(MediaType.WILDCARD);
-		} catch (IOException e) {
-			throw new RuntimeException("An exception occurred during getting a body", e);
-		}
+		return request.getHeader(CONTENT_TYPE)
+			.filter(Objects::nonNull)
+			.map(MediaType::of)
+			.filter(route.getConsumes()::contains)
+			.isPresent();
 	}
 
 	public static boolean matchHttpMethod(InternalRoute route, InternalRequest<?> request) {
