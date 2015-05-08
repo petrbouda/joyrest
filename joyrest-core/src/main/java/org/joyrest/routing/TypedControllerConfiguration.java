@@ -101,12 +101,12 @@ public abstract class TypedControllerConfiguration extends AbstractControllerCon
 
 	protected final <REQ, RESP> Route get(RouteAction<REQ, RESP> action,
 			RequestType<REQ> req, ResponseType<RESP> resp) {
-		return createEntityRoute(HttpMethod.POST, "", action, req, resp);
+		return createEntityRoute(HttpMethod.GET, "", action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route get(String path, RouteAction<REQ, RESP> action,
 			RequestType<REQ> req, ResponseType<RESP> resp) {
-		return createEntityRoute(HttpMethod.POST, path, action, req, resp);
+		return createEntityRoute(HttpMethod.GET, path, action, req, resp);
 	}
 
 	protected final <REQ, RESP> Route get(RouteAction<REQ, RESP> action,
