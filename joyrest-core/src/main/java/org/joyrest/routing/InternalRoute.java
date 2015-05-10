@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015 Petr Bouda
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.joyrest.routing;
 
 import static java.util.Collections.unmodifiableList;
@@ -92,12 +107,12 @@ public class InternalRoute implements Route {
 	private List<Aspect> aspects = new ArrayList<>();
 
 	@SuppressWarnings("rawtypes")
-	private BiConsumer action;
+	private RouteAction action;
 
 	private Type<?> requestType;
 	private Type<?> responseType;
 
-	public <REQ, RESP> InternalRoute(String path, HttpMethod httpMethod, BiConsumer<Request<REQ>, Response<RESP>> action,
+	public <REQ, RESP> InternalRoute(String path, HttpMethod httpMethod, RouteAction<REQ, RESP> action,
 			Type<REQ> requestClazz, Type<RESP> responseClazz) {
 		this.path = path;
 		this.httpMethod = httpMethod;
@@ -107,6 +122,9 @@ public class InternalRoute implements Route {
 		this.routeParts = createRouteParts(path);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Route consumes(MediaType... consumes) {
 		this.consumes = Arrays.asList(consumes);
@@ -117,6 +135,9 @@ public class InternalRoute implements Route {
 		return unmodifiableList(consumes);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Route produces(MediaType... produces) {
 		this.produces = Arrays.asList(produces);
@@ -173,6 +194,9 @@ public class InternalRoute implements Route {
 		return SLASH.contains(path) ? basePath : basePath + path;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Route aspect(Aspect... aspect) {
 		requireNonNull(aspect, "An added aspect cannot be null.");
@@ -192,8 +216,9 @@ public class InternalRoute implements Route {
 		return Objects.nonNull(requestType);
 	}
 
+	@SuppressWarnings("unchecked")
 	public InternalResponse<Object> execute(InternalRequest<Object> request, InternalResponse<Object> response) {
-		action.accept(ImmutableRequest.of(request), response);
+		action.perform(ImmutableRequest.of(request), response);
 		return response;
 	}
 

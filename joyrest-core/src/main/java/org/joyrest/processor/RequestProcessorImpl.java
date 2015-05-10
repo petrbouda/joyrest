@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015 Petr Bouda
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.joyrest.processor;
 
 import static java.util.function.Function.identity;
@@ -15,18 +30,19 @@ import org.joyrest.exception.processor.ExceptionProcessorImpl;
 import org.joyrest.extractor.PathParamExtractor;
 import org.joyrest.model.http.PathParam;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
-import org.joyrest.routing.strategy.DefaultRouteResolver;
-import org.joyrest.routing.strategy.RouteResolver;
+import org.joyrest.routing.resolver.DefaultRouteResolver;
+import org.joyrest.routing.resolver.RouteResolver;
 
 import com.codepoetics.protonpack.StreamUtils;
 
 /**
  * {@inheritDoc}
+ *
  * <p/>
- * The processor gets {@link ApplicationContext} with all information which can be provided by framework regarding configured routes.
+ * The processor gets {@link ApplicationContext} with all information which can be provided by framework regarding configured
+ * routes.
  *
  * @author pbouda
  */
@@ -50,20 +66,18 @@ public class RequestProcessorImpl implements RequestProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InternalResponse<Object> process(final InternalRequest<Object> request,
+	public void process(final InternalRequest<Object> request,
 			final InternalResponse<Object> response) throws Exception {
 		try {
-			return processRequest(request, response);
+			processRequest(request, response);
 		} catch (Exception ex) {
-			return exceptionProcessor.process(ex, request, response);
+			exceptionProcessor.process(ex, request, response);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private InternalResponse<Object> processRequest(final InternalRequest<Object> request, final InternalResponse<Object> response) {
-		final InternalRoute route = defaultRouteResolver.resolveRoute(request)
-			.orElseThrow(notFoundSupplier(String.format(
-					"No suitable route was found for path [%s] and method [%s]", request.getPath(), request.getMethod())));
+		final InternalRoute route = defaultRouteResolver.resolveRoute(request);
 
 		request.setPathParams(resolvePathParams(route, request));
 

@@ -13,34 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.transform;
+package org.joyrest.routing.resolver;
 
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
 
 /**
- * Provides the methods for writing outcoming entity to outputstream
+ * Implementation of this class resolve one route's definition which corresponds to the incoming request.
  *
- * @see AbstractReaderWriter
+ * @see DefaultRouteResolver
  * @author pbouda
  */
-public interface Writer extends Transformer {
+@FunctionalInterface
+public interface RouteResolver {
 
 	/**
-	 * Writes an entity to the outputstream
-	 *
-	 * @param response an outcoming response
-	 * @param request an incoming request
+	 * Find a route definition which corresponds to the incoming request
+	 * 
+	 * @param request incoming request object
+	 * @return route definition that matches all conditions defined in a child class
 	 */
-	void writeTo(InternalResponse<?> response, InternalRequest<?> request);
-
-	/**
-	 * Figures out whether is writer compatible for the given route
-	 *
-	 * @param route compared route
-	 * @return returns {@code true} if the writer is compatible with the given route
-	 */
-	boolean isWriterCompatible(InternalRoute route);
+	InternalRoute resolveRoute(InternalRequest<?> request);
 
 }

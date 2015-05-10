@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015 Petr Bouda
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.joyrest.context;
 
 import static java.util.Collections.singletonList;
@@ -23,6 +38,15 @@ import org.joyrest.transform.Transformer;
 import org.joyrest.transform.Writer;
 import org.joyrest.transform.aspect.SerializationAspect;
 
+/**
+ * Abstract class as a helper for initialization an {@link ApplicationContext}.
+ *
+ * @param <T> type of configuration class which is used to set up a configurer
+ * @see Configurer
+ * @see DependencyInjectionConfigurer
+ * @see NonDiConfigurer
+ * @author pbouda
+ */
 @SuppressWarnings("rawtypes")
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
@@ -35,16 +59,52 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	protected final List<Reader> REQUIRED_READERS = singletonList(stringReaderWriter);
 	protected final List<Writer> REQUIRED_WRITERS = singletonList(stringReaderWriter);
 
+	/**
+	 * Returns all {@link Aspect aspects} registered in the application context
+	 *
+	 * @return all registered aspects
+	 */
 	protected abstract Collection<Aspect> getAspects();
 
+	/**
+	 * Returns all {@link Reader readers} registered in the application context
+	 *
+	 * @return all registered readers
+	 */
 	protected abstract Collection<Reader> getReaders();
 
+	/**
+	 * Returns all {@link Writer writers} registered in the application context
+	 *
+	 * @return all registered writers
+	 */
 	protected abstract Collection<Writer> getWriters();
 
+	/**
+	 * Returns all {@link ExceptionConfiguration exceptionConfigurations} registered in the application context
+	 *
+	 * @return all registered exceptionConfigurations
+	 */
 	protected abstract Collection<ExceptionConfiguration> getExceptionConfigurations();
 
+	/**
+	 * Returns all {@link ControllerConfiguration controllerConfigurations} registered in the application context
+	 *
+	 * @return all registered controllerConfigurations
+	 */
 	protected abstract Collection<ControllerConfiguration> getControllerConfiguration();
 
+	/**
+	 * Method causes the initialization of the application context using the methods which returns a collection of beans such as
+	 *
+	 * {@link AbstractConfigurer#getAspects()},
+	 * {@link AbstractConfigurer#getReaders()},
+	 * {@link AbstractConfigurer#getWriters()},
+	 * {@link AbstractConfigurer#getExceptionConfigurations()},
+	 * {@link AbstractConfigurer#getControllerConfiguration()}.
+	 *
+	 * @return initialized {@code application context}
+	 */
 	protected ApplicationContext initializeContext() {
 		Map<Boolean, List<Reader>> readers = createTransformers(getReaders(), REQUIRED_READERS);
 		Map<Boolean, List<Writer>> writers = createTransformers(getWriters(), REQUIRED_WRITERS);

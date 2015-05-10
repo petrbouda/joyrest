@@ -7,9 +7,11 @@ import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.routing.InternalRoute;
 
 /**
- * The heart of the JoyREST Framework that contains all needed configuration for successful running the framework. It doesn't do any work
- * just store the information about the framework and application that is built on that.
+ * The heart of the JoyREST Framework that contains all needed configuration for successful running the framework.
+ * It doesn't do any work just store the information about the framework and application that is built on that.
  *
+ * @see ApplicationContextImpl
+ * @see Configurer
  * @author pbouda
  */
 public interface ApplicationContext {
