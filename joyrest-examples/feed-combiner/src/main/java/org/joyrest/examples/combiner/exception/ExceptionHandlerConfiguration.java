@@ -7,7 +7,7 @@ public class ExceptionHandlerConfiguration extends AbstractExceptionConfiguratio
 	@Override
 	protected void configure() {
 		// TODO
-		// exception(ConstraintViolationException.class, (request, response, ex) -> {
+		// exception(ConstraintViolationException.class, (model, response, ex) -> {
 		// Error error = new Error();
 		// ex.getConstraintViolations().stream()
 		// .forEach(violation -> error.addMessage(violation.getMessage()));

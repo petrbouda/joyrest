@@ -1,31 +1,50 @@
 package org.joyrest.exception.type;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.Supplier;
 
+import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpStatus;
-import org.joyrest.model.response.InternalResponse;
+
+import static java.util.Collections.emptyMap;
 
 public class RestException extends RuntimeException {
 
 	private static final long serialVersionUID = 3036905776427215166L;
 
-	private final InternalResponse<?> response;
+	private final HttpStatus status;
+
+	private final String message;
+
+	private final Map<HeaderName, String> headers;
 
 	public RestException(HttpStatus status) {
-		this(new InternalResponse().status(status), "");
+		this(status, null, emptyMap());
 	}
 
 	public RestException(HttpStatus status, String message) {
-		this(new InternalResponse().status(status), message);
+		this(status, message, emptyMap());
 	}
 
-	public RestException(InternalResponse<?> response) {
-		this(response, "");
+	public RestException(HttpStatus status, String message, Map<HeaderName, String> headers) {
+		this.status = status;
+		this.message = message;
+		this.headers = headers;
 	}
 
-	public RestException(InternalResponse<?> response, String message) {
-		super(message);
-		this.response = response;
+
+	public HttpStatus getStatus() {
+		return status;
+	}
+
+	@Override
+	public String getMessage() {
+		return message;
+	}
+
+	public Map<HeaderName, String> getHeaders() {
+		return headers;
 	}
 
 	public static Supplier<RestException> badRequestSupplier(String msg) {
@@ -46,10 +65,6 @@ public class RestException extends RuntimeException {
 
 	public static Supplier<RestException> internalServerErrorSupplier(String msg) {
 		return () -> new RestException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
-	}
-
-	public InternalResponse<?> getResponse() {
-		return response;
 	}
 
 }

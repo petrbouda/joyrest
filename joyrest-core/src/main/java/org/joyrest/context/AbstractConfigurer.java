@@ -187,9 +187,9 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 		@Override
 		protected void configure() {
 			handle(RestException.class, (req, resp, ex) -> {
-				InternalResponse<?> exResp = ex.getResponse();
-				resp.status(exResp.getStatus());
-				exResp.getHeaders().forEach(resp::header);
+				resp.status(ex.getStatus());
+				ex.getHeaders()
+					.forEach(resp::header);
 			});
 		}
 	}

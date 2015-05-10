@@ -1,55 +1,26 @@
 package org.joyrest.model.response;
 
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpStatus;
 
-public class InternalResponse<E> implements Response<E> {
-
-	private Map<HeaderName, String> headers = new HashMap<>();
-
-	private HttpStatus status = HttpStatus.OK;
+public abstract class InternalResponse<E> implements Response<E> {
 
 	private E entity;
 
-	private OutputStream outputStream;
+	public abstract OutputStream getOutputStream();
 
-	@Override
-	public InternalResponse<E> header(HeaderName name, String value) {
-		headers.put(name, value);
-		return this;
-	}
+	public abstract Map<HeaderName, String> getHeaders();
 
-	@Override
-	public InternalResponse<E> status(HttpStatus status) {
-		this.status = status;
-		return this;
-	}
+	public abstract HttpStatus getStatus();
 
 	@Override
 	public InternalResponse<E> entity(E entity) {
 		this.entity = entity;
 		return this;
-	}
-
-	public OutputStream getOutputStream() {
-		return outputStream;
-	}
-
-	public void setOutputStream(OutputStream outputStream) {
-		this.outputStream = outputStream;
-	}
-
-	public Map<HeaderName, String> getHeaders() {
-		return headers;
-	}
-
-	public HttpStatus getStatus() {
-		return status;
 	}
 
 	public Optional<E> getEntity() {

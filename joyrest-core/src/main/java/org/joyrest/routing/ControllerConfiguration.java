@@ -4,7 +4,7 @@ import java.util.Set;
 
 /**
  * A basic configuration interface contains method {@link #initialize()} in which is mostly set of {@link InternalRoute} classes represent an
- * individual handler for client's request.
+ * individual handler for client's model.
  *
  * @author pbouda
  **/

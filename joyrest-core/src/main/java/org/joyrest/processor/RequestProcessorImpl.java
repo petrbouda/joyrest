@@ -35,7 +35,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 	/* Class is able to extract path params from incoming path according an info from route */
 	private final PathParamExtractor pathParamExtractor = new PathParamExtractor();
 
-	/* Classes for route resolving - find the correct route according to the incoming request */
+	/* Classes for route resolving - find the correct route according to the incoming model */
 	private final RouteResolver defaultRouteResolver;
 
 	/* Class for a ecxeption processing */
@@ -71,7 +71,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 		return chain.proceed(request, response);
 	}
 
-	private Map<String, PathParam> resolvePathParams(final InternalRoute route, final Request<?> request) {
+	private Map<String, PathParam> resolvePathParams(final InternalRoute route, final InternalRequest<?> request) {
 		return StreamUtils
 			.zip(route.getRouteParts().stream(), request.getPathParts().stream(), pathParamExtractor)
 			.filter(Objects::nonNull)

@@ -1,6 +1,5 @@
 package org.joyrest.ittest.requestResponseData;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseType.Resp;
@@ -27,21 +26,19 @@ public class RequestResponseDataController extends TypedControllerConfiguration 
 			assertNotNull("Entity object cannot be null.", entry);
 
 			assertThat("Entity object is not the same object as in Request#getEntityClass()",
-				request.getEntity(), sameInstance(entry));
+					request.getEntity(), sameInstance(entry));
 			assertEquals("Http Method is not correct.",
-				HttpMethod.POST, request.getMethod());
+					HttpMethod.POST, request.getMethod());
 			assertEquals("Route path is not correct.",
-				"/feeds", request.getPath());
+					"/feeds", request.getPath());
 			assertEquals("Content-Type header value is not correct.",
-				MediaType.JSON, request.getHeader(HeaderName.CONTENT_TYPE).get());
+					MediaType.JSON, MediaType.of(request.getHeader(HeaderName.CONTENT_TYPE).get()));
 			assertEquals("Accept header value is not correct.",
-				MediaType.WILDCARD, MediaType.of(request.getHeader(HeaderName.ACCEPT).get()));
-			assertThat("Invalid values in path parts",
-				request.getPathParts(), contains("feeds"));
+					MediaType.WILDCARD, MediaType.of(request.getHeader(HeaderName.ACCEPT).get()));
 			assertTrue("There is any path param and should not be.",
-				request.getPathParams().isEmpty());
+					request.getPathParams().isEmpty());
 			assertTrue("There is any query param and should not be.",
-				request.getQueryParams().isEmpty());
+					request.getQueryParams().isEmpty());
 
 			response.status(HttpStatus.NO_CONTENT);
 		}, Req(FeedEntry.class), Resp(FeedEntry.class))

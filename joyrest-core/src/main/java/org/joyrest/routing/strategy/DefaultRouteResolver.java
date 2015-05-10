@@ -16,7 +16,7 @@ import org.joyrest.stream.BiStream;
 
 public class DefaultRouteResolver implements RouteResolver {
 
-	/* Class which compares path from route and incoming request */
+	/* Class which compares path from route and incoming model */
 	private final PathComparator pathComparator = new PathComparator();
 
 	/* All routes configures in an application */

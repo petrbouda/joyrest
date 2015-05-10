@@ -82,10 +82,10 @@ public class InternalRoute implements Route {
 	/* Flag that indicates having a resource path in the list of the RouteParts */
 	private boolean hasGlobalPath = false;
 
-	/* Must match with ContentType header in the client's request */
+	/* Must match with ContentType header in the client's model */
 	private List<MediaType> consumes = Collections.singletonList(MediaType.WILDCARD);
 
-	/* Final MediaType of the Response is determined by the Accept header in the client's request */
+	/* Final MediaType of the Response is determined by the Accept header in the client's model */
 	private List<MediaType> produces = Collections.singletonList(MediaType.WILDCARD);
 
 	/* Collection of interceptors which will be applied with execution of this route */

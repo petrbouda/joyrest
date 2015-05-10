@@ -27,7 +27,7 @@ public final class CombinedFeed implements Serializable {
 	private String id;
 
 	// UnmodifiableList
-	@NotNull(message = "At least one valid URL must be in the request.")
+	@NotNull(message = "At least one valid URL must be in the model.")
 	private List<URL> urls;
 
 	@Min(value = 0, message = "Refresh period must be equal or higher than 0.")

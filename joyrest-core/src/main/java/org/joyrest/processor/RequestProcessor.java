@@ -14,12 +14,12 @@ import org.joyrest.model.response.Response;
 public interface RequestProcessor {
 
 	/**
-	 * Generates correct {@link Response response} on the base of the incoming {@link InternalRequest request} as a abstraction of any
+	 * Generates correct {@link Response response} on the base of the incoming {@link InternalRequest model} as a abstraction of any
 	 * server data.
 	 *
-	 * @param request incoming request in the form of {@link InternalRequest}
+	 * @param request incoming model in the form of {@link InternalRequest}
 	 * @param response response in which is stored a processing result
-	 * @return generated response on the base of the incoming request
+	 * @return generated response on the base of the incoming model
 	 * @throws java.lang.Exception
 	 */
 	InternalResponse<Object> process(InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;

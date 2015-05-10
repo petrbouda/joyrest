@@ -10,7 +10,7 @@ import org.joyrest.model.request.InternalRequest;
 import com.codepoetics.protonpack.StreamUtils;
 
 /**
- * Class is able compare the equality of a configured route's {@link Route} path and the path from the incoming request.
+ * Class is able compare the equality of a configured route's {@link Route} path and the path from the incoming model.
  *
  * @author pbouda
  */
@@ -46,7 +46,7 @@ public class  PathComparator implements BiPredicate<InternalRoute, InternalReque
 	 * Compares a configured route with the given path which comes from the client call.
 	 *
 	 * @param route configured route
-	 * @param request incoming request
+	 * @param request incoming model
 	 * @return returns true if all parts are equal
 	 **/
 	@Override

@@ -32,7 +32,7 @@ public final class RequestMatcher {
 				if (acceptTypes.size() == 1) {
 					request.setMatchedAccept(acceptTypes.get(0));
 				} else {
-					// If there are more than one accept media-type and the incoming request contains also
+					// If there are more than one accept media-type and the incoming model contains also
 					// content type, so choose the same one media-type
 					request.setMatchedAccept(acceptTypes.get(0));
 					request.getContentType().ifPresent(contentTypeStr -> {

@@ -1,6 +1,5 @@
 package org.joyrest.model.request;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -59,11 +58,6 @@ public final class ImmutableRequest<E> implements Request<E> {
 	@Override
 	public String getPath() {
 		return request.getPath();
-	}
-
-	@Override
-	public List<String> getPathParts() {
-		return request.getPathParts();
 	}
 
 	@Override

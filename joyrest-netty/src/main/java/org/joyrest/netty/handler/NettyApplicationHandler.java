@@ -16,7 +16,7 @@ import io.netty.handler.codec.http.HttpRequest;
 
 public class NettyApplicationHandler extends SimpleChannelInboundHandler<HttpRequest> {
 
-	/* Class for processing an incoming request and generated response */
+	/* Class for processing an incoming model and generated response */
 	private final RequestProcessor processor;
 
 	public NettyApplicationHandler(ApplicationContext applicationContext) {
