@@ -42,7 +42,6 @@
         <module>joyrest-grizzly</module>
         <module>joyrest-servlet</module>
         <module>joyrest-test-integration</module>
-        <module>joyrest-test-performance</module>
         <module>joyrest-dagger</module>
         <module>joyrest-guice</module>
         <module>joyrest-undertow</module>
