@@ -4,9 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.joyrest.exception.handler.InternalExceptionHandler;
-import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.InternalRoute;
-import org.joyrest.transform.Writer;
 
 /**
  * The heart of the JoyREST Framework that contains all needed configuration for successful running the framework. It doesn't do any work

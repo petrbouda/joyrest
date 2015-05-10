@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.exception.handler.InternalExceptionHandler;
@@ -56,5 +57,4 @@ public class ApplicationContextImpl implements ApplicationContext {
 		requireNonNull(handlers);
 		this.exceptionHandlers = handlers;
 	}
-
 }

@@ -24,11 +24,11 @@ public class BiStream<T, U> {
 		return new BiStream<>(stream, validatedObject);
 	}
 
-	public BiStream<T, U> throwFilter(Predicate<? super T> predicate, Supplier<? extends RuntimeException> e) {
+	public BiStream<T, U> throwIfNull(Predicate<? super T> predicate, Supplier<? extends RuntimeException> e) {
 		return nonEmptyStream(stream.filter(predicate), e);
 	}
 
-	public BiStream<T, U> throwFilter(BiPredicate<? super T, ? super U> biPredicate, Supplier<? extends RuntimeException> e) {
+	public BiStream<T, U> throwIfNull(BiPredicate<? super T, ? super U> biPredicate, Supplier<? extends RuntimeException> e) {
 		Predicate<T> predicate = (t) -> biPredicate.test(t, object);
 		return nonEmptyStream(stream.filter(predicate), e);
 	}

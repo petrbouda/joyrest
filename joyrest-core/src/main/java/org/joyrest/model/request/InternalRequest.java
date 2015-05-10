@@ -2,6 +2,7 @@ package org.joyrest.model.request;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
+import static org.joyrest.utils.PathUtils.createPathParts;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +12,6 @@ import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
-import org.joyrest.utils.PathUtils;
 
 public class InternalRequest<E> implements Request<E> {
 
@@ -24,6 +24,8 @@ public class InternalRequest<E> implements Request<E> {
 	protected MediaType matchedAccept;
 
 	protected Optional<MediaType> contentType;
+
+	protected Optional<List<MediaType>> accept;
 
 	protected List<String> pathParts;
 
@@ -81,6 +83,9 @@ public class InternalRequest<E> implements Request<E> {
 
 	@Override
 	public List<String> getPathParts() {
+		if (isNull(pathParts))
+			setPathParts(createPathParts(path));
+
 		return pathParts;
 	}
 
@@ -103,7 +108,6 @@ public class InternalRequest<E> implements Request<E> {
 	}
 
 	public void setPath(String path) {
-		this.pathParts = PathUtils.createPathParts(path);
 		this.path = path;
 	}
 
@@ -132,9 +136,8 @@ public class InternalRequest<E> implements Request<E> {
 		this.matchedAccept = matchedAccept;
 	}
 
-	@Override
 	public Optional<MediaType> getContentType() {
-		if(isNull(contentType))
+		if (isNull(contentType))
 			contentType = getHeader(HeaderName.CONTENT_TYPE)
 				.map(MediaType::of);
 		return contentType;
@@ -142,6 +145,17 @@ public class InternalRequest<E> implements Request<E> {
 
 	public void setContentType(MediaType contentType) {
 		this.contentType = Optional.ofNullable(contentType);
+	}
+
+	public Optional<List<MediaType>> getAccept() {
+		if (isNull(accept))
+			accept = getHeader(HeaderName.ACCEPT)
+				.map(MediaType::list);
+		return accept;
+	}
+
+	public void setAccept(List<MediaType> accept) {
+		this.accept = Optional.ofNullable(accept);
 	}
 
 	@Override
@@ -159,23 +173,23 @@ public class InternalRequest<E> implements Request<E> {
 		}
 		final InternalRequest other = (InternalRequest) obj;
 		return Objects.equals(this.headers, other.headers)
-			&& Objects.equals(this.pathParams, other.pathParams)
-			&& Objects.equals(this.queryParams, other.queryParams)
-			&& Objects.equals(this.path, other.path)
-			&& Objects.equals(this.method, other.method)
-			&& Objects.equals(this.entity, other.entity);
+				&& Objects.equals(this.pathParams, other.pathParams)
+				&& Objects.equals(this.queryParams, other.queryParams)
+				&& Objects.equals(this.path, other.path)
+				&& Objects.equals(this.method, other.method)
+				&& Objects.equals(this.entity, other.entity);
 	}
 
 	@Override
 	public String toString() {
 		try {
 			return "InternalRequest{" +
-				"headers=" + headers +
-				", pathParts=" + pathParts +
-				", path='" + path + '\'' +
-				", method=" + method +
-				", inputStreamAvailable=" + (inputStream.available() > 0) +
-				'}';
+					"headers=" + headers +
+					", pathParts=" + pathParts +
+					", path='" + path + '\'' +
+					", method=" + method +
+					", inputStreamAvailable=" + (inputStream.available() > 0) +
+					'}';
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

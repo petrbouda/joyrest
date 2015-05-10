@@ -19,8 +19,6 @@ public interface Request<E> {
 
 	HttpMethod getMethod();
 
-	Optional<MediaType> getContentType();
-
 	String getPath();
 
 	List<String> getPathParts();

@@ -18,7 +18,6 @@ import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
-import org.joyrest.routing.strategy.CachedRouteResolver;
 import org.joyrest.routing.strategy.DefaultRouteResolver;
 import org.joyrest.routing.strategy.RouteResolver;
 
@@ -38,14 +37,12 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 	/* Classes for route resolving - find the correct route according to the incoming request */
 	private final RouteResolver defaultRouteResolver;
-	private final RouteResolver cachedRouteResolver;
 
 	/* Class for a ecxeption processing */
 	private final ExceptionProcessor exceptionProcessor;
 
 	public RequestProcessorImpl(ApplicationContext context) {
 		this.defaultRouteResolver = new DefaultRouteResolver(context);
-		this.cachedRouteResolver = new CachedRouteResolver(context);
 		this.exceptionProcessor = new ExceptionProcessorImpl(context);
 	}
 
@@ -64,10 +61,9 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 	@SuppressWarnings("unchecked")
 	private InternalResponse<Object> processRequest(final InternalRequest<Object> request, final InternalResponse<Object> response) {
-		final InternalRoute route = cachedRouteResolver.resolveRoute(request)
-			.chainIfEmpty(defaultRouteResolver.resolveRoute(request))
+		final InternalRoute route = defaultRouteResolver.resolveRoute(request)
 			.orElseThrow(notFoundSupplier(String.format(
-				"No suitable route was found for path [%s] and method [%s]", request.getPath(), request.getMethod())));
+					"No suitable route was found for path [%s] and method [%s]", request.getPath(), request.getMethod())));
 
 		request.setPathParams(resolvePathParams(route, request));
 

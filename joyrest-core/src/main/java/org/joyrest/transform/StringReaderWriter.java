@@ -2,15 +2,20 @@ package org.joyrest.transform;
 
 import java.io.*;
 import java.io.Writer;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
+import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.entity.Type;
 
+import static java.util.stream.Collectors.toList;
 import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
+import static org.joyrest.model.http.MediaType.WILDCARD;
 
 public class StringReaderWriter extends AbstractReaderWriter {
 

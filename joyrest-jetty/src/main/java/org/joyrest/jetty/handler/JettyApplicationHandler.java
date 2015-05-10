@@ -1,6 +1,7 @@
 package org.joyrest.jetty.handler;
 
 import static java.util.Collections.list;
+import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 import static org.joyrest.utils.RequestResponseUtils.createPath;
 
@@ -60,6 +61,7 @@ public class JettyApplicationHandler extends AbstractHandler {
 		joyRequest.setQueryParamNames(list(req.getParameterNames()));
 		joyRequest.setHeaderNames(list(req.getHeaderNames()));
 		joyRequest.setContentType(MediaType.of(req.getHeader(CONTENT_TYPE.getValue())));
+		joyRequest.setAccept(MediaType.list(req.getHeader(ACCEPT.getValue())));
 		return joyRequest;
 	}
 

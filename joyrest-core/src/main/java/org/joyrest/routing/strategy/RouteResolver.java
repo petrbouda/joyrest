@@ -4,9 +4,11 @@ import org.joyrest.model.request.InternalRequest;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.utils.OptionalChain;
 
+import java.util.Optional;
+
 @FunctionalInterface
 public interface RouteResolver {
 
-	OptionalChain<InternalRoute> resolveRoute(InternalRequest<?> request);
+	Optional<InternalRoute> resolveRoute(InternalRequest<?> request);
 
 }

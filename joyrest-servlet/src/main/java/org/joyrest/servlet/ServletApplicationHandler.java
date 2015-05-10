@@ -2,6 +2,7 @@ package org.joyrest.servlet;
 
 import static java.util.Collections.list;
 import static java.util.Objects.isNull;
+import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 import static org.joyrest.servlet.JoyrestProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
 import static org.joyrest.servlet.JoyrestProperties.CONFIGURER_PROPERTY;
@@ -123,6 +124,7 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		joyRequest.setQueryParamNames(list(req.getParameterNames()));
 		joyRequest.setHeaderNames(list(req.getHeaderNames()));
 		joyRequest.setContentType(MediaType.of(req.getHeader(CONTENT_TYPE.getValue())));
+		joyRequest.setAccept(MediaType.list(req.getHeader(ACCEPT.getValue())));
 		return joyRequest;
 	}
 }

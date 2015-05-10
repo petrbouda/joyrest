@@ -1,6 +1,7 @@
 package org.joyrest.utils;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -13,7 +14,7 @@ public class OptionalChain<T> {
 	}
 
 	public OptionalChain<T> chainIfEmpty(OptionalChain<T> next) {
-		Objects.requireNonNull(next);
+		requireNonNull(next);
 		return optional.isPresent() ? this : next;
 	}
 

@@ -60,6 +60,7 @@ public final class MediaType {
 		return Arrays.stream(mediaTypes.split(","))
 			.filter(Objects::nonNull)
 			.map(String::trim)
+			.distinct()
 			.map(MediaType::of)
 			.collect(toList());
 	}

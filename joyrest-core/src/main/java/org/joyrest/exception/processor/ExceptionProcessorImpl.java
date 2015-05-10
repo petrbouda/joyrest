@@ -6,6 +6,7 @@ import static org.joyrest.exception.type.RestException.internalServerErrorSuppli
 import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,14 +41,14 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 
 	private void writeEntity(InternalExceptionHandler handler, InternalRequest<?> request, InternalResponse<?> response) {
 		if (response.getEntity().isPresent()) {
-			String acceptHeader = request.getHeader(ACCEPT).get();
-			Writer writer = MediaType.list(acceptHeader).stream()
+			List<MediaType> acceptMediaTypes = request.getAccept().get();
+			Writer writer = acceptMediaTypes.stream()
 				.filter(accept -> handler.getWriter(accept).isPresent())
 				.findFirst()
 				.flatMap(handler::getWriter)
 				.orElseThrow(internalServerErrorSupplier(
-						String.format("No writer registered for Accept[%s] and Exception Response-Type[%s]",
-								acceptHeader, handler.getExceptionClass())));
+						String.format("No writer registered for Accept%s and Exception Response-Type[%s]",
+							acceptMediaTypes, handler.getExceptionClass())));
 
 			response.header(CONTENT_TYPE, writer.getMediaType().get());
 			writer.writeTo(response, request);

@@ -33,7 +33,7 @@ public class RequestResponseDataController extends TypedControllerConfiguration 
 			assertEquals("Route path is not correct.",
 				"/feeds", request.getPath());
 			assertEquals("Content-Type header value is not correct.",
-				MediaType.JSON, request.getContentType().get());
+				MediaType.JSON, request.getHeader(HeaderName.CONTENT_TYPE).get());
 			assertEquals("Accept header value is not correct.",
 				MediaType.WILDCARD, MediaType.of(request.getHeader(HeaderName.ACCEPT).get()));
 			assertThat("Invalid values in path parts",

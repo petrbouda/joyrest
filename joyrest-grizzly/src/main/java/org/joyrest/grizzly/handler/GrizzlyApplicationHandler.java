@@ -1,5 +1,6 @@
 package org.joyrest.grizzly.handler;
 
+import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 import static org.joyrest.utils.RequestResponseUtils.createPath;
 
@@ -50,6 +51,7 @@ public class GrizzlyApplicationHandler extends HttpHandler {
 		joyRequest.setHeaderNames(req.getHeaderNames());
 		joyRequest.setQueryParamNames(req.getParameterNames());
 		joyRequest.setContentType(MediaType.of(req.getHeader(CONTENT_TYPE.getValue())));
+		joyRequest.setAccept(MediaType.list(req.getHeader(ACCEPT.getValue())));
 		return joyRequest;
 	}
 

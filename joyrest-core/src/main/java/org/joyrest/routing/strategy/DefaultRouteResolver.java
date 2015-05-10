@@ -11,9 +11,8 @@ import org.joyrest.context.ApplicationContext;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.PathComparator;
-import org.joyrest.stream.BiStream;
-import org.joyrest.utils.OptionalChain;
 import org.joyrest.routing.matcher.RequestMatcher;
+import org.joyrest.stream.BiStream;
 
 public class DefaultRouteResolver implements RouteResolver {
 
@@ -28,22 +27,20 @@ public class DefaultRouteResolver implements RouteResolver {
 	}
 
 	@Override
-	public OptionalChain<InternalRoute> resolveRoute(InternalRequest<?> request) {
-		Optional<InternalRoute> route = BiStream.of(routes.stream(), request)
-			.throwFilter(pathComparator, notFoundSupplier(String.format(
+	public Optional<InternalRoute> resolveRoute(InternalRequest<?> request) {
+		return BiStream.of(routes.stream(), request)
+			.throwIfNull(pathComparator, notFoundSupplier(String.format(
 					"There is no route suitable for path [%s]",
 					request.getPath())))
-			.throwFilter(RequestMatcher::matchHttpMethod, notFoundSupplier(String.format(
+			.throwIfNull(RequestMatcher::matchHttpMethod, notFoundSupplier(String.format(
 					"There is no route suitable for path [%s], method [%s]",
 					request.getPath(), request.getMethod())))
-			.throwFilter(RequestMatcher::matchConsumes, unsupportedMediaTypeSupplier(String.format(
+			.throwIfNull(RequestMatcher::matchConsumes, unsupportedMediaTypeSupplier(String.format(
 					"There is no route suitable for path [%s], method [%s], content-type [%s]",
 					request.getPath(), request.getMethod(), request.getHeader(CONTENT_TYPE).orElse("---"))))
-			.throwFilter(RequestMatcher::matchProduces, notAcceptableSupplier(String.format(
+			.throwIfNull(RequestMatcher::matchProduces, notAcceptableSupplier(String.format(
 					"There is no route suitable for path [%s], method [%s], accept [%s]",
 					request.getPath(), request.getMethod(), request.getHeader(ACCEPT))))
 			.findAny();
-
-		return new OptionalChain<>(route);
 	}
 }

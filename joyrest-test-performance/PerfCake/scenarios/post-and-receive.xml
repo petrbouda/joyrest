@@ -13,7 +13,7 @@
             <destination class="ChartDestination">
                 <period type="time" value="500"/>
                 <property name="name" value="${framework:unknown}"/>
-                <property name="group" value="PerfTest_post-and-receive"/>
+                <property name="group" value="PerfTest_post_and_receive"/>
                 <property name="yAxis" value="Throughput"/>
                 <property name="outputDir" value="${perfcake.scenario}-charts"/>
                 <property name="attributes" value="Minimum, Maximum, Average, Result"/>
@@ -26,7 +26,7 @@
             <destination class="ChartDestination">
                 <period type="time" value="500"/>
                 <property name="name" value="${framework:unknown}"/>
-                <property name="group" value="PerfTest_post-and-receive"/>
+                <property name="group" value="PerfTest_post_and_receive"/>
                 <property name="yAxis" value="Response Time"/>
                 <property name="outputDir" value="${perfcake.scenario}-charts"/>
                 <property name="attributes" value="Minimum, Maximum, Average, Result"/>

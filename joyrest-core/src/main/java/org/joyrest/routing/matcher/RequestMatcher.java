@@ -24,7 +24,7 @@ public final class RequestMatcher {
 		if(route.getProduces().contains(WILDCARD))
 			return true;
 
-		Optional<String> optAccept = request.getHeader(ACCEPT);
+		Optional<List<MediaType>> optAccept = request.getAccept();
 		if (optAccept.isPresent()) {
 			List<MediaType> acceptTypes = getAcceptMediaTypes(route, optAccept);
 
@@ -49,12 +49,8 @@ public final class RequestMatcher {
 		return false;
 	}
 
-	private static List<MediaType> getAcceptMediaTypes(InternalRoute route, Optional<String> optAccept) {
-		return Arrays.stream(optAccept.get().split(","))
-					.filter(Objects::nonNull)
-					.map(String::trim)
-					.map(MediaType::of)
-					.distinct()
+	private static List<MediaType> getAcceptMediaTypes(InternalRoute route, Optional<List<MediaType>> optAccept) {
+		return optAccept.get().stream()
 					.filter(accept -> route.getProduces().contains(accept))
 					.collect(toList());
 	}
@@ -63,9 +59,8 @@ public final class RequestMatcher {
 		if(route.getConsumes().contains(WILDCARD))
 			return true;
 
-		return request.getHeader(CONTENT_TYPE)
+		return request.getContentType()
 			.filter(Objects::nonNull)
-			.map(MediaType::of)
 			.filter(route.getConsumes()::contains)
 			.isPresent();
 	}
