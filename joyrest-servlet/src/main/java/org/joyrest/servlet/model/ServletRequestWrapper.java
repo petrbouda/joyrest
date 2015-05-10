@@ -3,7 +3,7 @@ package org.joyrest.servlet.model;
 import static java.util.Collections.list;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.joyrest.common.annotation.UnmodifiableMapCollector.toUnmodifiableMap;
+import static org.joyrest.common.UnmodifiableMapCollector.toUnmodifiableMap;
 
 import java.io.IOException;
 import java.io.InputStream;

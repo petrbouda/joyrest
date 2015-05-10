@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import org.joyrest.extractor.param.StringPath;
 import org.joyrest.model.RoutePart;
 
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -45,7 +46,7 @@ public final class PathUtils {
 	}
 
 	private static boolean isNotEmpty(String value) {
-		return value != null && !value.isEmpty();
+		return nonNull(value) && !value.isEmpty();
 	}
 
 }

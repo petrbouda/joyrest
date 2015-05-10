@@ -85,7 +85,7 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	protected final void setGlobalPath(String path) {
 		requireNonNull(path, "Global path cannot be change to 'null'");
 
-		if (!"".equals(path) || !"/".equals(path)) {
+		if (!"".equals(path) && !"/".equals(path)) {
 			this.globalPath = pathCorrector.apply(path);
 		}
 	}

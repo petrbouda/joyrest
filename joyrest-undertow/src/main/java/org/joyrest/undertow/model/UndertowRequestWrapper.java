@@ -2,7 +2,7 @@ package org.joyrest.undertow.model;
 
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toMap;
-import static org.joyrest.common.annotation.UnmodifiableMapCollector.toUnmodifiableMap;
+import static org.joyrest.common.UnmodifiableMapCollector.toUnmodifiableMap;
 
 import java.io.InputStream;
 import java.util.List;
