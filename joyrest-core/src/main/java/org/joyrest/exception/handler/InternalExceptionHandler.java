@@ -6,26 +6,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.joyrest.function.TriConsumer;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.ImmutableRequest;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.model.response.Response;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Writer;
 
 public class InternalExceptionHandler implements ExceptionHandler {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private final TriConsumer action;
+	private final ExceptionHandlerAction action;
 	private final Type<?> responseType;
 	private final Class<? extends Exception> exceptionClass;
 	private Map<MediaType, Writer> writers = new HashMap<>();
 
 	public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz,
-		TriConsumer<Request<?>, Response<RESP>, T> action, Type<RESP> resp) {
+			ExceptionHandlerAction<RESP, T> action, Type<RESP> resp) {
 		this.exceptionClass = clazz;
 		this.action = action;
 		this.responseType = resp;
@@ -52,6 +49,7 @@ public class InternalExceptionHandler implements ExceptionHandler {
 		return writers;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Exception> InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response, T ex) {
 		action.accept(ImmutableRequest.of(request), response, ex);
 		return response;

@@ -3,10 +3,8 @@ package org.joyrest.exception.configuration;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.joyrest.exception.handler.ExceptionHandlerAction;
 import org.joyrest.exception.handler.InternalExceptionHandler;
-import org.joyrest.function.TriConsumer;
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
 import org.joyrest.routing.entity.Type;
 
 public abstract class AbstractExceptionConfiguration implements ExceptionConfiguration {
@@ -34,8 +32,8 @@ public abstract class AbstractExceptionConfiguration implements ExceptionConfigu
 	}
 
 	public <T extends Exception, RESP> InternalExceptionHandler putHandler(Class<T> clazz,
-			TriConsumer<Request<?>, Response<RESP>, T> consumer, Type<RESP> resp) {
-		final InternalExceptionHandler handler = new InternalExceptionHandler(clazz, consumer, resp);
+			ExceptionHandlerAction<RESP, T> action, Type<RESP> resp) {
+		final InternalExceptionHandler handler = new InternalExceptionHandler(clazz, action, resp);
 		handlers.add(handler);
 		return handler;
 	}

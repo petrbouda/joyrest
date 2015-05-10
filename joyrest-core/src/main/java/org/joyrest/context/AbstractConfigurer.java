@@ -6,7 +6,6 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.joyrest.aspect.Aspect;
 import org.joyrest.common.annotation.General;
@@ -16,7 +15,6 @@ import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.exception.type.RestException;
 import org.joyrest.logging.JoyLogger;
-import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.Reader;

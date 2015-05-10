@@ -1,21 +1,14 @@
 package org.joyrest.transform;
 
-import java.io.*;
-import java.io.Writer;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
 
-import org.joyrest.model.http.HeaderName;
+import java.io.*;
+import java.util.Objects;
+
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.entity.Type;
-
-import static java.util.stream.Collectors.toList;
-import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
-import static org.joyrest.model.http.MediaType.WILDCARD;
 
 public class StringReaderWriter extends AbstractReaderWriter {
 
@@ -31,7 +24,7 @@ public class StringReaderWriter extends AbstractReaderWriter {
 				.orElse(DEFAULT_CHARSET);
 
 			StringBuilder builder = new BufferedReader(
-				new InputStreamReader(request.getInputStream(), charset)).lines()
+					new InputStreamReader(request.getInputStream(), charset)).lines()
 				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
 			return (T) builder.toString();
 		} catch (UnsupportedEncodingException e) {
@@ -45,7 +38,7 @@ public class StringReaderWriter extends AbstractReaderWriter {
 			String charset = request.getMatchedAccept().getParam("charset")
 				.orElse(DEFAULT_CHARSET);
 
-			Writer writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), charset));
+			java.io.Writer writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), charset));
 			writer.append((CharSequence) response.getEntity().get());
 			writer.flush();
 		} catch (UnsupportedEncodingException e) {

@@ -1,4 +1,4 @@
-package org.joyrest.transform;
+package org.joyrest.utils.transform;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -7,6 +7,7 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.entity.Type;
+import org.joyrest.transform.AbstractReaderWriter;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;

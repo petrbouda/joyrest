@@ -32,6 +32,12 @@
 
         <dependency>
             <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joyrest</groupId>
             <artifactId>joyrest-dagger</artifactId>
             <version>${project.version}</version>
         </dependency>

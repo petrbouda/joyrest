@@ -7,29 +7,21 @@ import java.util.stream.Stream;
 import org.joyrest.extractor.param.StringPath;
 import org.joyrest.model.RoutePart;
 
-/**
- * @author pbouda
- */
+import static java.util.stream.Collectors.toList;
+
 public final class PathUtils {
 
-	/**
-	 * Creates a list of the parts from the provided path which is splitted up by a slash char
-	 *
-	 * @return list of path's parts which are splitted up by a slash char
-	 */
 	public static List<String> createPathParts(String path) {
 		return Stream.of(path.split("/"))
 			.map(String::trim)
 			.filter(PathUtils::isNotEmpty)
-			.collect(Collectors.toList());
+			.collect(toList());
 	}
 
 	public static List<RoutePart<String>> createRouteParts(String path) {
-		List<String> pathParts = createPathParts(path);
-
-		return pathParts.stream()
+		return createPathParts(path).stream()
 			.map(part -> new RoutePart<>(RoutePart.Type.PATH, part, StringPath.INSTANCE))
-			.collect(Collectors.toList());
+			.collect(toList());
 	}
 
 	private static boolean isNotEmpty(String value) {

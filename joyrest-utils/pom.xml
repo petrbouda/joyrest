@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>joyrest-core</artifactId>
+    <artifactId>joyrest-utils</artifactId>
 
     <properties>
         <jackson.version>2.5.1</jackson.version>
@@ -19,13 +19,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.codepoetics</groupId>
-            <artifactId>protonpack</artifactId>
+            <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-core</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>${hessian.version}</version>
         </dependency>
     </dependencies>
 </project>

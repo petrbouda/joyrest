@@ -22,6 +22,12 @@
 
         <dependency>
             <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joyrest</groupId>
             <artifactId>joyrest-servlet</artifactId>
             <version>${project.version}</version>
         </dependency>

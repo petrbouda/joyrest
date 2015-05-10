@@ -2,7 +2,7 @@ package org.joyrest.ittest;
 
 import org.joyrest.servlet.ServletApplicationHandler;
 import org.joyrest.spring.SpringJavaConfigurer;
-import org.joyrest.transform.JsonReaderWriter;
+import org.joyrest.utils.transform.JsonReaderWriter;
 import org.springframework.boot.autoconfigure.PropertyPlaceholderAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.*;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;

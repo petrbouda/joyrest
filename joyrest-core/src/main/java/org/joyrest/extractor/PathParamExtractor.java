@@ -3,7 +3,6 @@ package org.joyrest.extractor;
 import java.util.function.BiFunction;
 
 import org.joyrest.exception.type.RestException;
-import org.joyrest.extractor.param.PathType;
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.PathParam;
 

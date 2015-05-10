@@ -4,7 +4,6 @@ import static java.util.Collections.list;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.joyrest.common.annotation.UnmodifiableMapCollector.toUnmodifiableMap;
-import static org.joyrest.utils.RequestResponseUtils.createPath;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +36,12 @@ public class JettyRequestWrapper extends InternalRequest<Object> {
 	public JettyRequestWrapper(HttpServletRequest request) {
 		this.request = request;
 		this.method = HttpMethod.of(request.getMethod());
-		this.path = createPath(request.getRequestURI(), request.getContextPath());
+		this.path = createPath(request.getRequestURI(), request.getContextPath(), request.getServletPath());
+	}
+
+	private static String createPath(String requestUri, String contextPath, String servletPath) {
+		return requestUri.substring(contextPath.length())
+			.substring(servletPath.length());
 	}
 
 	@Override

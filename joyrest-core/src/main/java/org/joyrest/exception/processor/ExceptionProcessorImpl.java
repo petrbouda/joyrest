@@ -3,7 +3,6 @@ package org.joyrest.exception.processor;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
-import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
 import java.util.List;

@@ -3,7 +3,6 @@ package org.joyrest.grizzly.model;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.joyrest.common.annotation.UnmodifiableMapCollector.toUnmodifiableMap;
-import static org.joyrest.utils.RequestResponseUtils.createPath;
 
 import java.io.InputStream;
 import java.util.List;
@@ -34,7 +33,7 @@ public class GrizzlyRequestWrapper extends InternalRequest<Object> {
 	public GrizzlyRequestWrapper(Request request) {
 		this.request = request;
 		this.method = HttpMethod.of(request.getMethod().getMethodString());
-		this.path = createPath(request.getRequestURI(), request.getContextPath());
+		this.path = request.getRequestURI().substring(request.getContextPath().length());
 	}
 
 	@Override

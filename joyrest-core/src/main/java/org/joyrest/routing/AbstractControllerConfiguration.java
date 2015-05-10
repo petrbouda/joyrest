@@ -1,5 +1,6 @@
 package org.joyrest.routing;
 
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.util.HashSet;
@@ -47,10 +48,9 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 			configure();
 
 			List<RoutePart<String>> globalParts = PathUtils.createRouteParts(globalPath);
-
-			if (globalPath != null) {
-				this.routes.stream().forEach(route -> route.addGlobalPath(globalParts));
-			}
+			if (nonNull(globalPath))
+				this.routes.stream()
+					.forEach(route -> route.addGlobalPath(globalParts));
 
 			this.isInitialized = true;
 		}

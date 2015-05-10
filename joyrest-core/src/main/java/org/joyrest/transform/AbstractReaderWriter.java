@@ -25,7 +25,7 @@ public abstract class AbstractReaderWriter implements Reader, Writer {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof JsonReaderWriter))
+		if (!(o instanceof AbstractReaderWriter))
 			return false;
 
 		AbstractReaderWriter that = (AbstractReaderWriter) o;

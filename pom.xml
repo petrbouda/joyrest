@@ -47,6 +47,7 @@
         <module>joyrest-undertow</module>
         <module>joyrest-jetty</module>
         <module>joyrest-netty</module>
+        <module>joyrest-utils</module>
     </modules>
 
     <properties>
@@ -55,8 +56,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <junit.version>4.12</junit.version>
-        <protonpack.version>1.0</protonpack.version>
-        <grizzly.version>2.3.18</grizzly.version>
+        <protonpack.version>1.7</protonpack.version>
+        <grizzly.version>2.3.20</grizzly.version>
 
         <slf4.version>1.7.12</slf4.version>
         <logback.version>1.1.2</logback.version>
