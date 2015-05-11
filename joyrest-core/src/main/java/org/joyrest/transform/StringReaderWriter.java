@@ -18,8 +18,10 @@ package org.joyrest.transform;
 import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Objects;
 
+import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
@@ -40,19 +42,16 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T readFrom(InternalRequest<T> request, Type<T> clazz) {
-		try {
-			String charset = request.getContentType()
-				.filter(Objects::nonNull)
-				.flatMap(mediaType -> mediaType.getParam("charset"))
-				.orElse(DEFAULT_CHARSET);
+		Charset charset = request.getContentType()
+			.filter(Objects::nonNull)
+			.flatMap(mediaType -> mediaType.getParam("charset"))
+			.map(Charset::forName)
+			.orElse(DEFAULT_CHARSET);
 
-			StringBuilder builder = new BufferedReader(
+		StringBuilder builder = new BufferedReader(
 				new InputStreamReader(request.getInputStream(), charset)).lines()
-				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
-			return (T) builder.toString();
-		} catch (UnsupportedEncodingException e) {
-			throw internalServerErrorSupplier("Unsupported Encoding Exception").get();
-		}
+			.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
+		return (T) builder.toString();
 	}
 
 	/**
@@ -61,7 +60,8 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	@Override
 	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
 		try {
-			String charset = request.getMatchedAccept().getParam("charset")
+			Charset charset = request.getHeader(HeaderName.ACCEPT_CHARSET)
+				.map(Charset::forName)
 				.orElse(DEFAULT_CHARSET);
 
 			java.io.Writer writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), charset));

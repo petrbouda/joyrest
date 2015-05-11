@@ -11,12 +11,6 @@
 
     <artifactId>joyrest-core</artifactId>
 
-    <properties>
-        <jackson.version>2.5.1</jackson.version>
-        <typetools.version>0.4.0</typetools.version>
-        <hessian.version>4.0.38</hessian.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.codepoetics</groupId>
@@ -28,6 +22,11 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

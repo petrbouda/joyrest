@@ -61,14 +61,14 @@ public final class MediaType {
 	}
 
 	private MediaType(String type, String subType, MediaType processingType) {
-		this(type, subType, null, null);
+		this(type, subType, processingType, null);
 	}
 
 	private MediaType(String type, String subType, MediaType processingType, Map<String, String> params) {
 		this.type = type;
 		this.subType = subType;
 		this.processingType = Optional.ofNullable(processingType);
-		this.params = params;
+		this.params = nonNull(params) ? params : new HashMap<>();
 	}
 
 	public static List<MediaType> list(String mediaTypes) {
@@ -81,10 +81,10 @@ public final class MediaType {
 	}
 
 	public static MediaType of(String mediaType) {
-		if (isNull(mediaType) || mediaType.isEmpty()) {
+		if (isNull(mediaType) || mediaType.isEmpty())
 			return WILDCARD;
-		}
 
+		// Contains header some params?
 		Map<String, String> params = new HashMap<>();
 		if (mediaType.contains(";")) {
 			String[] mediaTypeSplit = mediaType.split(";");
@@ -106,9 +106,8 @@ public final class MediaType {
 		MediaType processingType = null;
 		if (typeSplit[1].contains("+")) {
 			String[] processingSplit = typeSplit[1].split("\\+");
-			if (processingSplit.length == 2) {
+			if (processingSplit.length == 2)
 				processingType = BASIC_MEDIA_TYPE.get(processingSplit[1]);
-			}
 		}
 
 		return new MediaType(typeSplit[0], typeSplit[1], processingType, params);

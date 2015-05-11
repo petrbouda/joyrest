@@ -17,6 +17,8 @@ package org.joyrest.transform;
 
 import org.joyrest.routing.InternalRoute;
 
+import java.nio.charset.Charset;
+
 /**
  * {@inheritDoc}
  *
@@ -26,7 +28,7 @@ import org.joyrest.routing.InternalRoute;
  */
 public abstract class AbstractReaderWriter implements Reader, Writer {
 
-	protected final String DEFAULT_CHARSET = "UTF-8";
+	protected final Charset DEFAULT_CHARSET = Charset.defaultCharset();
 
 	/**
 	 * {@inheritDoc}

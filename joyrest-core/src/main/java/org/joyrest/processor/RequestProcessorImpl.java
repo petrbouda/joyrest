@@ -66,8 +66,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(final InternalRequest<Object> request,
-			final InternalResponse<Object> response) throws Exception {
+	public void process(final InternalRequest<Object> request, final InternalResponse<Object> response) throws Exception {
 		try {
 			processRequest(request, response);
 		} catch (Exception ex) {

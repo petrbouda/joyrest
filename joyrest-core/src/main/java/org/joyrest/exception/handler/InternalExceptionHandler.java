@@ -46,6 +46,10 @@ public class InternalExceptionHandler implements ExceptionHandler {
 
 	private Map<MediaType, Writer> writers = new HashMap<>();
 
+	public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz, ExceptionHandlerAction<RESP, T> action) {
+		this(clazz, action, null);
+	}
+
 	public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz,
 			ExceptionHandlerAction<RESP, T> action, Type<RESP> resp) {
 		this.exceptionClass = clazz;

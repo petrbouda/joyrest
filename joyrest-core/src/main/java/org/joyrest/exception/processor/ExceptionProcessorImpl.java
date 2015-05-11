@@ -60,18 +60,30 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 
 	private void writeEntity(InternalExceptionHandler handler, InternalRequest<?> request, InternalResponse<?> response) {
 		if (response.getEntity().isPresent()) {
-			List<MediaType> acceptMediaTypes = request.getAccept().get();
-			Writer writer = acceptMediaTypes.stream()
-				.filter(accept -> handler.getWriter(accept).isPresent())
-				.findFirst()
-				.flatMap(handler::getWriter)
-				.orElseThrow(internalServerErrorSupplier(
-						String.format("No writer registered for Accept%s and Exception Response-Type[%s]",
-							acceptMediaTypes, handler.getExceptionClass())));
+			Writer writer = null;
+			if (nonNull(request.getMatchedAccept())) {
+				Optional<Writer> optWriter = handler.getWriter(request.getMatchedAccept());
+				if (optWriter.isPresent())
+					writer = optWriter.get();
+			}
+
+			if (isNull(writer))
+				writer = chooseWriter(handler, request);
 
 			response.header(CONTENT_TYPE, writer.getMediaType().get());
 			writer.writeTo(response, request);
 		}
+	}
+
+	private Writer chooseWriter(InternalExceptionHandler handler, InternalRequest<?> request) {
+		List<MediaType> acceptMediaTypes = request.getAccept().get();
+		return acceptMediaTypes.stream()
+			.filter(accept -> handler.getWriter(accept).isPresent())
+			.findFirst()
+			.flatMap(handler::getWriter)
+			.orElseThrow(internalServerErrorSupplier(
+					String.format("No writer registered for Accept%s and Exception Response-Type[%s]",
+							acceptMediaTypes, handler.getExceptionClass())));
 	}
 
 	private Optional<InternalExceptionHandler> getHandlerFromParent(Class<? extends Exception> clazz) {
