@@ -15,6 +15,8 @@ import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.TypedControllerConfiguration;
 
+import java.util.*;
+
 public class CombinedFeedRoute extends TypedControllerConfiguration {
 
 	@Inject

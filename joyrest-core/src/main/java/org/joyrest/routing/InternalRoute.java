@@ -112,8 +112,8 @@ public class InternalRoute implements Route {
 	private Type<?> requestType;
 	private Type<?> responseType;
 
-	public <REQ, RESP> InternalRoute(String path, HttpMethod httpMethod, RouteAction<REQ, RESP> action,
-			Type<REQ> requestClazz, Type<RESP> responseClazz) {
+	public InternalRoute(String path, HttpMethod httpMethod,
+			RouteAction action, Type<?> requestClazz, Type<?> responseClazz) {
 		this.path = path;
 		this.httpMethod = httpMethod;
 		this.action = action;

@@ -6,6 +6,7 @@ import static org.joyrest.model.http.MediaType.JSON;
 import static org.joyrest.model.http.MediaType.XML;
 import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseCollectionType.RespList;
+import static org.joyrest.routing.entity.ResponseType.Resp;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +40,7 @@ public class JokeController extends TypedControllerConfiguration {
 		get("{id}", (req, resp) -> {
 			Joke joke = service.get(req.getPathParam("id"));
 			resp.entity(joke);
-		}).produces(JSON, XML);
+		}, Resp(Joke.class)).produces(JSON, XML);
 	}
 
 	private String getEntityLocation(String entityId, String path) {

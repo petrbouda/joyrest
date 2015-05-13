@@ -15,9 +15,6 @@
  */
 package org.joyrest.routing;
 
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
-
 /**
  * Class that represents action which is execute when the given route is resolved.
  *
@@ -35,6 +32,6 @@ public interface RouteAction<REQ, RESP> {
 	 * @param request injected request into the route action
 	 * @param response injected response into the route action
 	 */
-	void perform(Request<REQ> request, Response<RESP> response);
+	void perform(REQ request, RESP response);
 
 }

@@ -98,8 +98,8 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 		return routes;
 	}
 
-	protected <REQ, RESP> InternalRoute createEntityRoute(HttpMethod method, String path,
-			RouteAction<REQ, RESP> action, Type<REQ> reqClazz, Type<RESP> respClazz) {
+	protected InternalRoute createEntityRoute(HttpMethod method, String path, RouteAction action,
+											  Type<?> reqClazz, Type<?> respClazz) {
 		final String correctPath = pathCorrector.apply(path);
 		final InternalRoute route = new InternalRoute(correctPath, method, action, reqClazz, respClazz);
 		routes.add(route);
