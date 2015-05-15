@@ -15,36 +15,29 @@
  */
 package org.joyrest.routing;
 
+import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.joyrest.model.http.MediaType.*;
+import static org.joyrest.utils.PathUtils.createPathParts;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import org.joyrest.aspect.Aspect;
-import org.joyrest.exception.type.InvalidConfigurationException;
-import org.joyrest.extractor.param.IntegerPath;
-import org.joyrest.extractor.param.LongPath;
-import org.joyrest.extractor.param.PathType;
-import org.joyrest.extractor.param.StringPath;
 import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.ImmutableRequest;
 import org.joyrest.model.request.InternalRequest;
-import org.joyrest.model.request.Request;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.model.response.Response;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
-import org.joyrest.utils.PathUtils;
 
 /**
  * Container for all information about one route {@link InternalRoute}
@@ -57,25 +50,6 @@ public class InternalRoute implements Route {
 
 	private final static String SLASH = "/";
 
-	/* This character determines whether the given part is PARAM or not */
-	private static final String START_PARAM = "{";
-	private static final int START_PARAM_LENGTH = START_PARAM.length();
-
-	private static final String END_PARAM = "}";
-	private static final int END_PARAM_LENGTH = END_PARAM.length();
-
-	private static final String NAME_TYPE_DELIMITER = ":";
-
-	/* All path param types which are available for a creation of route */
-	private final static Map<String, PathType<?>> PATH_TYPES;
-
-	static {
-		PATH_TYPES = new HashMap<>();
-		PATH_TYPES.put(StringPath.NAME, StringPath.INSTANCE);
-		PATH_TYPES.put(IntegerPath.NAME, IntegerPath.INSTANCE);
-		PATH_TYPES.put(LongPath.NAME, LongPath.INSTANCE);
-	}
-
 	private final HttpMethod httpMethod;
 
 	/* List of the all path's parts which contains this route */
@@ -83,9 +57,6 @@ public class InternalRoute implements Route {
 
 	/* Map of the all path params which contains this route */
 	private final Map<String, RoutePart<?>> pathParams = new HashMap<>();
-
-	/* Parser what is responsible for getting params from the given path */
-	private final ParamParser PARAM_PARSER = new ParamParser();
 
 	/* All Readers and Writers added to the application dedicated for this route */
 	private Map<MediaType, Reader> readers = new HashMap<>();
@@ -98,10 +69,10 @@ public class InternalRoute implements Route {
 	private boolean hasGlobalPath = false;
 
 	/* Must match with ContentType header in the client's model */
-	private List<MediaType> consumes = Collections.singletonList(MediaType.WILDCARD);
+	private List<MediaType> consumes = singletonList(WILDCARD);
 
 	/* Final MediaType of the Response is determined by the Accept header in the client's model */
-	private List<MediaType> produces = Collections.singletonList(MediaType.WILDCARD);
+	private List<MediaType> produces = singletonList(WILDCARD);
 
 	/* Collection of interceptors which will be applied with execution of this route */
 	private List<Aspect> aspects = new ArrayList<>();
@@ -149,18 +120,14 @@ public class InternalRoute implements Route {
 	}
 
 	private List<RoutePart<?>> createRouteParts(String path) {
-		List<String> parts = PathUtils.createPathParts(path);
-		return parts.stream()
-			.peek(PARAM_PARSER)
-			.map(this::mapStringPartToRoutePart)
+		return createPathParts(path).stream()
+			.map(new ParamParser(path))
+			.peek(part -> {
+				// Save path params to the map
+				if(part.getType() == RoutePart.Type.PARAM)
+					pathParams.put(part.getValue(), part);
+			})
 			.collect(toList());
-	}
-
-	private RoutePart<?> mapStringPartToRoutePart(String part) {
-		if (isPathParam(part))
-			return pathParams.get(getPathParamName(part));
-
-		return new RoutePart<>(RoutePart.Type.PATH, part, StringPath.INSTANCE);
 	}
 
 	public List<RoutePart<?>> getRouteParts() {
@@ -260,70 +227,6 @@ public class InternalRoute implements Route {
 	public void addWriter(Writer writer) {
 		requireNonNull(writer);
 		this.writers.put(writer.getMediaType(), writer);
-	}
-
-	private static boolean isPathParam(String part) {
-		return part.startsWith(START_PARAM) && part.endsWith(END_PARAM);
-	}
-
-	private static String getPathParamName(String part) {
-		String param = getPathParam(part);
-
-		/* Split a name and a type of the param */
-		return param.split(NAME_TYPE_DELIMITER)[0];
-	}
-
-	private static String getPathParam(String part) {
-		if (part.startsWith(START_PARAM) && part.endsWith(END_PARAM))
-			return part.substring(START_PARAM_LENGTH, part.length() - END_PARAM_LENGTH);
-
-		throw new InvalidConfigurationException(String.format(
-				"Invalid path param configuration '%s'", part));
-	}
-
-	/**
-	 * Contains a logic for parsing data from the part of the given route
-	 *
-	 * @author pbouda
-	 */
-	private final class ParamParser implements Consumer<String> {
-
-		@Override
-		public void accept(String part) {
-			if (isPathParam(part)) {
-				/* Split a name and a type of the param */
-				String[] split = getPathParam(part).split(NAME_TYPE_DELIMITER);
-
-				String paramName = split[0];
-				PathType<?> pathType = null;
-
-				/* Duplication param-name in one route */
-				if (pathParams.containsKey(paramName))
-					throw new InvalidConfigurationException(String.format(
-							"Route '%s' contains more path params with the same name '%s'.", path, paramName));
-
-				/* param without a definition of a type - String default */
-				if (split.length == 1)
-					pathType = StringPath.INSTANCE;
-
-				/* param with a definition of a type */
-				else if (split.length == 2) {
-					String paramType = split[1];
-					Optional<PathType<?>> optPathType = Optional.ofNullable(PATH_TYPES.get(paramType));
-					pathType = optPathType.orElseThrow(() ->
-						new InvalidConfigurationException(String.format(
-								"Missing a path type for param '%s' and type '%s' in the route '%s'.",
-								paramName, paramType, path)));
-				}
-
-				/* There is no valid type of the param */
-				else if (split.length == 0 || split.length > 2)
-					throw new InvalidConfigurationException(String.format(
-							"Invalid format of the path param '%s' in the route '%s'.", part, path));
-
-				pathParams.put(paramName, new RoutePart<>(RoutePart.Type.PARAM, paramName, pathType));
-			}
-		}
 	}
 
 	@Override

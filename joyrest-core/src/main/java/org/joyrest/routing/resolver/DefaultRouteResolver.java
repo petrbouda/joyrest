@@ -52,12 +52,15 @@ public class DefaultRouteResolver implements RouteResolver {
 			.throwIfNull(pathComparator, notFoundSupplier(String.format(
 					"There is no route suitable for path [%s]",
 					request.getPath())))
+
 			.throwIfNull(RequestMatcher::matchHttpMethod, notFoundSupplier(String.format(
 					"There is no route suitable for path [%s], method [%s]",
 					request.getPath(), request.getMethod())))
+
 			.throwIfNull(RequestMatcher::matchConsumes, unsupportedMediaTypeSupplier(String.format(
 					"There is no route suitable for path [%s], method [%s], content-type [%s]",
 					request.getPath(), request.getMethod(), request.getHeader(CONTENT_TYPE).orElse("---"))))
+
 			.throwIfNull(RequestMatcher::matchProduces, notAcceptableSupplier(String.format(
 					"There is no route suitable for path [%s], method [%s], accept [%s]",
 					request.getPath(), request.getMethod(), request.getHeader(ACCEPT).orElse("---"))))

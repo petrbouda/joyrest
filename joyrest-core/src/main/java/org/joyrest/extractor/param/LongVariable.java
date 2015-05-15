@@ -15,12 +15,12 @@
  */
 package org.joyrest.extractor.param;
 
-public class LongPath extends AbstractPath<Long> {
+public class LongVariable extends AbstractVariable<Long> {
 
-	public static final LongPath INSTANCE = new LongPath();
+	public static final LongVariable INSTANCE = new LongVariable();
 	public static final String NAME = "long";
 
-	private LongPath() {
+	private LongVariable() {
 		super(NAME, Long::parseLong);
 	}
 

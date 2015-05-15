@@ -76,7 +76,7 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 	}
 
 	private Writer chooseWriter(InternalExceptionHandler handler, InternalRequest<?> request) {
-		List<MediaType> acceptMediaTypes = request.getAccept().get();
+		List<MediaType> acceptMediaTypes = request.getAccept();
 		return acceptMediaTypes.stream()
 			.filter(accept -> handler.getWriter(accept).isPresent())
 			.findFirst()

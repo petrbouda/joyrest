@@ -1,9 +1,15 @@
 package org.joyrest.model.http;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.joyrest.model.http.MediaType.JSON;
+import static org.joyrest.model.http.MediaType.XML;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
 import org.joyrest.exception.type.RestException;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class MediaTypeTest {
 
@@ -55,6 +61,24 @@ public class MediaTypeTest {
 	@Test(expected = RestException.class)
 	public void media_type_wrong_three_parts() {
 		MediaType.of("application/json/xml");
+	}
+
+	@Test
+	public void list_success() {
+		List<MediaType> mediaTypes = MediaType.list("application/json, application/xml");
+		assertEquals(asList(JSON, XML), mediaTypes);
+	}
+
+	@Test
+	public void list_duplicate() {
+		List<MediaType> mediaTypes = MediaType.list("application/json, application/xml, application/json");
+		assertEquals(asList(JSON, XML), mediaTypes);
+	}
+
+	@Test
+	public void list_with_blank_spaces() {
+		List<MediaType> mediaTypes = MediaType.list("application/json, , application/json");
+		assertEquals(singletonList(JSON), mediaTypes);
 	}
 
 }

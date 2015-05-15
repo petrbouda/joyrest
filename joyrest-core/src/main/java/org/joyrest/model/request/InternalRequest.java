@@ -15,16 +15,18 @@
  */
 package org.joyrest.model.request;
 
+import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
+import static org.joyrest.model.http.MediaType.WILDCARD;
+import static org.joyrest.utils.CollectionUtils.nonEmpty;
 import static org.joyrest.utils.PathUtils.createPathParts;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
 
@@ -46,19 +48,9 @@ public abstract class InternalRequest<E> implements Request<E> {
 
 	protected E entity;
 
-	/**
-	 * Returns a content-type header value
-	 *
-     * @return content-type header value in {@link Optional} object
-	 */
-	public abstract Optional<MediaType> getContentType();
+	protected MediaType contentType;
 
-	/**
-	 * Returns a accept header value
-	 *
-	 * @return accept header value in {@link Optional} object
-	 */
-	public abstract Optional<List<MediaType>> getAccept();
+	protected List<MediaType> accept;
 
 	/**
 	 * Returns an inputstream object of an incoming entity
@@ -66,6 +58,36 @@ public abstract class InternalRequest<E> implements Request<E> {
 	 * @return incoming entity's input stream
 	 */
 	public abstract InputStream getInputStream();
+
+	/**
+	 * Returns a content-type header value
+	 *
+	 * @return content-type header value in {@link Optional} object
+	 */
+	public MediaType getContentType() {
+		if (isNull(this.contentType))
+			contentType = getHeader(HeaderName.CONTENT_TYPE)
+				.map(MediaType::of)
+				.orElse(WILDCARD);
+
+		return contentType;
+	}
+
+	/**
+	 * Returns a accept header value
+	 *
+	 * @return accept header value in {@link Optional} object
+	 */
+	public List<MediaType> getAccept() {
+		if (isNull(accept)) {
+			List<MediaType> accepts = getHeader(HeaderName.ACCEPT)
+				.map(MediaType::list)
+				.get();
+
+			this.accept = nonEmpty(accepts) ? accepts : singletonList(WILDCARD);
+		}
+		return accept;
+	}
 
 	/**
 	 * {@inheritDoc}

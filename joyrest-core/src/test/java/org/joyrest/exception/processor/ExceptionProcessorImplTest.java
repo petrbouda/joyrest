@@ -1,8 +1,15 @@
 package org.joyrest.exception.processor;
 
+import static java.util.Collections.singletonList;
+import static org.joyrest.model.http.MediaType.JSON;
+import static org.joyrest.model.http.MediaType.PLAIN_TEXT;
+import static org.joyrest.routing.entity.RequestType.Req;
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import org.joyrest.context.ApplicationContextImpl;
 import org.joyrest.exception.handler.InternalExceptionHandler;
@@ -13,17 +20,10 @@ import org.joyrest.exception.processor.exceptions.ThirdException;
 import org.joyrest.exception.type.RestException;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpStatus;
-import org.joyrest.model.http.MediaType;
 import org.joyrest.stubs.RequestStub;
 import org.joyrest.stubs.ResponseStub;
 import org.joyrest.transform.StringReaderWriter;
 import org.junit.Test;
-
-import static java.util.Collections.singletonList;
-import static org.joyrest.model.http.MediaType.JSON;
-import static org.joyrest.model.http.MediaType.PLAIN_TEXT;
-import static org.joyrest.routing.entity.RequestType.Req;
-import static org.junit.Assert.assertEquals;
 
 public class ExceptionProcessorImplTest {
 
@@ -63,10 +63,10 @@ public class ExceptionProcessorImplTest {
 	@Test
 	public void handle_multiple_exception_in_tree() throws Exception {
 		InternalExceptionHandler secondHandler = new InternalExceptionHandler(SecondException.class,
-			(req, resp, ex) -> resp.status(HttpStatus.BAD_GATEWAY));
+				(req, resp, ex) -> resp.status(HttpStatus.BAD_GATEWAY));
 
 		InternalExceptionHandler thirdHandler = new InternalExceptionHandler(ThirdException.class,
-			(req, resp, ex) -> resp.status(HttpStatus.CONFLICT));
+				(req, resp, ex) -> resp.status(HttpStatus.CONFLICT));
 
 		Map<Class<? extends Exception>, InternalExceptionHandler> map = new HashMap<>();
 		map.put(ThirdException.class, thirdHandler);
@@ -99,7 +99,7 @@ public class ExceptionProcessorImplTest {
 		response.setOutputStream(new ByteArrayOutputStream());
 
 		RequestStub request = new RequestStub();
-		request.setAccept(Optional.of(singletonList(PLAIN_TEXT)));
+		request.setAccept(singletonList(PLAIN_TEXT));
 		Map<HeaderName, String> headers = request.getHeaders();
 		headers.put(HeaderName.ACCEPT_CHARSET, "UTF-8");
 
@@ -119,7 +119,7 @@ public class ExceptionProcessorImplTest {
 		response.setOutputStream(new ByteArrayOutputStream());
 
 		RequestStub request = new RequestStub();
-		request.setAccept(Optional.of(singletonList(PLAIN_TEXT)));
+		request.setAccept(singletonList(PLAIN_TEXT));
 		request.setMatchedAccept(PLAIN_TEXT);
 
 		ExceptionProcessor testedClass = new ExceptionProcessorImpl(context);
@@ -138,7 +138,7 @@ public class ExceptionProcessorImplTest {
 		response.setOutputStream(new ByteArrayOutputStream());
 
 		RequestStub request = new RequestStub();
-		request.setAccept(Optional.of(singletonList(JSON)));
+		request.setAccept(singletonList(JSON));
 
 		ExceptionProcessor testedClass = new ExceptionProcessorImpl(context);
 		testedClass.process(new FourthException(), request, response);
@@ -146,10 +146,10 @@ public class ExceptionProcessorImplTest {
 
 	private ApplicationContextImpl getApplicationContextWithBody() {
 		InternalExceptionHandler secondHandler = new InternalExceptionHandler(SecondException.class,
-			(req, resp, ex) -> {
-				resp.status(HttpStatus.BAD_GATEWAY);
-				resp.entity("Well Done!!");
-			}, Req(String.class));
+				(req, resp, ex) -> {
+					resp.status(HttpStatus.BAD_GATEWAY);
+					resp.entity("Well Done!!");
+				}, Req(String.class));
 		secondHandler.addWriter(new StringReaderWriter());
 
 		Map<Class<? extends Exception>, InternalExceptionHandler> map = new HashMap<>();
@@ -162,7 +162,7 @@ public class ExceptionProcessorImplTest {
 
 	private ApplicationContextImpl getApplicationContextOneHandler() {
 		InternalExceptionHandler handler = new InternalExceptionHandler(SecondException.class,
-			(req, resp, ex) -> resp.status(HttpStatus.BAD_GATEWAY));
+				(req, resp, ex) -> resp.status(HttpStatus.BAD_GATEWAY));
 
 		Map<Class<? extends Exception>, InternalExceptionHandler> map = new HashMap<>();
 		map.put(SecondException.class, handler);

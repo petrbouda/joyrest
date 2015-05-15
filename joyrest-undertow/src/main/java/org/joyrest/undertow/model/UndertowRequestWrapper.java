@@ -30,10 +30,6 @@ public class UndertowRequestWrapper extends InternalRequest<Object> {
 
 	private Map<String, String[]> queryParams;
 
-	protected Optional<MediaType> contentType;
-
-	protected Optional<List<MediaType>> accept;
-
 	public UndertowRequestWrapper(HttpServerExchange request) {
 		this.request = request;
 		this.method = HttpMethod.of(request.getRequestMethod().toString());
@@ -57,22 +53,6 @@ public class UndertowRequestWrapper extends InternalRequest<Object> {
 	@Override
 	public String getPath() {
 		return path;
-	}
-
-	@Override
-	public Optional<MediaType> getContentType() {
-		if (isNull(contentType))
-			contentType = getHeader(HeaderName.CONTENT_TYPE)
-				.map(MediaType::of);
-		return contentType;
-	}
-
-	@Override
-	public Optional<List<MediaType>> getAccept() {
-		if (isNull(accept))
-			accept = getHeader(HeaderName.ACCEPT)
-				.map(MediaType::list);
-		return accept;
 	}
 
 	@Override

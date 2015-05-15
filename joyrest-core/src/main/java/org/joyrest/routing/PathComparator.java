@@ -51,7 +51,7 @@ public class  PathComparator implements BiPredicate<InternalRoute, InternalReque
 		case PATH:
 			return routePart.getValue().equals(pathPart);
 		case PARAM:
-			return routePart.getPathType().isAssignableFromString(pathPart);
+			return routePart.getVariableType().isAssignableFromString(pathPart);
 		default:
 			return false;
 		}
@@ -68,6 +68,7 @@ public class  PathComparator implements BiPredicate<InternalRoute, InternalReque
 	public boolean test(InternalRoute route, InternalRequest<?> request) {
 		List<String> pathParts = request.getPathParts();
 		List<RoutePart<?>> routeParts = route.getRouteParts();
+
 		if (routeParts.size() != pathParts.size())
 			return false;
 

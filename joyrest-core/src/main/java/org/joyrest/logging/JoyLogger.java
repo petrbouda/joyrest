@@ -24,6 +24,10 @@ public final class JoyLogger {
 
 	public final Logger logger;
 
+	public static final JoyLogger of(Class<?> clazz) {
+		return new JoyLogger(clazz);
+	}
+
 	public JoyLogger(Class<?> clazz) {
 		this.logger = LoggerFactory.getLogger(clazz);
 	}

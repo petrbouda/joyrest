@@ -26,7 +26,7 @@ public class JsonReaderWriter extends AbstractReaderWriter {
 	}
 
 	@Override
-	public <T> T readFrom(InternalRequest<T> request, Type<T> type) {
+	public <T> T readFrom(InternalRequest<?> request, Type<T> type) {
 		try {
 			return mapper.readValue(request.getInputStream(), (Class<T>) type.getType());
 		} catch (IOException e) {

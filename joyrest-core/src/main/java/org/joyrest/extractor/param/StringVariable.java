@@ -15,13 +15,15 @@
  */
 package org.joyrest.extractor.param;
 
-public class IntegerPath extends AbstractPath<Integer> {
+import java.util.function.Function;
 
-	public static final IntegerPath INSTANCE = new IntegerPath();
-	public static final String NAME = "int";
+public class StringVariable extends AbstractVariable<String> {
 
-	private IntegerPath() {
-		super(NAME, Integer::parseInt);
+	public static final StringVariable INSTANCE = new StringVariable();
+	public static final String NAME = "str";
+
+	public StringVariable() {
+		super(NAME, Function.identity());
 	}
 
 }

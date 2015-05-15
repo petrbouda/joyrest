@@ -19,8 +19,9 @@ import static org.joyrest.exception.type.RestException.internalServerErrorSuppli
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Objects;
+import java.util.Optional;
 
+import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
@@ -34,6 +35,8 @@ import org.joyrest.routing.entity.Type;
  */
 public class StringReaderWriter extends AbstractReaderWriter {
 
+	private final static JoyLogger logger = JoyLogger.of(StringReaderWriter.class);
+
 	private final MediaType supportedMediaType = MediaType.PLAIN_TEXT;
 
 	/**
@@ -41,9 +44,8 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T readFrom(InternalRequest<T> request, Type<T> clazz) {
-		Charset charset = request.getContentType()
-			.filter(Objects::nonNull)
+	public <T> T readFrom(InternalRequest<?> request, Type<T> clazz) {
+		Charset charset = Optional.of(request.getContentType())
 			.flatMap(mediaType -> mediaType.getParam("charset"))
 			.map(Charset::forName)
 			.orElse(DEFAULT_CHARSET);
@@ -60,6 +62,11 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	@Override
 	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
 		try {
+			if (!response.getEntity().isPresent()) {
+				logger.warn(() -> "No entity in the response to write to an output stream.");
+				return;
+			}
+
 			Charset charset = request.getHeader(HeaderName.ACCEPT_CHARSET)
 				.map(Charset::forName)
 				.orElse(DEFAULT_CHARSET);

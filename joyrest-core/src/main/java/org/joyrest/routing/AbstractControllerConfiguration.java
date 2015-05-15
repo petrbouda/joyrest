@@ -21,12 +21,9 @@ import static java.util.Objects.requireNonNull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
-import org.joyrest.model.request.Request;
-import org.joyrest.model.response.Response;
 import org.joyrest.processor.RequestProcessor;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.utils.PathUtils;
@@ -62,7 +59,7 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 		if (!this.isInitialized) {
 			configure();
 
-			List<RoutePart<String>> globalParts = PathUtils.createRouteParts(globalPath);
+			List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(globalPath);
 			if (nonNull(globalPath))
 				this.routes.stream()
 					.forEach(route -> route.addGlobalPath(globalParts));
@@ -100,6 +97,8 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 
 	protected InternalRoute createEntityRoute(HttpMethod method, String path, RouteAction action,
 											  Type<?> reqClazz, Type<?> respClazz) {
+		requireNonNull(path, "Route path cannot be null.");
+
 		final String correctPath = pathCorrector.apply(path);
 		final InternalRoute route = new InternalRoute(correctPath, method, action, reqClazz, respClazz);
 		routes.add(route);

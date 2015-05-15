@@ -1,15 +1,15 @@
 package org.joyrest.stubs;
 
-import org.joyrest.model.http.HeaderName;
-import org.joyrest.model.http.HttpMethod;
-import org.joyrest.model.http.MediaType;
-import org.joyrest.model.request.InternalRequest;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.MediaType;
+import org.joyrest.model.request.InternalRequest;
 
 public class RequestStub extends InternalRequest<Object> {
 
@@ -19,23 +19,9 @@ public class RequestStub extends InternalRequest<Object> {
 
 	private Map<HeaderName, String> headers = new HashMap<>();
 
-	private Optional<MediaType> contentType;
-
-	private Optional<List<MediaType>> accept;
-
 	private InputStream inputStream;
 
 	private Map<String, String[]> queryParams = new HashMap<>();
-
-	@Override
-	public Optional<MediaType> getContentType() {
-		return contentType;
-	}
-
-	@Override
-	public Optional<List<MediaType>> getAccept() {
-		return accept;
-	}
 
 	@Override
 	public InputStream getInputStream() {
@@ -84,11 +70,11 @@ public class RequestStub extends InternalRequest<Object> {
 		this.headers = headers;
 	}
 
-	public void setContentType(Optional<MediaType> contentType) {
+	public void setContentType(MediaType contentType) {
 		this.contentType = contentType;
 	}
 
-	public void setAccept(Optional<List<MediaType>> accept) {
+	public void setAccept(List<MediaType> accept) {
 		this.accept = accept;
 	}
 

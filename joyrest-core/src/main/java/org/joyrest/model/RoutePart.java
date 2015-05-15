@@ -15,18 +15,20 @@
  */
 package org.joyrest.model;
 
-import org.joyrest.extractor.param.PathType;
+import org.joyrest.extractor.param.VariableType;
+
+import java.util.Objects;
 
 public class RoutePart<T> {
 
 	private final Type type;
-	private final PathType<T> pathType;
+	private final VariableType<T> variableType;
 	private final String value;
 
-	public RoutePart(Type type, String value, PathType<T> pathType) {
+	public RoutePart(Type type, String value, VariableType<T> variableType) {
 		this.type = type;
 		this.value = value;
-		this.pathType = pathType;
+		this.variableType = variableType;
 	}
 
 	public Type getType() {
@@ -37,11 +39,30 @@ public class RoutePart<T> {
 		return value;
 	}
 
-	public PathType<T> getPathType() {
-		return pathType;
+	public VariableType<T> getVariableType() {
+		return variableType;
 	}
 
-	public static enum Type {
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, variableType, value);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final RoutePart other = (RoutePart) obj;
+		return Objects.equals(this.type, other.type)
+			&& Objects.equals(this.variableType, other.variableType)
+			&& Objects.equals(this.value, other.value);
+	}
+
+	public enum Type {
 		PATH,
 		PARAM
 	}

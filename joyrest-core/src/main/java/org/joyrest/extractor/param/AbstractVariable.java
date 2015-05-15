@@ -21,13 +21,13 @@ import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
 
-public abstract class AbstractPath<T> implements PathType<T> {
+public abstract class AbstractVariable<T> implements VariableType<T> {
 
 	private final String name;
 
 	private final Function<String, T> extractor;
 
-	public AbstractPath(String name, Function<String, T> extractor) {
+	public AbstractVariable(String name, Function<String, T> extractor) {
 		this.name = name;
 		this.extractor = extractor;
 	}
@@ -60,7 +60,7 @@ public abstract class AbstractPath<T> implements PathType<T> {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		final AbstractPath other = (AbstractPath) obj;
+		final AbstractVariable other = (AbstractVariable) obj;
 		return Objects.equals(this.name, other.name)
 				&& Objects.equals(this.extractor, other.extractor);
 	}

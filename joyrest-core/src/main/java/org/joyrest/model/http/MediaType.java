@@ -72,9 +72,7 @@ public final class MediaType {
 	}
 
 	public static List<MediaType> list(String mediaTypes) {
-		return Arrays.stream(mediaTypes.split(","))
-			.filter(Objects::nonNull)
-			.map(String::trim)
+		return split(mediaTypes, ",").stream()
 			.distinct()
 			.map(MediaType::of)
 			.collect(toList());
@@ -87,36 +85,50 @@ public final class MediaType {
 		// Contains header some params?
 		Map<String, String> params = new HashMap<>();
 		if (mediaType.contains(";")) {
-			String[] mediaTypeSplit = mediaType.split(";");
-			mediaType = mediaTypeSplit[0];
-			params = Arrays.stream(mediaTypeSplit)
+			List<String> mediaTypes = split(mediaType, ";");
+			mediaType = mediaTypes.get(0);
+			params = mediaTypes.stream()
 				.skip(1)
-				.filter(Objects::nonNull)
 				.filter(param -> param.contains("="))
-				.map(String::trim)
 				.map(MediaType::paramToNameValue)
 				.collect(toMap(NameValueEntity::getName, NameValueEntity::getValue));
 		}
 
-		String[] typeSplit = mediaType.split("/");
-		if (typeSplit.length != 2)
+		List<String> typeSplit = split(mediaType, "/");
+		if (typeSplit.size() != 2)
 			throw internalServerErrorSupplier(
 					String.format("Invalid MediaType [%s]", mediaType)).get();
 
 		MediaType processingType = null;
-		if (typeSplit[1].contains("+")) {
-			String[] processingSplit = typeSplit[1].split("\\+");
-			if (processingSplit.length == 2)
-				processingType = BASIC_MEDIA_TYPE.get(processingSplit[1]);
+		if (typeSplit.get(1).contains("+")) {
+			List<String> processingSplit = split(typeSplit.get(1), "+");
+			if (processingSplit.size() == 2)
+				processingType = BASIC_MEDIA_TYPE.get(processingSplit.get(1));
 		}
 
-		return new MediaType(typeSplit[0], typeSplit[1], processingType, params);
+		return new MediaType(typeSplit.get(0), typeSplit.get(1), processingType, params);
 	}
 
-	private static final NameValueEntity<String, String> paramToNameValue(String param) {
-		String[] paramSplit = param.split("=");
-		return nonNull(paramSplit[0]) && nonNull(paramSplit[1]) ?
-				new NameValueEntity<>(paramSplit[0].toLowerCase(), paramSplit[1].toLowerCase()) : null;
+	private static List<String> split(String value, String delimiter) {
+		List<String> result = new ArrayList<>();
+
+		StringTokenizer tokenizer = new StringTokenizer(value, delimiter);
+		while (tokenizer.hasMoreTokens()) {
+			String trimmed = tokenizer.nextToken().trim();
+			if(!trimmed.isEmpty())
+				result.add(trimmed);
+		}
+		return result;
+	}
+
+	private static NameValueEntity<String, String> paramToNameValue(String param) {
+		char[] chars = param.toCharArray();
+		int index = param.indexOf("=");
+
+		String name = new String(chars, 0, index);
+		String value = new String(chars, index + 1, chars.length - index - 1);
+
+		return new NameValueEntity<>(name.toLowerCase(), value.toLowerCase());
 	}
 
 	public String get() {

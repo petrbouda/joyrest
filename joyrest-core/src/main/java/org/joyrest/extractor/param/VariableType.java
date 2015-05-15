@@ -21,13 +21,13 @@ import java.util.Optional;
  * Abstract type of a part in the path.
  *
  * @param <T>
- * @see AbstractPath
- * @see IntegerPath
- * @see LongPath
- * @see StringPath
+ * @see AbstractVariable
+ * @see IntegerVariable
+ * @see LongVariable
+ * @see StringVariable
  * @author pbouda
  */
-public interface PathType<T> {
+public interface VariableType<T> {
 
 	/**
 	 * Method parses and casts from the string value to a concrete value defined in a child class.

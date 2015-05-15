@@ -29,10 +29,6 @@ public class JettyRequestWrapper extends InternalRequest<Object> {
 
 	private Map<HeaderName, String> headers;
 
-	protected Optional<MediaType> contentType;
-
-	protected Optional<List<MediaType>> accept;
-
 	public JettyRequestWrapper(HttpServletRequest request) {
 		this.request = request;
 		this.method = HttpMethod.of(request.getMethod());
@@ -62,22 +58,6 @@ public class JettyRequestWrapper extends InternalRequest<Object> {
 	@Override
 	public String getPath() {
 		return path;
-	}
-
-	@Override
-	public Optional<MediaType> getContentType() {
-		if (isNull(contentType))
-			contentType = getHeader(HeaderName.CONTENT_TYPE)
-				.map(MediaType::of);
-		return contentType;
-	}
-
-	@Override
-	public Optional<List<MediaType>> getAccept() {
-		if (isNull(accept))
-			accept = getHeader(HeaderName.ACCEPT)
-				.map(MediaType::list);
-		return accept;
 	}
 
 	@Override
