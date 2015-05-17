@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.joyrest.examples</groupId>
         <artifactId>joyrest-examples</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
 
     <artifactId>feed-combiner</artifactId>
