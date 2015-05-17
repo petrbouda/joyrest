@@ -35,7 +35,7 @@ public interface Reader extends Transformer {
 	 * @param <T> type of the result object
 	 * @return created object
 	 */
-	<T> T readFrom(InternalRequest<?> request, Type<T> clazz);
+	<T> T readFrom(InternalRequest<Object> request, Type<T> clazz);
 
 	/**
 	 * Figures out whether is reader compatible for the given route

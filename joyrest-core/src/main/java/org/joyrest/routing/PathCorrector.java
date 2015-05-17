@@ -24,8 +24,29 @@ import org.joyrest.exception.type.InvalidConfigurationException;
 /**
  * Class which customizes the form of the path to a valid internal representation
  *
- * "//" => Throw an Exception "/" => Correct! "" => Add "/" "/path" => Correct! "/path/" => Remove the last char "/"
- * "path	=> Add the first char "/" "path/" => Add the first char "/" && Remove the last char "/"
+ * <p>
+ * "//" Throw an Exception
+ * </p>
+ * <p>
+ * "/" Correct!
+ * </p>
+ * <p>
+ * "" Add "/"
+ * </p>
+ * <p>
+ * "/path" Correct!
+ * </p>
+ * <p>
+ * "/path/" Remove the last char "/"
+ * </p>
+ * <p>
+ * "path" Add the first char "/"
+ * </p>
+ * <p>
+ * "path/" Add the first char "/", Remove the last char "/"
+ * </p>
+ *
+ * @author pbouda
  **/
 public class PathCorrector implements Function<String, String> {
 

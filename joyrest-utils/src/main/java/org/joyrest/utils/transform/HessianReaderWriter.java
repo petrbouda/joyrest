@@ -18,7 +18,7 @@ public class HessianReaderWriter extends AbstractReaderWriter {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T readFrom(InternalRequest<?> request, Type<T> clazz) {
+	public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
 		try {
 			Hessian2Input in = new Hessian2Input(request.getInputStream());
 			in.startMessage();

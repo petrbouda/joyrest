@@ -40,9 +40,10 @@ import com.codepoetics.protonpack.StreamUtils;
 /**
  * {@inheritDoc}
  *
- * <p/>
+ * <p>
  * The processor gets {@link ApplicationContext} with all information which can be provided by framework regarding configured
  * routes.
+ * </p>
  *
  * @author pbouda
  */

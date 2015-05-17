@@ -39,7 +39,7 @@ public interface Transformer extends General {
 	 * Compares whether the class is suitable for this transformer
 	 *
 	 * @param clazz class to compare
-	 * @return returns {@link true} if the class is compatible with the given transformer
+	 * @return returns {@code true} if the class is compatible with the given transformer
 	 */
 	boolean isClassCompatible(Class<?> clazz);
 

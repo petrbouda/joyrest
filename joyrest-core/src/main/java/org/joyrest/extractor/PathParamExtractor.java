@@ -28,11 +28,11 @@ public class PathParamExtractor implements BiFunction<RoutePart<?>, String, Path
 	 * path param.
 	 *
 	 * <p>
-	 * If it is just string path, so this method will return @{code null}</>.
-	 * <p/>
+	 * If it is just string path, so this method will return @{code null}.
+	 * </p>
 	 * <p>
 	 * If it is param path, so method will find out whether is possible to cast the object or not and then can throw an validation exception
-	 * <p/>
+	 * </p>
 	 *
 	 * @param routePart configured part
 	 * @param pathPart path from a client's call

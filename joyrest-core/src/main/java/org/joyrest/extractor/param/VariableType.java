@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * Abstract type of a part in the path.
  *
- * @param <T>
+ * @param <T> type of the variable
  * @see AbstractVariable
  * @see IntegerVariable
  * @see LongVariable

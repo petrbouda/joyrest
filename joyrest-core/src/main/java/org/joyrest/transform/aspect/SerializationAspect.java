@@ -39,7 +39,8 @@ public class SerializationAspect implements Aspect {
 	public static final int SERIALIZATION_ASPECT_ORDER = 0;
 
 	@Override
-	public InternalResponse<?> around(AspectChain chain, InternalRequest request, InternalResponse response) {
+	public InternalResponse<Object> around(AspectChain chain,
+			InternalRequest<Object> request, InternalResponse<Object> response) {
 		InternalRoute route = chain.getRoute();
 		if (route.hasRequestBody()) {
 			Object entity = readEntity(route, request);
@@ -56,7 +57,7 @@ public class SerializationAspect implements Aspect {
 			MediaType accept = request.getMatchedAccept();
 			Writer writer = route.getWriter(accept)
 				.orElseThrow(notAcceptableSupplier(String.format(
-					"No suitable Writer for accept header [%s] is registered.", accept)));
+						"No suitable Writer for accept header [%s] is registered.", accept)));
 			response.header(HeaderName.CONTENT_TYPE, accept.get());
 			writer.writeTo(response, request);
 		}
@@ -66,7 +67,7 @@ public class SerializationAspect implements Aspect {
 		MediaType contentType = request.getHeader(CONTENT_TYPE).map(MediaType::of).get();
 		Reader reader = route.getReader(contentType)
 			.orElseThrow(unsupportedMediaTypeSupplier(String.format(
-				"No suitable Reader for content-type header [%s] is registered.", contentType)));
+					"No suitable Reader for content-type header [%s] is registered.", contentType)));
 		return reader.readFrom(request, route.getRequestType());
 	}
 
@@ -74,4 +75,5 @@ public class SerializationAspect implements Aspect {
 	public int getOrder() {
 		return SERIALIZATION_ASPECT_ORDER;
 	}
+
 }

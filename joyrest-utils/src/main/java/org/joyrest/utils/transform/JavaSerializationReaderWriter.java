@@ -17,7 +17,7 @@ public class JavaSerializationReaderWriter extends AbstractReaderWriter {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T readFrom(InternalRequest<?> request, Type<T> clazz) {
+	public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
 		try {
 			ObjectInputStream in = new ObjectInputStream(request.getInputStream());
 			return (T) in.readObject();

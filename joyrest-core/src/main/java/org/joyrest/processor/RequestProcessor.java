@@ -34,7 +34,7 @@ public interface RequestProcessor {
 	 *
 	 * @param request incoming model in the form of {@link InternalRequest}
 	 * @param response response in which is stored a processing result
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception exception occurred during processing in joyrest framework
 	 */
 	void process(InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;
 

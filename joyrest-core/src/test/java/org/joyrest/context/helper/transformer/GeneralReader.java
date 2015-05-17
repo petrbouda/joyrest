@@ -8,7 +8,7 @@ import org.joyrest.transform.Reader;
 
 public class GeneralReader implements Reader {
 	@Override
-	public <T> T readFrom(InternalRequest<?> request, Type<T> clazz) {
+	public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
 		return null;
 	}
 

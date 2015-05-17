@@ -44,7 +44,7 @@ public class StringReaderWriter extends AbstractReaderWriter {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T readFrom(InternalRequest<?> request, Type<T> clazz) {
+	public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
 		Charset charset = Optional.of(request.getContentType())
 			.flatMap(mediaType -> mediaType.getParam("charset"))
 			.map(Charset::forName)

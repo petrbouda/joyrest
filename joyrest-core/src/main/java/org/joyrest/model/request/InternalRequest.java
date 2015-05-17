@@ -32,8 +32,7 @@ import org.joyrest.model.http.PathParam;
 
 /**
  *
- *
- * @param <E>
+ * @param <E> typed of the entity which is wrapped by the request object
  * @see ImmutableRequest
  * @see Request
  * @author pbouda

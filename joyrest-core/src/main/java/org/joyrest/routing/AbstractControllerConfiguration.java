@@ -29,11 +29,14 @@ import org.joyrest.routing.entity.Type;
 import org.joyrest.utils.PathUtils;
 
 /**
+ * <p>
  * Class {@link AbstractControllerConfiguration} is abstract implementation of {@link ControllerConfiguration} and makes easier to create
  * the given route using predefined protected method.
- * <p/>
+ * </p>
+ * <p>
  * It can be considered as container for routes which are provided to {@link RequestProcessor} because of processing and handling incoming
  * requests.
+ * </p>
  *
  * @author pbouda
  */
