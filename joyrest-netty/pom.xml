@@ -10,7 +10,7 @@
     <artifactId>joyrest-netty</artifactId>
 
     <properties>
-        <netty.version>4.0.28.Final</netty.version>
+        <netty.version>5.0.0.Alpha2</netty.version>
     </properties>
 
     <dependencies>
@@ -33,5 +33,26 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven-deploy-plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <configuration>
+                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

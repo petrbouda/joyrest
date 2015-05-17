@@ -29,8 +29,8 @@ public class NettyApplicationHandler extends SimpleChannelInboundHandler<HttpReq
 
 	@Override
 	protected void messageReceived(ChannelHandlerContext context, HttpRequest request) throws Exception {
-		if (HttpHeaderUtil.is100ContinueExpected(request))
-			send100Continue(context);
+//		if (HttpHeaderUtil.is100ContinueExpected(request))
+//			send100Continue(context);
 
 	}
 
