@@ -15,6 +15,7 @@
  */
 package org.joyrest.aspect;
 
+import org.joyrest.common.annotation.Ordered;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 
@@ -25,7 +26,7 @@ import org.joyrest.model.response.InternalResponse;
  * @see GlobalAspect
  * @author pbouda
  **/
-public interface Aspect {
+public interface Aspect extends Ordered {
 
 	/**
 	 * Method that wraps an actual route call. This method can swallow the call or can call method
@@ -38,12 +39,5 @@ public interface Aspect {
 	 * @return response after the aspect and route call
 	 */
 	InternalResponse<Object> around(AspectChain chain, InternalRequest<Object> request, InternalResponse<Object> response);
-
-	/**
-	 * Order of the route in a {@link AspectChain}.
-	 *
-	 * @return order in a chain
-	 */
-	int getOrder();
 
 }
