@@ -13,6 +13,6 @@ hs_err_pid*
 
 *.iml
 .idea
+pom.xml.*
 Gemfile.lock
 _site
-pom.xml.*
