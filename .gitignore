@@ -15,3 +15,4 @@ hs_err_pid*
 .idea
 Gemfile.lock
 _site
+pom.xml.*
