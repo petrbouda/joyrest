@@ -1,0 +1,6 @@
+RELEASE MAJOR VERSION
+    mvn release:clean release:prepare
+    mvn release:perform
+
+RELEASE SNAPHOTS
+    mvn clean deploy -P release
