@@ -14,11 +14,15 @@ Don't forget to try out JoyRest-Maven-Plugin which provides extensible functiona
 
 ### Lambda-based approach
 There are three ways to define a body of the given route. Even if it's the `lambda-based approach` of defining routes the most favourite concept, it also worth mentioning other two approaches. For the sake of simplicity and conciseness my favourite is Lambda! 
-Try it out or look at the Examples on GitHub
+
+`Try it out or look at the Examples on GitHub`
 
 - lambda-based approach
 - method reference
 - implementing BiConsumer interface
+
+### Clear java interface configuration
+JoyRest prefers the way without or at least eliminate a number of annotations used during the declaring and bootstrapping the application. Annotations can be sometimes very confusing and make harder following debugging and understanding of the code underneath.
 
 ### License
 ```
