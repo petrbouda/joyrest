@@ -5,14 +5,12 @@ import static java.util.stream.Collectors.toMap;
 import static org.joyrest.common.UnmodifiableMapCollector.toUnmodifiableMap;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
-import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 
 import io.undertow.server.HttpServerExchange;
@@ -33,7 +31,7 @@ public class UndertowRequestWrapper extends InternalRequest<Object> {
 	public UndertowRequestWrapper(HttpServerExchange request) {
 		this.request = request;
 		this.method = HttpMethod.of(request.getRequestMethod().toString());
-		this.path = request.getRequestPath();
+		this.path = request.getRelativePath();
 	}
 
 	@Override

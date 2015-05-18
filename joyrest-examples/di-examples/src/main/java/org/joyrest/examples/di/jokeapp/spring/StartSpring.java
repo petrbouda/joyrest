@@ -9,7 +9,7 @@ public class StartSpring {
 	public static void main(String... args) throws Exception {
 		SpringJavaConfigurer configurer = new SpringJavaConfigurer();
 		ApplicationContext applicationContext = configurer.initialize(new ApplicationConfiguration());
-		GrizzlyServer.start(applicationContext, "/services", 5000);
+		GrizzlyServer.start(applicationContext, 5000, "/services");
 	}
 
 }

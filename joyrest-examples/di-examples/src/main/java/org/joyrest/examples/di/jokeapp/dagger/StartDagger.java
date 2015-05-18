@@ -9,7 +9,7 @@ public class StartDagger {
 	public static void main(String... args) throws Exception {
 		DaggerConfigurer configurer = new DaggerConfigurer();
 		ApplicationContext applicationContext = configurer.initialize(new DaggerApplicationModule());
-		GrizzlyServer.start(applicationContext, "/services", 5000);
+		GrizzlyServer.start(applicationContext, 5000, "/services");
 	}
 
 }

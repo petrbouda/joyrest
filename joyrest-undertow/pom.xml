@@ -10,7 +10,7 @@
     <artifactId>joyrest-undertow</artifactId>
 
     <properties>
-        <undertow.version>1.2.0.CR1</undertow.version>
+        <undertow.version>1.2.6.Final</undertow.version>
     </properties>
 
     <dependencies>

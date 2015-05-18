@@ -14,7 +14,7 @@ public class GrizzlyServer {
 
 	private static Logger LOG = Logger.getLogger(GrizzlyServer.class.getName());
 
-	public static void start(final ApplicationContext applicationConfig, String path, final int port) {
+	public static void start(final ApplicationContext applicationConfig, final int port, String path) {
 		try {
 			// Logging settings
 			InputStream loggingStream = GrizzlyServer.class.getResourceAsStream("/logging.properties");

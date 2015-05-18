@@ -24,6 +24,7 @@ public class UndertowApplicationHandler implements HttpHandler {
 
 	@Override
 	public void handleRequest(HttpServerExchange exchange) throws Exception {
+		exchange.startBlocking();
 		processor.process(new UndertowRequestWrapper(exchange), new UndertowResponseWrapper(exchange));
 	}
 }

@@ -10,7 +10,7 @@ public class StartGuice {
 	public static void main(String... args) throws Exception {
 		Configurer configurer = new GuiceConfigurer();
 		ApplicationContext applicationContext = configurer.initialize(new GuiceApplicationModule());
-		GrizzlyServer.start(applicationContext, "/services", 5000);
+		GrizzlyServer.start(applicationContext, 5000, "/services");
 	}
 
 }

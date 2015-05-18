@@ -8,7 +8,7 @@ public class Start {
 	public static void main(String... args) throws Exception {
 		JokeConfigurer configurer = new JokeConfigurer();
 		ApplicationContext applicationContext = configurer.initialize();
-		GrizzlyServer.start(applicationContext, "/services", 5000);
+		GrizzlyServer.start(applicationContext, 5000, "/services");
 	}
 
 }

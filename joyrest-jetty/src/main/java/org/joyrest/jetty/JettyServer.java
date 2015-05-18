@@ -12,7 +12,7 @@ public class JettyServer {
 
 	private static Logger LOG = Logger.getLogger(JettyServer.class.getName());
 
-	public static void start(final ApplicationContext applicationContext, String path, final int port) {
+	public static void start(final ApplicationContext applicationContext, final int port, String path) {
 		try {
 			Server server = new Server(port);
 			ContextHandler contextHandler = new ContextHandler();
