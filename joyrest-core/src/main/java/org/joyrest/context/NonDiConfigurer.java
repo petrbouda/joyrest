@@ -47,7 +47,7 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	 *
 	 * @return application context with all registered beans
 	 */
-	abstract protected ApplicationContext initialize();
+	abstract public ApplicationContext initialize();
 
 	/**
 	 * Add a new {@link Aspect} to the application context.

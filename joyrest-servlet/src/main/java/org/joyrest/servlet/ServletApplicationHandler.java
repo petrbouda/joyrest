@@ -1,6 +1,7 @@
 package org.joyrest.servlet;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.joyrest.servlet.JoyrestProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
 import static org.joyrest.servlet.JoyrestProperties.CONFIGURER_PROPERTY;
 
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.Configurer;
+import org.joyrest.context.NonDiConfigurer;
+import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.logging.JoyLogger;
 import org.joyrest.processor.RequestProcessor;
 import org.joyrest.processor.RequestProcessorImpl;
@@ -65,15 +68,33 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		initializeProcessor(filterConfig::getInitParameter);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initializeProcessor(Function<String, String> paramProvider) throws ServletException {
-		if (isNull(applicationConfig))
-			this.applicationConfig = getInstanceFromClazz(paramProvider.apply(APPLICATION_JAVA_CONFIG_PROPERTY));
+		if (isNull(applicationConfig)) {
+			String configClass = paramProvider.apply(APPLICATION_JAVA_CONFIG_PROPERTY);
+			if(nonNull(configClass))
+				this.applicationConfig = getInstanceFromClazz(configClass);
+		}
 
-		if (isNull(configurer))
-			this.configurer = getInstanceFromClazz(paramProvider.apply(CONFIGURER_PROPERTY), Configurer.class);
+		if (isNull(configurer)) {
+			String configurerClass = paramProvider.apply(CONFIGURER_PROPERTY);
+			if(nonNull(configurerClass))
+				this.configurer = getInstanceFromClazz(paramProvider.apply(CONFIGURER_PROPERTY), Configurer.class);
+			else
+				throw new InvalidConfigurationException("Servlet Handler cannot be initialized because property '"
+					+ CONFIGURER_PROPERTY + "' missing.");
+		}
 
-		@SuppressWarnings("unchecked")
-		ApplicationContext context = configurer.initialize(applicationConfig);
+		ApplicationContext context;
+		if(nonNull(applicationConfig)) {
+			context = configurer.initialize(applicationConfig);
+		} else {
+			if(configurer instanceof NonDiConfigurer)
+				context = ((NonDiConfigurer) configurer).initialize();
+			else
+				throw new InvalidConfigurationException("Servlet Handler cannot be initialized because of DI-dependent " +
+					"configurer without an application config.");
+		}
 		this.processor = new RequestProcessorImpl(context);
 	}
 
