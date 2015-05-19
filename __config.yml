@@ -7,3 +7,7 @@ github_username: petrbouda
 
 # Build settings
 markdown: kramdown
+
+# Joyrest Versions
+joyrest_release: 1.1
+joyrest_snapshot: 1.2-SNAPSHOT
