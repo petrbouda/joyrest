@@ -17,17 +17,11 @@ layout: default
         <p>
             The main component ensured JoyRest <-> HTTP Server integration is called <code>Handler</code>. Every server has a specific way
             to integrate with JoyRest, every of them provides a different way to find out information about HTTP Requests and Responses.
-            But the idea behind this is always the same:
+            Requests and responses wrap server-specific requests and responses and provide some caching because of an optimization.
         </p>
 
-        <ul>
-            <li>to map an HTTP server-specific request to an internal representation (<code>InternalRequest</code>)</li>
-            <li>to process the request using a predefined route</li>
-            <li>to map an internal response (<code>InternalResponse</code>) to a server-specific HTTP response</li>
-        </ul>
-
-        Handlers to the individual HTTP servers are included in individual jar files and these files are available as a maven
-        dependency. For instance:
+        Handlers and server-specific request and response are included in individual jar files and these files are available as a maven
+        dependency.
     </div>
     <table class="table">
         <caption></caption>
@@ -46,7 +40,17 @@ layout: default
         </tr>
         <tr>
             <td>org.joyrest</td>
+            <td>joyrest-undertow</td>
+            <td><code>{{ site.joyrest_release }}</code> or <code>{{ site.joyrest_snapshot }}</code></td>
+        </tr>
+        <tr>
+            <td>org.joyrest</td>
             <td>joyrest-jetty</td>
+            <td><code>{{ site.joyrest_release }}</code> or <code>{{ site.joyrest_snapshot }}</code></td>
+        </tr>
+        <tr>
+            <td>org.joyrest</td>
+            <td>joyrest-servlet</td>
             <td><code>{{ site.joyrest_release }}</code> or <code>{{ site.joyrest_snapshot }}</code></td>
         </tr>
         <tr>
@@ -57,55 +61,8 @@ layout: default
         </tbody>
     </table>
     <div class="bs-callout bs-callout-info">
-        <p>
-            The full set of supported servers is published in the <a href="./download.html">Download Section</a>.
-        </p>
-
-        The example mentioned below is a Grizzly-specific handler that uses <code>LambdaRequest</code> and <code>LamdaResponse</code>
-        because of better performance and omitting some useless transformations between grizzly-specific requests and responses to/from
-        an internal representation.
+        The full set of supported servers is published in the <a href="./download.html">Download Section</a>.
     </div>
-<pre><code class="language-java">
-public class GrizzlyApplicationHandler extends HttpHandler {
-
-    /* Class for processing an incoming request and generated response */
-    private final RequestProcessor processor;
-
-    public GrizzlyApplicationHandler(ApplicationContext applicationContext) {
-        this(new RequestProcessorImpl(applicationContext));
-    }
-
-    public GrizzlyApplicationHandler(RequestProcessor processor) {
-        super(GrizzlyApplicationHandler.class.getName());
-        this.processor = processor;
-    }
-
-    @Override
-    public void service(org.glassfish.grizzly.http.server.Request request,
-        org.glassfish.grizzly.http.server.Response response) throws Exception {
-        processor.process(createRequest(request), createResponse(response));
-    }
-
-    private LambdaRequest&lt;Object&gt; createRequest(org.glassfish.grizzly.http.server.Request req) {
-        LambdaRequest&lt;Object&gt; joyRequest = new LambdaRequest<>(req::getHeader, req::getParameterValues);
-        joyRequest.setPath(createPath(req.getRequestURI(), req.getContextPath()));
-        joyRequest.setMethod(HttpMethod.of(req.getMethod().getMethodString()));
-        joyRequest.setInputStream(req.getInputStream());
-        joyRequest.setHeaderNames(req.getHeaderNames());
-        joyRequest.setQueryParamNames(req.getParameterNames());
-        return joyRequest;
-    }
-
-    private LambdaResponse&lt;Object&gt; createResponse(org.glassfish.grizzly.http.server.Response response) throws IOException {
-        LambdaResponse&lt;Object&gt; joyResponse = new LambdaResponse<>(response::addHeader,
-            status -> response.setStatus(status.code()));
-        joyResponse.setOutputStream(response.getOutputStream());
-        return joyResponse;
-    }
-}</code></pre>
-
-    <h4>Servlet-based Integration</h4>
 
     <hr />
-
 </div>

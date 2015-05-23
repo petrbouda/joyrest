@@ -16,83 +16,20 @@ layout: default
     {% include github.html %}
 </div>
 <div class="col-md-9">
-    <h3 id="github-sec">GitHub Sources</h3>
-    A source code of the framework is able to clone from GitHub: <a href="http://www.github.com/petrbouda/joyrest">http://www.github.com/petrbouda/joyrest</a>
+    <h3 id="github-sec">How to create Application Context</h3>
+    <code>Application Context</code> is an entity created using <code>Configurer</code> class and <code>Application Config</code>.
+    Then Application Context is used along with a servlet-specific handler to configure the JoyRest application.
+
 
     <hr class="col-md-12">
 
-    <h3 id="maven-sec">Maven Dependency</h3>
-    JoyRest Releases are available on Maven Central Repository
-    <h4>Core</h4>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-core&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
+    <h4>Lambda expression example</h4>
+<pre><code class="language-java">
+public static void main(String... args) throws Exception {
+    JokeConfigurer configurer = new JokeConfigurer();
+    ApplicationContext applicationContext = configurer.initialize();
+    GrizzlyServer.start(applicationContext, 5000, "/services");
+}</code></pre>
 
-            <h4>Dependency Injection Integration</h4>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-hk2&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-spring&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-guice&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-dagger&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-            <h4>Server Integration</h4>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-servlet&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-grizzly&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-undertow&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-            <h4>Repository for Releases and Snapshots</h4>
-<pre><code class="language-markup">
-&lt;repository&gt;
-    &lt;id&gt;oss-sonatype&lt;/id&gt;
-    &lt;url&gt;https://oss.sonatype.org/content/groups/public&lt;/url&gt;
-&lt;/repository&gt;
-</code></pre>
     <hr>
 </div>
