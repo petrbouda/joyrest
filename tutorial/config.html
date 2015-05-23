@@ -10,14 +10,14 @@ layout: default
     <hr class="col-md-12">
 
     <h4>HK2-based configuration</h4>
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public static void main(String... args) throws Exception {
     HK2Configurer configurer = new HK2Configurer();
     ApplicationContext applicationContext = configurer.initialize(new ApplicationBinder());
     GrizzlyServer.start(applicationContext, 5000, "/services");
 }</code></pre>
 
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public class ApplicationBinder extends AbstractBinder {
 
     @Override
@@ -37,14 +37,14 @@ public class ApplicationBinder extends AbstractBinder {
 }</code></pre>
 
     <h4>Spring-based configuration</h4>
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public static void main(String... args) throws Exception {
     SpringJavaConfigurer configurer = new SpringJavaConfigurer();
     ApplicationContext applicationContext = configurer.initialize(new ApplicationConfiguration());
     GrizzlyServer.start(applicationContext, 5000, "/services");
 }</code></pre>
 
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 @Configuration
 public class ApplicationConfiguration {
 
@@ -65,14 +65,14 @@ public class ApplicationConfiguration {
 }</code></pre>
 
     <h4>Guice-based configuration</h4>
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public static void main(String... args) throws Exception {
     Configurer configurer = new GuiceConfigurer();
     ApplicationContext applicationContext = configurer.initialize(new GuiceApplicationModule());
     GrizzlyServer.start(applicationContext, 5000, "/services");
 }</code></pre>
 
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public class GuiceApplicationModule extends AbstractModule {
 
     @Override
@@ -94,14 +94,14 @@ public class GuiceApplicationModule extends AbstractModule {
 }</code></pre>
 
     <h4>Dagger-based configuration</h4>
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public static void main(String... args) throws Exception {
     DaggerConfigurer configurer = new DaggerConfigurer();
     ApplicationContext applicationContext = configurer.initialize(new DaggerApplicationModule());
     GrizzlyServer.start(applicationContext, 5000, "/services");
 }</code></pre>
 
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 @Module(injects = { DaggerConfigurer.DaggerConfigurationProvider.class, JokeController.class }, library = true)
 public class DaggerApplicationModule {
 

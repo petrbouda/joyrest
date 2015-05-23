@@ -12,7 +12,7 @@ layout: default
         and create <code>Application Context</code> that contains all needed information about objects which are used to run and
         process request from a server.
     </div>
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public class Start {
     public static void main(String... args) throws Exception {
         Configurer configurer = new HK2Configurer();
@@ -25,7 +25,7 @@ public class Start {
         In the snippet shown above you can see <code>GrizzlyServer.start()</code> method:
     </p>
 
-<pre><code class="language-java">
+<pre class="line-numbers"><code class="language-java">
 public class GrizzlyServer {
 
     private static Logger LOG = Logger.getLogger(GrizzlyServer.class.getName());
