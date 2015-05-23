@@ -8,7 +8,7 @@ layout: default
     <div class="bs-callout bs-callout-info">
         <p>
             Controllers are configuration classes which provides all information about routes that have something similar to each other. For example
-            resource <code>Joke</code> should have one controller configuration with all operations which are available to do with this resource.
+            resource <code>CombinedFeedRoute</code> should have one controller configuration with all operations which are available to do with this resource.
             There is one abstract class <code>TypedControllerConfiguration</code> that makes a route creation very easy because contains
             various combinations of parameters to makes a work with it as convenient as possible. Its usage is shown below.
         </p>
@@ -18,7 +18,7 @@ layout: default
         <ul>
             <li>using a lambda expression</li>
             <li>using a method reference</li>
-            <li>using an implementation of the interface <code>BiConsumer&lt;Request&lt;REQ&gt;, Response&lt;RESP&gt;&gt;</code></li>
+            <li>using an implementation of the interface <code>RouteAcion&lt;Request&lt;REQ&gt;, Response&lt;RESP&gt;&gt;</code></li>
         </ul>
     </div>
     <div class="bs-callout bs-callout-warning">
@@ -33,23 +33,71 @@ layout: default
 
     <h4>Lambda expression example</h4>
 <pre><code class="language-java">
-public class JokeController extends TypedControllerConfiguration {
+    public class CombinedFeedRoute extends TypedControllerConfiguration {
 
     @Inject
-    private JokeService service;
+    private CrudService&ltCombinedFeed&gt feedService;
 
     @Override
     protected void configure() {
-        get((req, resp) -> {
-            List&lt;Joke&gt; jokes = service.getAll();
-            resp.entity(jokes);
-        }, RespList(Joke.class)).produces(JSON, XML);
+        setGlobalPath("feeds");
+
+        post((request, response) -> {
+            CombinedFeed feed = feedService.save(request.getEntity());
+            response.entity(feed)
+                .status(CREATED));
+        }, Req(CombinedFeed.class), Resp(CombinedFeed.class))
+            .consumes(JSON).produces(JSON);
     }
 }</code></pre>
 
     <h4>Method reference example</h4>
+<pre><code class="language-java">
+public class CombinedFeedRoute extends TypedControllerConfiguration {
 
-    <h4>BiConsumer implementation example</h4>
+    @Inject
+    private CrudService&ltCombinedFeed&gt feedService;
+
+    @Override
+    protected void configure() {
+        setGlobalPath("feeds");
+
+        post(this::postFeed, Req(CombinedFeed.class), Resp(CombinedFeed.class))
+            .consumes(JSON).produces(JSON);
+    }
+
+    private void postFeed(Request&ltCombinedFeed&gt req, Response&ltCombinedFeed&gt resp) {
+        CombinedFeed feed = feedService.save(req.getEntity());
+        resp.entity(feed)
+            .status(CREATED);
+    }
+}</code></pre>
+
+    <h4>RouteAction interface implementation example</h4>
+<pre><code class="language-java">
+public class CombinedFeedRoute extends TypedControllerConfiguration {
+
+    @Inject
+    private CrudService&ltCombinedFeed&gt feedService;
+
+    @Override
+    protected void configure() {
+        setGlobalPath("feeds");
+
+        post(new PostFeed(), Req(CombinedFeed.class), Resp(CombinedFeed.class))
+            .consumes(JSON).produces(JSON);
+    }
+
+    private class PostFeed implements RouteAction&ltRequest&ltCombinedFeed&gt, Response&ltCombinedFeed&gt&gt {
+
+        @Override
+        public void perform(Request&ltCombinedFeed&gt req, Response&ltCombinedFeed&gt resp) {
+            CombinedFeed feed = feedService.save(req.getEntity());
+            resp.entity(feed)
+                .status(CREATED);
+        }
+    }
+}</code></pre>
 
     <hr>
 </div>

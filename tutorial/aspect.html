@@ -1,98 +1,42 @@
 ---
 layout: default
 ---
-<div class="col-md-3" id="leftCol">
+<div class="col-md-12">
+    <h3 id="github-sec">How to wrap a request call with a particular functionality</h3>
+    <code>Aspect</code> is the class which provides a possibility to add some kind of functionality before the <code>RouteAction</code>
+    (the body of an endpoint) is called and then add some functionality after the action is called. Aspects are ordered to the
+    <code>ActionChain</code> according to their <code>Order</code> number.
 
-    <div class="well">
-        <ul class="nav nav-stacked" id="sidebar">
-            <li><a href="#github-sec">Clone GitHub</a></li>
-            <li><a href="#maven-sec">Maven Dependencies</a></li>
-            <li><a href="#config-sec">Application Config</a></li>
-            <li><a href="#server-sec">Server Settings</a></li>
-            <li><a href="#route-sec">Route Definition</a></li>
-        </ul>
-    </div>
+    <br /><br />
+    The interface <code>ActionChain</code> contains a method
+    <code>InternalResponse&lt;Object&gt; proceed(InternalRequest&lt;Object&gt; request, InternalResponse&lt;Object&gt; response)</code>
+    that is used to continue in the aspect's chain or in the case when the currently processed aspect is the last, so then
+    to process a body of the particular route.
 
-    {% include github.html %}
-</div>
-<div class="col-md-9">
-    <h3 id="github-sec">GitHub Sources</h3>
-    A source code of the framework is able to clone from GitHub: <a href="http://www.github.com/petrbouda/joyrest">http://www.github.com/petrbouda/joyrest</a>
+    <p>
+        There are several available aspects:
+    </p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Aspect Name</th>
+            <th>Description</th>
+            <th>Default</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>SerializationAspect</td>
+            <td>The aspect transform body of the request or response to/from an entity according to provided MediaType</td>
+            <td>YES</td>
+        </tr>
+        <tr>
+            <td>LoggingAspect</td>
+            <td>The aspect primarily intended for debug purposes during the development phase, writes down an incoming request and an outgoing response.</td>
+            <td>Coming Soon</td>
+        </tr>
+        </tbody>
+    </table>
 
-    <hr class="col-md-12">
-
-    <h3 id="maven-sec">Maven Dependency</h3>
-    JoyRest Releases are available on Maven Central Repository
-    <h4>Core</h4>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-core&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-            <h4>Dependency Injection Integration</h4>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-hk2&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-spring&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-guice&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-dagger&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-            <h4>Server Integration</h4>
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-servlet&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-grizzly&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-<pre><code class="language-markup">
-&lt;dependency&gt;
-    &lt;groupId&gt;org.joyrest&lt;/groupId&gt;
-    &lt;artifactId&gt;joyrest-undertow&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-            <h4>Repository for Releases and Snapshots</h4>
-<pre><code class="language-markup">
-&lt;repository&gt;
-    &lt;id&gt;oss-sonatype&lt;/id&gt;
-    &lt;url&gt;https://oss.sonatype.org/content/groups/public&lt;/url&gt;
-&lt;/repository&gt;
-</code></pre>
     <hr>
 </div>
