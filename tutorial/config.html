@@ -1,21 +1,7 @@
 ---
 layout: default
 ---
-<div class="col-md-3" id="leftCol">
-
-    <div class="well">
-        <ul class="nav nav-stacked" id="sidebar">
-            <li><a href="#github-sec">Clone GitHub</a></li>
-            <li><a href="#maven-sec">Maven Dependencies</a></li>
-            <li><a href="#config-sec">Application Config</a></li>
-            <li><a href="#server-sec">Server Settings</a></li>
-            <li><a href="#route-sec">Route Definition</a></li>
-        </ul>
-    </div>
-
-    {% include github.html %}
-</div>
-<div class="col-md-9">
+<div class="col-md-12">
     <h3 id="github-sec">How to create Application Context</h3>
     <code>Application Context</code> is an entity created using <code>Configurer</code> class and <code>Application Config</code>.
     Then Application Context is used along with a servlet-specific handler to configure the JoyRest application.
@@ -23,12 +9,136 @@ layout: default
 
     <hr class="col-md-12">
 
-    <h4>Lambda expression example</h4>
+    <h4>HK2-based configuration</h4>
 <pre><code class="language-java">
 public static void main(String... args) throws Exception {
-    JokeConfigurer configurer = new JokeConfigurer();
-    ApplicationContext applicationContext = configurer.initialize();
+    HK2Configurer configurer = new HK2Configurer();
+    ApplicationContext applicationContext = configurer.initialize(new ApplicationBinder());
     GrizzlyServer.start(applicationContext, 5000, "/services");
+}</code></pre>
+
+<pre><code class="language-java">
+public class ApplicationBinder extends AbstractBinder {
+
+    @Override
+    protected void configure() {
+        bind(JokeServiceImpl.class)
+            .to(new TypeLiteral<JokeService>() {})
+            .in(Singleton.class);
+
+        bind(JokeController.class)
+            .to(ControllerConfiguration.class)
+            .in(Singleton.class);
+
+        bind(new JsonReaderWriter())
+            .to(Reader.class)
+            .to(Writer.class);
+    }
+}</code></pre>
+
+    <h4>Spring-based configuration</h4>
+<pre><code class="language-java">
+public static void main(String... args) throws Exception {
+    SpringJavaConfigurer configurer = new SpringJavaConfigurer();
+    ApplicationContext applicationContext = configurer.initialize(new ApplicationConfiguration());
+    GrizzlyServer.start(applicationContext, 5000, "/services");
+}</code></pre>
+
+<pre><code class="language-java">
+@Configuration
+public class ApplicationConfiguration {
+
+    @Bean
+    JsonReaderWriter jsonReaderWriter(){
+        return new JsonReaderWriter();
+    }
+
+    @Bean
+    ControllerConfiguration jokeControllerConfiguration() {
+        return new JokeController();
+    }
+
+    @Bean
+    JokeService jokeService() {
+        return new JokeServiceImpl();
+    }
+}</code></pre>
+
+    <h4>Guice-based configuration</h4>
+<pre><code class="language-java">
+public static void main(String... args) throws Exception {
+    Configurer configurer = new GuiceConfigurer();
+    ApplicationContext applicationContext = configurer.initialize(new GuiceApplicationModule());
+    GrizzlyServer.start(applicationContext, 5000, "/services");
+}</code></pre>
+
+<pre><code class="language-java">
+public class GuiceApplicationModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        Multibinder<ControllerConfiguration> controllerBinder = newSetBinder(binder(), ControllerConfiguration.class);
+        controllerBinder.addBinding().to(JokeController.class).in(Singleton.class);
+
+        JsonReaderWriter readerWriter = new JsonReaderWriter();
+        Multibinder<Writer> writerBinder = newSetBinder(binder(), Writer.class);
+        writerBinder.addBinding().toInstance(readerWriter);
+
+        Multibinder<Reader> readerBinder = newSetBinder(binder(), Reader.class);
+        readerBinder.addBinding().toInstance(readerWriter);
+
+        bind(JokeService.class)
+            .to(JokeServiceImpl.class)
+            .in(Singleton.class);
+    }
+}</code></pre>
+
+    <h4>Dagger-based configuration</h4>
+<pre><code class="language-java">
+public static void main(String... args) throws Exception {
+    DaggerConfigurer configurer = new DaggerConfigurer();
+    ApplicationContext applicationContext = configurer.initialize(new DaggerApplicationModule());
+    GrizzlyServer.start(applicationContext, 5000, "/services");
+}</code></pre>
+
+<pre><code class="language-java">
+@Module(injects = { DaggerConfigurer.DaggerConfigurationProvider.class, JokeController.class }, library = true)
+public class DaggerApplicationModule {
+
+    private final JsonReaderWriter jsonReaderWriter = new JsonReaderWriter();
+
+    /* only for dagger-compiler purposes */
+    @Provides(type = Provides.Type.SET)
+    Aspect nullAspect() {
+        return null;
+    }
+
+    /* only for dagger-compiler purposes */
+    @Provides(type = Provides.Type.SET)
+    ExceptionConfiguration jokeExceptionConfiguration() {
+        return null;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    Writer jsonWriter() {
+        return jsonReaderWriter;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    Reader jsonReader() {
+        return jsonReaderWriter;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    ControllerConfiguration jokeControllerConfiguration() {
+        return new JokeController();
+    }
+
+    @Provides
+    JokeService jokeService() {
+        return new JokeServiceImpl();
+    }
+
 }</code></pre>
 
     <hr>
