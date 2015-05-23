@@ -2,3 +2,7 @@ _site
 .sass-cache
 Gemfile.lock
 .idea
+
+*.iml
+pom.xml.*
+target
