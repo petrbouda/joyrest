@@ -83,20 +83,20 @@ public class JokeController extends TypedControllerConfiguration {
 
         post((req, resp) -> {
             Joke savedJoke = service.save(req.getEntity());
-            resp.entity(singletonList(savedJoke))
-                .status(CREATED));
+            resp.entity(Collections.singletonList(savedJoke))
+                .status(CREATED);
         }, Req(Joke.class), RespList(Joke.class))
-                .consumes(JSON).produces(JSON);
+            .consumes(JSON).produces(JSON);
 
         get((req, resp) -> {
-            List&lt;Joke&gt; jokes = service.getAll();
+            List<Joke> jokes = service.getAll();
             resp.entity(jokes);
         }, RespList(Joke.class)).produces(JSON, XML);
 
         get("{id}", (req, resp) -> {
             Joke joke = service.get(req.getPathParam("id"));
             resp.entity(joke);
-        }).produces(JSON, XML);
+        }, Resp(Joke.class)).produces(JSON, XML);
     }
 }</code></pre>
 
