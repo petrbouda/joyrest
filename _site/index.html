@@ -49,7 +49,7 @@
           <a href="../extensions.html">Extensions</a>
         </li>
         <li>
-          <a href="#">JavaDoc</a>
+          <a href="../apidocs">JavaDoc</a>
         </li>
         <li>
           <a href="../contact.html">Contact</a>
@@ -152,8 +152,7 @@ public class JokeController extends TypedControllerConfiguration {
         post((req, resp) -> {
             Joke savedJoke = service.save(req.getEntity());
             resp.entity(singletonList(savedJoke))
-                .status(CREATED)
-                .header(LOCATION, getEntityLocation(savedJoke.getId(), req.getPath()));
+                .status(CREATED));
         }, Req(Joke.class), RespList(Joke.class))
                 .consumes(JSON).produces(JSON);
 
@@ -166,10 +165,6 @@ public class JokeController extends TypedControllerConfiguration {
             Joke joke = service.get(req.getPathParam("id"));
             resp.entity(joke);
         }).produces(JSON, XML);
-    }
-
-    private String getEntityLocation(String entityId, String path) {
-        return path + "/" + entityId;
     }
 }</code></pre>
 
