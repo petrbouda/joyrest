@@ -15,83 +15,82 @@
  */
 package org.joyrest.routing.matcher;
 
-import static java.util.stream.Collectors.toList;
-import static org.joyrest.model.http.MediaType.WILDCARD;
-import static org.joyrest.utils.CollectionUtils.nonEmpty;
-import static org.joyrest.utils.CollectionUtils.isSingletonList;
-
-import java.util.List;
-import java.util.Objects;
-
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.routing.InternalRoute;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+import static org.joyrest.model.http.MediaType.WILDCARD;
+import static org.joyrest.utils.CollectionUtils.isSingletonList;
+import static org.joyrest.utils.CollectionUtils.nonEmpty;
+
 /**
  * Helper utility class for matching an incoming requests against a route configuration
  *
- * @see org.joyrest.processor.RequestProcessor
  * @author pbouda
+ * @see org.joyrest.processor.RequestProcessor
  */
 public final class RequestMatcher {
 
-	private RequestMatcher() {
-	}
+    private RequestMatcher() {
+    }
 
-	/**
-	 * Matches route produces configuration and Accept-header in an incoming request
-	 *
-	 * @param route route configuration
-	 * @param request incoming request object
-	 * @return returns {@code true} if the given route has produces Media-Type one of an Accept from an incoming request
-	 */
-	public static boolean matchProduces(InternalRoute route, InternalRequest<?> request) {
-		if (nonEmpty(request.getAccept())) {
-			List<MediaType> matchedAcceptTypes = getAcceptedMediaTypes(route.getProduces(), request.getAccept());
+    /**
+     * Matches route produces configuration and Accept-header in an incoming request
+     *
+     * @param route   route configuration
+     * @param request incoming request object
+     * @return returns {@code true} if the given route has produces Media-Type one of an Accept from an incoming request
+     */
+    public static boolean matchProduces(InternalRoute route, InternalRequest<?> request) {
+        if (nonEmpty(request.getAccept())) {
+            List<MediaType> matchedAcceptTypes = getAcceptedMediaTypes(route.getProduces(), request.getAccept());
 
-			if (nonEmpty(matchedAcceptTypes)) {
-				request.setMatchedAccept(matchedAcceptTypes.get(0));
-				return true;
-			}
-		}
+            if (nonEmpty(matchedAcceptTypes)) {
+                request.setMatchedAccept(matchedAcceptTypes.get(0));
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private static List<MediaType> getAcceptedMediaTypes(List<MediaType> routeProduces, List<MediaType> requestAccepts) {
-		if(isSingletonList(routeProduces) && routeProduces.get(0) == WILDCARD)
-			return requestAccepts;
+    private static List<MediaType> getAcceptedMediaTypes(List<MediaType> routeProduces, List<MediaType> requestAccepts) {
+        if (isSingletonList(routeProduces) && WILDCARD.equals(routeProduces.get(0)))
+            return requestAccepts;
 
-		if(isSingletonList(requestAccepts) && requestAccepts.get(0) == WILDCARD)
-			return routeProduces;
+        if (isSingletonList(requestAccepts) && WILDCARD.equals(requestAccepts.get(0)))
+            return routeProduces;
 
-		return requestAccepts.stream()
-			.filter(routeProduces::contains)
-			.collect(toList());
-	}
+        return requestAccepts.stream()
+                .filter(routeProduces::contains)
+                .collect(toList());
+    }
 
-	/**
-	 * Matches route consumes configuration and Content-Type header in an incoming request
-	 *
-	 * @param route route configuration
-	 * @param request incoming request object
-	 * @return returns {@code true} if the given route has consumes Media-Type one of a Content-Type from an incoming request
-	 */
-	public static boolean matchConsumes(InternalRoute route, InternalRequest<?> request) {
-		if(route.getConsumes().contains(WILDCARD))
-			return true;
+    /**
+     * Matches route consumes configuration and Content-Type header in an incoming request
+     *
+     * @param route   route configuration
+     * @param request incoming request object
+     * @return returns {@code true} if the given route has consumes Media-Type one of a Content-Type from an incoming request
+     */
+    public static boolean matchConsumes(InternalRoute route, InternalRequest<?> request) {
+        if (route.getConsumes().contains(WILDCARD))
+            return true;
 
-		return route.getConsumes().contains(request.getContentType());
-	}
+        return route.getConsumes().contains(request.getContentType());
+    }
 
-	/**
-	 * Matches route an http method in an incoming request
-	 *
-	 * @param route route configuration
-	 * @param request incoming request object
-	 * @return returns {@code true} if the given route has the same http method as an incoming request
-	 */
-	public static boolean matchHttpMethod(InternalRoute route, InternalRequest<?> request) {
-		return route.getHttpMethod() == request.getMethod();
-	}
+    /**
+     * Matches route an http method in an incoming request
+     *
+     * @param route   route configuration
+     * @param request incoming request object
+     * @return returns {@code true} if the given route has the same http method as an incoming request
+     */
+    public static boolean matchHttpMethod(InternalRoute route, InternalRequest<?> request) {
+        return route.getHttpMethod() == request.getMethod();
+    }
 }
