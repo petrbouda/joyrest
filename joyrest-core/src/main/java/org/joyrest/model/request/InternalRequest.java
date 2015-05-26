@@ -15,17 +15,21 @@
  */
 package org.joyrest.model.request;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.joyrest.model.http.MediaType.WILDCARD;
 import static org.joyrest.utils.CollectionUtils.nonEmpty;
 import static org.joyrest.utils.PathUtils.createPathParts;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
@@ -105,7 +109,12 @@ public abstract class InternalRequest<E> implements Request<E> {
 	 */
 	@Override
 	public String getPathParam(String name) {
-		return pathParams.get(name).getValue();
+		PathParam pathParam = pathParams.get(name);
+		if (isNull(pathParam))
+			throw new InvalidConfigurationException(
+				format("There is no configured path param under the name '%s'", name));
+
+		return pathParam.getValue();
 	}
 
 	public List<String> getPathParts() {

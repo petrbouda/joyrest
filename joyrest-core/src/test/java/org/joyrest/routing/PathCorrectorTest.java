@@ -9,9 +9,10 @@ public class PathCorrectorTest {
 
 	private final PathCorrector testedClass = new PathCorrector();
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void null_path(){
-		testedClass.apply(null);
+		String result = testedClass.apply(null);
+		assertEquals("/", result);
 	}
 
 	@Test(expected = InvalidConfigurationException.class)

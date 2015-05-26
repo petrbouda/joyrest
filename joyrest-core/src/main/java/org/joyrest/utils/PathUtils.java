@@ -15,18 +15,22 @@
  */
 package org.joyrest.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import org.joyrest.extractor.param.StringVariable;
-import org.joyrest.model.RoutePart;
-
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.*;
+
+import org.joyrest.extractor.PathParamExtractor;
+import org.joyrest.extractor.param.StringVariable;
+import org.joyrest.model.RoutePart;
+import org.joyrest.model.http.PathParam;
+import org.joyrest.routing.InternalRoute;
+
+import com.codepoetics.protonpack.StreamUtils;
 
 /**
  * Utility class which includes methods around the path
@@ -35,6 +39,16 @@ import static java.util.stream.Collectors.toList;
  */
 public final class PathUtils {
 
+	/* Class is able to extract path params from incoming path according an info from route */
+	private static final PathParamExtractor pathParamExtractor = new PathParamExtractor();
+
+	public static Map<String, PathParam> getPathParams(InternalRoute route, List<String> pathParts) {
+		return StreamUtils
+			.zip(route.getRouteParts().stream(), pathParts.stream(), pathParamExtractor)
+			.filter(Objects::nonNull)
+			.collect(toMap(PathParam::getName, identity()));
+	}
+
 	public static List<String> createPathParts(String path) {
 		if (isNull(path))
 			return emptyList();
@@ -42,9 +56,9 @@ public final class PathUtils {
 		List<String> parts = new ArrayList<>();
 
 		StringTokenizer tokenizer = new StringTokenizer(path, "/");
-		while(tokenizer.hasMoreTokens()){
+		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken().trim();
-			if(isNotEmpty(token))
+			if (isNotEmpty(token))
 				parts.add(token);
 		}
 		return parts;

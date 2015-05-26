@@ -157,7 +157,9 @@ public class InternalRoute implements Route {
 	}
 
 	private String addGlobalPathToPath(List<RoutePart<String>> parts) {
-		String basePath = parts.stream().map(RoutePart::getValue).collect(joining(SLASH, SLASH, ""));
+		String basePath = parts.stream()
+				.map(RoutePart::getValue)
+				.collect(joining(SLASH, SLASH, ""));
 		return SLASH.contains(path) ? basePath : basePath + path;
 	}
 

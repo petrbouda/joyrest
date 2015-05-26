@@ -15,6 +15,10 @@
  */
 package org.joyrest.routing.entity;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 public class CollectionType<T> extends Type<T> {
 
 	private final Class<?> param;
@@ -22,6 +26,18 @@ public class CollectionType<T> extends Type<T> {
 	public CollectionType(Class<?> type, Class<?> param) {
 		super(type);
 		this.param = param;
+	}
+
+	public static <P> CollectionType<List<P>> List(Class<P> param) {
+		return new CollectionType<>(List.class, param);
+	}
+
+	public static <P> CollectionType<Set<P>> Set(Class<P> param) {
+		return new CollectionType<>(Set.class, param);
+	}
+
+	public static <P> CollectionType<Collection<P>> Col(Class<P> param) {
+		return new CollectionType<>(Collection.class, param);
 	}
 
 	public Class<?> getParam() {

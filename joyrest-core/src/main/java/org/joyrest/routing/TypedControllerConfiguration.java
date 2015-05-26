@@ -19,15 +19,19 @@ import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.request.Request;
 import org.joyrest.model.response.Response;
 import org.joyrest.processor.RequestProcessor;
-import org.joyrest.routing.entity.*;
+import org.joyrest.routing.entity.RequestCollectionType;
+import org.joyrest.routing.entity.RequestType;
+import org.joyrest.routing.entity.ResponseCollectionType;
+import org.joyrest.routing.entity.ResponseType;
 
 /**
  * <p>
- * Class {@link TypedControllerConfiguration} is abstract implementation of {@link ControllerConfiguration} and makes easier to
- * create the  given route using predefined protected method.
- * </p><p>
- * It can be considered as container for routes which are provided to {@link RequestProcessor} because of processing and handling
- * incoming requests.
+ * Class {@link TypedControllerConfiguration} is abstract implementation of {@link ControllerConfiguration} and makes easier to create the
+ * given route using predefined protected method.
+ * </p>
+ * <p>
+ * It can be considered as container for routes which are provided to {@link RequestProcessor} because of processing and handling incoming
+ * requests.
  * </p>
  *
  * @see ControllerConfiguration

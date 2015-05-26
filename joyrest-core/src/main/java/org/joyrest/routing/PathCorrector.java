@@ -15,6 +15,7 @@
  */
 package org.joyrest.routing;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 import java.util.function.Function;
@@ -60,35 +61,29 @@ public class PathCorrector implements Function<String, String> {
 
 	@Override
 	public String apply(final String path) {
-		requireNonNull(path, "A Path to correct cannot be null.");
-
-		if (path.contains("//")) {
-			throw new InvalidConfigurationException("Route's path cannot contain string '//'");
-		}
-
-		if (SLASH.equals(path)) {
-			return path;
-		}
-
-		if (BLANK_PATH.equals(path)) {
+		if (isNull(path))
 			return SLASH;
-		}
 
-		if (path.startsWith(SLASH) && !path.endsWith(SLASH)) {
+		if (path.contains("//"))
+			throw new InvalidConfigurationException("Route's path cannot contain string '//'");
+
+		if (SLASH.equals(path))
 			return path;
-		}
 
-		if (path.startsWith(SLASH) && path.endsWith(SLASH)) {
+		if (BLANK_PATH.equals(path))
+			return SLASH;
+
+		if (path.startsWith(SLASH) && !path.endsWith(SLASH))
+			return path;
+
+		if (path.startsWith(SLASH) && path.endsWith(SLASH))
 			return removeLastChar(path);
-		}
 
-		if (!path.startsWith(SLASH) && !path.endsWith(SLASH)) {
+		if (!path.startsWith(SLASH) && !path.endsWith(SLASH))
 			return SLASH + path;
-		}
 
-		if (!path.startsWith(SLASH) && path.endsWith(SLASH)) {
+		if (!path.startsWith(SLASH) && path.endsWith(SLASH))
 			return SLASH + removeLastChar(path);
-		}
 
 		return path;
 	}
