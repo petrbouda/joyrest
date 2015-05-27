@@ -9,5 +9,5 @@ github_username: petrbouda
 markdown: kramdown
 
 # Joyrest Versions
-joyrest_release: 1.1
-joyrest_snapshot: 1.2-SNAPSHOT
+joyrest_release: 1.3
+joyrest_snapshot: 1.4-SNAPSHOT

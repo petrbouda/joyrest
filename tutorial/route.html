@@ -40,7 +40,7 @@ layout: default
 
     @Override
     protected void configure() {
-        setGlobalPath("feeds");
+        setControllerPath("feeds");
 
         post((request, response) -> {
             CombinedFeed feed = feedService.save(request.getEntity());
@@ -60,7 +60,7 @@ public class CombinedFeedRoute extends TypedControllerConfiguration {
 
     @Override
     protected void configure() {
-        setGlobalPath("feeds");
+        setControllerPath("feeds");
 
         post(this::postFeed, Req(CombinedFeed.class), Resp(CombinedFeed.class))
             .consumes(JSON).produces(JSON);
@@ -82,7 +82,7 @@ public class CombinedFeedRoute extends TypedControllerConfiguration {
 
     @Override
     protected void configure() {
-        setGlobalPath("feeds");
+        setControllerPath("feeds");
 
         post(new PostFeed(), Req(CombinedFeed.class), Resp(CombinedFeed.class))
             .consumes(JSON).produces(JSON);
