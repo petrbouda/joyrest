@@ -3,7 +3,7 @@
 
     <groupId>org.joyrest</groupId>
     <artifactId>joyrest</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>pom</packaging>
 
     <name>joyrest</name>
@@ -24,7 +24,7 @@
         <connection>scm:git:git@github.com:petrbouda/joyrest.git</connection>
         <url>git@github.com:petrbouda/joyrest.git</url>
         <developerConnection>scm:git:git@github.com:petrbouda/joyrest.git</developerConnection>
-        <tag>joyrest-1.0</tag>
+        <tag>joyrest-1.2</tag>
     </scm>
 
     <developers>
