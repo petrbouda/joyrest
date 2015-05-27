@@ -15,16 +15,14 @@ import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.routing.TypedControllerConfiguration;
 
-import java.util.*;
-
-public class CombinedFeedRoute extends TypedControllerConfiguration {
+public class CombinedFeedController extends TypedControllerConfiguration {
 
 	@Inject
 	private CrudService<CombinedFeed> feedService;
 
 	@Override
 	protected void configure() {
-		setGlobalPath("feeds");
+		setControllerPath("feeds");
 
 		post((request, response) -> {
 			CombinedFeed feed = feedService.save(request.getEntity());

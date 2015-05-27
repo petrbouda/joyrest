@@ -13,7 +13,7 @@ public class ExceptionController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/exception");
+		setControllerPath("/ittest/exception");
 
 		get("badRequest", (req, resp) -> {
 			throw new RestException(HttpStatus.BAD_REQUEST, "Bad Request !!!");

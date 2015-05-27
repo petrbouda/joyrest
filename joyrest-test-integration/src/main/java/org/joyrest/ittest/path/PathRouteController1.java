@@ -7,7 +7,7 @@ public class PathRouteController1 extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/path");
+		setControllerPath("/ittest/path");
 
 		post((req, resp) -> {
 			resp.status(HttpStatus.NO_CONTENT);

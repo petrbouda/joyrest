@@ -10,7 +10,7 @@ public class StatusController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/status");
+		setControllerPath("/ittest/status");
 
 		get("/200", (req, resp) -> resp.status(OK));
 

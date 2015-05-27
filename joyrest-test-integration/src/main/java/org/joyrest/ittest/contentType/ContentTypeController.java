@@ -15,7 +15,7 @@ public class ContentTypeController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/content-type");
+		setControllerPath("/ittest/content-type");
 
 		post("/wildcard", (req, resp) -> {
 			resp.status(NO_CONTENT);

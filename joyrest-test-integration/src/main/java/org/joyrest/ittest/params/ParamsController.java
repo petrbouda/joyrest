@@ -15,7 +15,7 @@ public class ParamsController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/params");
+		setControllerPath("/ittest/params");
 
 		FeedEntry f = new FeedEntry();
 		f.setLink("http://localhost:8080");

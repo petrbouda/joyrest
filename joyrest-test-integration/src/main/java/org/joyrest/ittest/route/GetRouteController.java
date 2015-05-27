@@ -13,7 +13,7 @@ public class GetRouteController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/route");
+		setControllerPath("/ittest/route");
 
 		get((req, resp) -> {
 			resp.status(HttpStatus.OK);

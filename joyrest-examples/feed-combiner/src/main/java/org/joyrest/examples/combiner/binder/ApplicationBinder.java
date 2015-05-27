@@ -1,6 +1,5 @@
 package org.joyrest.examples.combiner.binder;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 
@@ -26,7 +25,7 @@ import org.joyrest.examples.combiner.manager.FeedDataStoreManager;
 import org.joyrest.examples.combiner.manager.FeedTaskFactory;
 import org.joyrest.examples.combiner.manager.FeedTaskFactoryImpl;
 import org.joyrest.examples.combiner.model.CombinedFeed;
-import org.joyrest.examples.combiner.routes.CombinedFeedRoute;
+import org.joyrest.examples.combiner.routes.CombinedFeedController;
 import org.joyrest.examples.combiner.service.CombinedFeedService;
 import org.joyrest.examples.combiner.service.CrudService;
 import org.joyrest.examples.combiner.store.DataStoreObserver;
@@ -79,7 +78,7 @@ public class ApplicationBinder extends AbstractBinder {
 
 		@Override
 		protected void configure() {
-			bind(CombinedFeedRoute.class)
+			bind(CombinedFeedController.class)
 				.to(ControllerConfiguration.class)
 				.in(Singleton.class);
 		}

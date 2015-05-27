@@ -22,7 +22,7 @@ public class AcceptController extends TypedControllerConfiguration {
         f.setTitle("My Feed Title");
         f.setDescription("My Feed Description");
 
-        setGlobalPath("/ittest/accept");
+        setControllerPath("/ittest/accept");
 
         post("/wildcard", (req, resp) -> {
             resp.status(NO_CONTENT);

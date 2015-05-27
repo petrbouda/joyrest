@@ -13,7 +13,7 @@ public class PostRouteController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/route");
+		setControllerPath("/ittest/route");
 
 		post((req, resp) -> resp.status(HttpStatus.OK)).consumes(JSON);
 

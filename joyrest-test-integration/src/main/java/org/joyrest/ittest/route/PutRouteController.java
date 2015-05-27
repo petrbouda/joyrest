@@ -14,7 +14,7 @@ public class PutRouteController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/route");
+		setControllerPath("/ittest/route");
 
 		put((req, resp) -> {
 			resp.status(HttpStatus.OK);

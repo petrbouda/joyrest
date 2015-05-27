@@ -49,7 +49,7 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	private final PathCorrector pathCorrector = new PathCorrector();
 
 	/* Resource path that will be added to the beginning of all routes defined in the inherited class */
-	private String globalPath = null;
+	private String controllerPath = null;
 
 	/* RoutingConfiguration's initialization should be executed only once */
 	private boolean isInitialized = false;
@@ -62,10 +62,10 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 		if (!this.isInitialized) {
 			configure();
 
-			List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(globalPath);
-			if (nonNull(globalPath))
+			List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(controllerPath);
+			if (nonNull(controllerPath))
 				this.routes.stream()
-					.forEach(route -> route.addGlobalPath(globalParts));
+					.forEach(route -> route.addControllerPath(globalParts));
 
 			this.isInitialized = true;
 		}
@@ -82,11 +82,11 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	 * @param path resource path of all defined class
 	 * @throws NullPointerException whether {@code path} is {@code null}
 	 */
-	protected final void setGlobalPath(String path) {
+	protected final void setControllerPath(String path) {
 		requireNonNull(path, "Global path cannot be change to 'null'");
 
 		if (!"".equals(path) && !"/".equals(path)) {
-			this.globalPath = pathCorrector.apply(path);
+			this.controllerPath = pathCorrector.apply(path);
 		}
 	}
 

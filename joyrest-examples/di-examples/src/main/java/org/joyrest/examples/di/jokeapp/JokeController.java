@@ -8,7 +8,6 @@ import static org.joyrest.routing.entity.RequestType.Req;
 import static org.joyrest.routing.entity.ResponseCollectionType.RespList;
 import static org.joyrest.routing.entity.ResponseType.Resp;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class JokeController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("jokes");
+		setControllerPath("jokes");
 
 		post((request, response) -> {
 			Joke savedJoke = service.save(request.getEntity());

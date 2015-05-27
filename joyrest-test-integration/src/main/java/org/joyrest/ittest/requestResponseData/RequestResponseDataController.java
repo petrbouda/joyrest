@@ -16,7 +16,7 @@ public class RequestResponseDataController extends TypedControllerConfiguration 
 
 	@Override
 	protected void configure() {
-		setGlobalPath("feeds");
+		setControllerPath("feeds");
 
 		post((request, response) -> {
 			FeedEntry entry = request.getEntity();

@@ -23,7 +23,7 @@ public class JokeController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("jokes");
+		setControllerPath("jokes");
 
 		post((req, resp) -> {
 			Joke savedJoke = service.save(req.getEntity());

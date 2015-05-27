@@ -10,7 +10,7 @@ public class DeleteRouteController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setGlobalPath("/ittest/route");
+		setControllerPath("/ittest/route");
 
 		delete((req, resp) -> {
 			resp.status(HttpStatus.OK);

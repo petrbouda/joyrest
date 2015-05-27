@@ -62,11 +62,11 @@ public class InternalRoute implements Route {
 	private Map<MediaType, Reader> readers = new HashMap<>();
 	private Map<MediaType, Writer> writers = new HashMap<>();
 
-	/* It is not FINAL because of adding a global path */
+	/* It is not FINAL because of adding a controller path */
 	private String path;
 
 	/* Flag that indicates having a resource path in the list of the RouteParts */
-	private boolean hasGlobalPath = false;
+	private boolean hasControllerPath = false;
 
 	/* Must match with ContentType header in the client's model */
 	private List<MediaType> consumes = singletonList(WILDCARD);
@@ -146,17 +146,17 @@ public class InternalRoute implements Route {
 		return httpMethod;
 	}
 
-	public void addGlobalPath(List<RoutePart<String>> parts) {
-		if (!hasGlobalPath) {
+	public void addControllerPath(List<RoutePart<String>> parts) {
+		if (!hasControllerPath) {
 			routeParts.addAll(0, parts);
-			path = addGlobalPathToPath(parts);
-			hasGlobalPath = true;
+			path = addControllerPathToPath(parts);
+			hasControllerPath = true;
 		} else {
-			logger.warn(() -> "A global path has been already set.");
+			logger.warn(() -> "A controller path has been already set.");
 		}
 	}
 
-	private String addGlobalPathToPath(List<RoutePart<String>> parts) {
+	private String addControllerPathToPath(List<RoutePart<String>> parts) {
 		String basePath = parts.stream()
 				.map(RoutePart::getValue)
 				.collect(joining(SLASH, SLASH, ""));
