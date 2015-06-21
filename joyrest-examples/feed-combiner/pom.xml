@@ -29,7 +29,7 @@
 
         <dependency>
             <groupId>org.joyrest</groupId>
-            <artifactId>joyrest-utils</artifactId>
+            <artifactId>joyrest-gson</artifactId>
             <version>${project.version}</version>
         </dependency>
 

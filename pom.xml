@@ -46,7 +46,9 @@
         <module>joyrest-guice</module>
         <module>joyrest-undertow</module>
         <module>joyrest-jetty</module>
-        <module>joyrest-utils</module>
+        <module>joyrest-gson</module>
+        <module>joyrest-hessian</module>
+        <module>joyrest-jackson</module>
     </modules>
 
     <properties>

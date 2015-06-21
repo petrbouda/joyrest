@@ -1,4 +1,4 @@
-package org.joyrest.utils.transform;
+package org.joyrest.hessian;
 
 import java.io.IOException;
 import java.io.Serializable;

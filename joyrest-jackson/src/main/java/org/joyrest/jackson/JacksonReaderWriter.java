@@ -1,4 +1,4 @@
-package org.joyrest.utils.transform;
+package org.joyrest.jackson;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import org.joyrest.transform.AbstractReaderWriter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonReaderWriter extends AbstractReaderWriter {
+public class JacksonReaderWriter extends AbstractReaderWriter {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 

@@ -7,7 +7,7 @@ import org.joyrest.examples.di.jokeapp.JokeController;
 import org.joyrest.examples.di.jokeapp.JokeService;
 import org.joyrest.examples.di.jokeapp.JokeServiceImpl;
 import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.utils.transform.JsonReaderWriter;
+import org.joyrest.gson.GsonReaderWriter;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 
@@ -22,7 +22,7 @@ public class GuiceApplicationModule extends AbstractModule {
 		Multibinder<ControllerConfiguration> controllerBinder = newSetBinder(binder(), ControllerConfiguration.class);
 		controllerBinder.addBinding().to(JokeController.class).in(Singleton.class);
 
-		JsonReaderWriter readerWriter = new JsonReaderWriter();
+		GsonReaderWriter readerWriter = new GsonReaderWriter();
 		Multibinder<Writer> writerBinder = newSetBinder(binder(), Writer.class);
 		writerBinder.addBinding().toInstance(readerWriter);
 

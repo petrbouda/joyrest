@@ -8,7 +8,7 @@ import org.joyrest.examples.di.jokeapp.JokeController;
 import org.joyrest.examples.di.jokeapp.JokeService;
 import org.joyrest.examples.di.jokeapp.JokeServiceImpl;
 import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.utils.transform.JsonReaderWriter;
+import org.joyrest.gson.GsonReaderWriter;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 
@@ -24,7 +24,7 @@ public class ApplicationBinder extends AbstractBinder {
 			.to(ControllerConfiguration.class)
 			.in(Singleton.class);
 
-		bind(new JsonReaderWriter())
+		bind(new GsonReaderWriter())
 			.to(Reader.class)
 			.to(Writer.class);
 	}

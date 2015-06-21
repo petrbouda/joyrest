@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>org.joyrest</groupId>
-            <artifactId>joyrest-utils</artifactId>
+            <artifactId>joyrest-jackson</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

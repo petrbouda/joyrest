@@ -2,7 +2,7 @@ package org.joyrest.examples.nondi.jokeapp;
 
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.NonDiConfigurer;
-import org.joyrest.utils.transform.JsonReaderWriter;
+import org.joyrest.jackson.JacksonReaderWriter;
 
 public class JokeConfigurer extends NonDiConfigurer {
 
@@ -10,7 +10,7 @@ public class JokeConfigurer extends NonDiConfigurer {
 	public ApplicationContext initialize() {
 		JokeService service = new JokeServiceImpl();
 		JokeController jokeController = new JokeController(service);
-		JsonReaderWriter readerWriter = new JsonReaderWriter();
+		JacksonReaderWriter readerWriter = new JacksonReaderWriter();
 
 		addControllerConfiguration(jokeController);
 		addReader(readerWriter);

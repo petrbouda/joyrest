@@ -32,11 +32,10 @@
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-utils:2.4.0-b11" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.18.1-GA" level="project" />
-    <orderEntry type="module" module-name="joyrest-utils" />
+    <orderEntry type="module" module-name="joyrest-jackson" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.1" level="project" />
-    <orderEntry type="library" name="Maven: com.caucho:hessian:4.0.38" level="project" />
     <orderEntry type="module" module-name="joyrest-servlet" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
   </component>

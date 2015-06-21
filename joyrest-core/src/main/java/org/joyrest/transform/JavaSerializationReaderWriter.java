@@ -1,4 +1,4 @@
-package org.joyrest.utils.transform;
+package org.joyrest.transform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,7 +9,6 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.entity.Type;
-import org.joyrest.transform.AbstractReaderWriter;
 
 public class JavaSerializationReaderWriter extends AbstractReaderWriter {
 
