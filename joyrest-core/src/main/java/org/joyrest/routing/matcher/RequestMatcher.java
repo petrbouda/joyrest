@@ -27,7 +27,7 @@ import static org.joyrest.utils.CollectionUtils.isSingletonList;
 import static org.joyrest.utils.CollectionUtils.nonEmpty;
 
 /**
- * Helper utility class for matching an incoming requests against a route configuration
+ * Helper utility class for matching an incoming requests against a route configurer
  *
  * @author pbouda
  * @see org.joyrest.processor.RequestProcessor
@@ -38,9 +38,9 @@ public final class RequestMatcher {
     }
 
     /**
-     * Matches route produces configuration and Accept-header in an incoming request
+     * Matches route produces configurer and Accept-header in an incoming request
      *
-     * @param route   route configuration
+     * @param route   route configurer
      * @param request incoming request object
      * @return returns {@code true} if the given route has produces Media-Type one of an Accept from an incoming request
      */
@@ -70,9 +70,9 @@ public final class RequestMatcher {
     }
 
     /**
-     * Matches route consumes configuration and Content-Type header in an incoming request
+     * Matches route consumes configurer and Content-Type header in an incoming request
      *
-     * @param route   route configuration
+     * @param route   route configurer
      * @param request incoming request object
      * @return returns {@code true} if the given route has consumes Media-Type one of a Content-Type from an incoming request
      */
@@ -86,7 +86,7 @@ public final class RequestMatcher {
     /**
      * Matches route an http method in an incoming request
      *
-     * @param route   route configuration
+     * @param route   route configurer
      * @param request incoming request object
      * @return returns {@code true} if the given route has the same http method as an incoming request
      */

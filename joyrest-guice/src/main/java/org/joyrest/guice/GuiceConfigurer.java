@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.*;
 
 import org.joyrest.aspect.Aspect;
-import org.joyrest.context.AbstractConfigurer;
+import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.logging.JoyLogger;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.context;
+package org.joyrest.context.configurer;
 
 import java.util.Collection;
 

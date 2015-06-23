@@ -96,6 +96,6 @@ public class ParamParser implements Function<String, RoutePart<?>> {
 			return part.substring(START_PARAM_LENGTH, part.length() - END_PARAM_LENGTH);
 
 		throw new InvalidConfigurationException(String.format(
-			"Invalid path param configuration '%s'", part));
+			"Invalid path param configurer '%s'", part));
 	}
 }

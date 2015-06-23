@@ -6,7 +6,6 @@ import org.joyrest.routing.InternalRoute;
 
 public final class LoggingHelper {
 
-	/* ServiceLocator name in its own context */
 	private static final JoyLogger log = new JoyLogger(LoggingHelper.class);
 
 	public static void logExceptionHandler(InternalExceptionHandler handler) {

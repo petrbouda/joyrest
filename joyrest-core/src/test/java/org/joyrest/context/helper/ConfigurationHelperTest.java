@@ -34,7 +34,7 @@ public class ConfigurationHelperTest {
 	@Test
 	public void testCreateTransformers() throws Exception {
 		List<Reader> readers = Arrays.asList(new FirstReader(), new GeneralReader(), new SecondReader(), new GeneralReader());
-		Map<Boolean, List<Reader>> transformers = createTransformers(readers, Collections.emptyList());
+		Map<Boolean, List<Reader>> transformers = createTransformers(readers);
 
 		assertEquals(2, transformers.get(Boolean.TRUE).size());
 		assertEquals(2, transformers.get(Boolean.FALSE).size());

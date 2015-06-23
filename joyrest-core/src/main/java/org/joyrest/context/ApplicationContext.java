@@ -18,11 +18,12 @@ package org.joyrest.context;
 import java.util.Map;
 import java.util.Set;
 
+import org.joyrest.context.configurer.Configurer;
 import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.routing.InternalRoute;
 
 /**
- * The heart of the JoyREST Framework that contains all needed configuration for successful running the framework.
+ * The heart of the JoyREST Framework that contains all needed configurer for successful running the framework.
  * It doesn't do any work just store the information about the framework and application that is built on that.
  *
  * @see ApplicationContextImpl

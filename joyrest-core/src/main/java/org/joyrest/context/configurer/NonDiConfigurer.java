@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.context;
+package org.joyrest.context.configurer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.joyrest.aspect.Aspect;
+import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.Reader;
@@ -85,7 +86,7 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	 * @param exceptionConfiguration registered aspect
 	 */
 	protected void addExceptionConfiguration(ExceptionConfiguration exceptionConfiguration) {
-		requireNonNull(exceptionConfiguration, "A registered exception configuration cannot be null.");
+		requireNonNull(exceptionConfiguration, "A registered exception configurer cannot be null.");
 		exceptionConfigurations.add(exceptionConfiguration);
 	}
 
@@ -95,7 +96,7 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	 * @param controllerConfiguration registered aspect
 	 */
 	protected void addControllerConfiguration(ControllerConfiguration controllerConfiguration) {
-		requireNonNull(controllerConfiguration, "A registered controller configuration cannot be null.");
+		requireNonNull(controllerConfiguration, "A registered controller configurer cannot be null.");
 		controllerConfigurations.add(controllerConfiguration);
 	}
 

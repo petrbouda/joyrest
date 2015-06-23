@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.Configurer;
-import org.joyrest.context.NonDiConfigurer;
+import org.joyrest.context.configurer.Configurer;
+import org.joyrest.context.configurer.NonDiConfigurer;
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.logging.JoyLogger;
 import org.joyrest.processor.RequestProcessor;

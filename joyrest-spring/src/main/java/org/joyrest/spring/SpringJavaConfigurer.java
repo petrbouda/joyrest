@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.DependencyInjectionConfigurer;
+import org.joyrest.context.configurer.DependencyInjectionConfigurer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 

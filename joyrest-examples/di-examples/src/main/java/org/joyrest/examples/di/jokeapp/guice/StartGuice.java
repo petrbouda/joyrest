@@ -1,7 +1,7 @@
 package org.joyrest.examples.di.jokeapp.guice;
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.Configurer;
+import org.joyrest.context.configurer.Configurer;
 import org.joyrest.grizzly.GrizzlyServer;
 import org.joyrest.guice.GuiceConfigurer;
 

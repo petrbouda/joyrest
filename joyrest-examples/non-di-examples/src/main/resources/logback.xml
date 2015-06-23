@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Simple logback configuration for STDOUT-only. -->
+<!-- Simple logback configurer for STDOUT-only. -->
 <configuration scan="true" scanPeriod="10 seconds">
 
     <appender name="STOUT" class="ch.qos.logback.core.ConsoleAppender">

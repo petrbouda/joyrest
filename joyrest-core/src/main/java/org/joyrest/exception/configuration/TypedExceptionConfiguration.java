@@ -21,7 +21,7 @@ import org.joyrest.routing.entity.ResponseCollectionType;
 import org.joyrest.routing.entity.ResponseType;
 
 /**
- * Helper class for a registering exception handlers in exception configuration and subsequently configuring in application context.
+ * Helper class for a registering exception handlers in exception configurer and subsequently configuring in application context.
  *
  * @see AbstractExceptionConfiguration
  * @author pbouda

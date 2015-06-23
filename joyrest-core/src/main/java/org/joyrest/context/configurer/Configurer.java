@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.context;
+package org.joyrest.context.configurer;
+
+import org.joyrest.context.ApplicationContext;
 
 /**
  * Implementation of this interface is able to configure JoyREST framework for specified dependency injection framework.
  *
- * @param <T> type of the configuration class that is specialized according to dependency injection framework
+ * @param <T> type of the configurer class that is specialized according to dependency injection framework
  *
  * @see DependencyInjectionConfigurer
  * @see NonDiConfigurer

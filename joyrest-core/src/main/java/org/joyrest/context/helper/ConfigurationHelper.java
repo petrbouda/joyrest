@@ -24,8 +24,8 @@ public final class ConfigurationHelper {
 			.collect(toList());
 	}
 
-	public static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform, List<T> additional) {
-		return insertInto(transform, additional).stream()
+	public static <T extends Transformer> Map<Boolean, List<T>> createTransformers(Collection<T> transform) {
+		return transform.stream()
 			.collect(partitioningBy(General::isGeneral));
 	}
 }

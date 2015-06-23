@@ -2,7 +2,9 @@ package org.joyrest.utils;
 
 import static java.util.Objects.isNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class CollectionUtils {
 
@@ -22,11 +24,18 @@ public class CollectionUtils {
 		return collection;
 	}
 
-	public static final <T> Collection<T> insertInto(Collection<T> collection, Collection<T> insert) {
+	public static final <T1, T2 extends T1> Collection<T1> insertInto(Collection<T1> collection, Collection<T2> insert) {
 		if (isNull(insert))
 			return collection;
 
 		collection.addAll(insert);
 		return collection;
+	}
+
+	public static final <T, T2 extends T> Collection<T> insertIntoNewList(Collection<T> collection, Collection<T2> insert) {
+		if (isNull(insert))
+			return new ArrayList<>(collection);
+
+		return new ArrayList<>(insertInto(collection, insert));
 	}
 }

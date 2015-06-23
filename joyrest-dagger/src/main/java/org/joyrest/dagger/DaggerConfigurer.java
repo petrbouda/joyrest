@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.joyrest.aspect.Aspect;
-import org.joyrest.context.AbstractConfigurer;
+import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.routing.ControllerConfiguration;

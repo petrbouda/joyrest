@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.context;
+package org.joyrest.context.configurer;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
@@ -27,6 +27,7 @@ import static org.joyrest.context.helper.LoggingHelper.logExceptionHandler;
 import static org.joyrest.context.helper.LoggingHelper.logRoute;
 import static org.joyrest.context.helper.PopulateHelper.*;
 import static org.joyrest.utils.CollectionUtils.insertInto;
+import static org.joyrest.utils.CollectionUtils.insertIntoNewList;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,21 +35,24 @@ import java.util.Map;
 import java.util.Set;
 
 import org.joyrest.aspect.Aspect;
+import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.ApplicationContextImpl;
+import org.joyrest.context.autoconfigurar.AutoConfigurer;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.exception.configuration.TypedExceptionConfiguration;
 import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.exception.type.RestException;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.routing.InternalRoute;
+import org.joyrest.transform.AbstractReaderWriter;
 import org.joyrest.transform.Reader;
-import org.joyrest.transform.StringReaderWriter;
 import org.joyrest.transform.Writer;
 import org.joyrest.transform.aspect.SerializationAspect;
 
 /**
  * Abstract class as a helper for initialization an {@link ApplicationContext}.
  *
- * @param <T> type of configuration class which is used to set up a configurer
+ * @param <T> type of configurer class which is used to set up a configurer
  * @see Configurer
  * @see DependencyInjectionConfigurer
  * @see NonDiConfigurer
@@ -56,11 +60,7 @@ import org.joyrest.transform.aspect.SerializationAspect;
  */
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
-	private final StringReaderWriter stringReaderWriter = new StringReaderWriter();
-
-	protected final List<Aspect> REQUIRED_ASPECTS = singletonList(new SerializationAspect());
-	protected final List<Reader> REQUIRED_READERS = singletonList(stringReaderWriter);
-	protected final List<Writer> REQUIRED_WRITERS = singletonList(stringReaderWriter);
+	protected final List<Aspect> PREDEFINED_ASPECTS = singletonList(new SerializationAspect());
 
 	/**
 	 * Returns all {@link Aspect aspects} registered in the application context
@@ -109,9 +109,11 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	 * @return initialized {@code application context}
 	 */
 	protected ApplicationContext initializeContext() {
-		Map<Boolean, List<Reader>> readers = createTransformers(getReaders(), REQUIRED_READERS);
-		Map<Boolean, List<Writer>> writers = createTransformers(getWriters(), REQUIRED_WRITERS);
-		Collection<Aspect> aspects = sort(insertInto(getAspects(), REQUIRED_ASPECTS));
+		List<AbstractReaderWriter> readersWriters = AutoConfigurer.configureReadersWriters();
+
+		Map<Boolean, List<Reader>> readers = createTransformers(insertIntoNewList(getReaders(), readersWriters));
+		Map<Boolean, List<Writer>> writers = createTransformers(insertIntoNewList(getWriters(), readersWriters));
+		Collection<Aspect> aspects = sort(insertInto(getAspects(), PREDEFINED_ASPECTS));
 
 		orderDuplicationCheck(aspects);
 

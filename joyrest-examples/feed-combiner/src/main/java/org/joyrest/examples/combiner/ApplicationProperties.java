@@ -1,7 +1,7 @@
 package org.joyrest.examples.combiner;
 
 /**
- * Application configuration properties
+ * Application configurer properties
  *
  * @author Petr Bouda
  **/

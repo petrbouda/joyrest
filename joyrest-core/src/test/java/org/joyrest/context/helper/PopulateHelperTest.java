@@ -28,7 +28,7 @@ public class PopulateHelperTest {
 	@Test
 	public void populate_readers_null() throws Exception {
 		List<Reader> readers = Arrays.asList(new FirstReader(), new SecondReader(), new GeneralReader());
-		Map<Boolean, List<Reader>> transformers = createTransformers(readers, null);
+		Map<Boolean, List<Reader>> transformers = createTransformers(readers);
 
 		InternalRoute route = basicRoute();
 
@@ -39,7 +39,7 @@ public class PopulateHelperTest {
 	@Test
 	public void populate_readers() throws Exception {
 		List<Reader> readers = Arrays.asList(new FirstReader(), new SecondReader(), new GeneralReader());
-		Map<Boolean, List<Reader>> transformers = createTransformers(readers, null);
+		Map<Boolean, List<Reader>> transformers = createTransformers(readers);
 
 		InternalRoute route = basicRoute();
 

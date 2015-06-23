@@ -76,10 +76,10 @@
                         <!--</goals>-->
                     <!--</execution>-->
                 <!--</executions>-->
-                <!--<configuration>-->
+                <!--<configurer>-->
                     <!--<configurerClass>org.joyrest.hk2.HK2Configurer</configurerClass>-->
                     <!--<applicationConfigClass>org.joyrest.examples.combiner.binder.ApplicationBinder</applicationConfigClass>-->
-                <!--</configuration>-->
+                <!--</configurer>-->
             <!--</plugin>-->
 
             <plugin>

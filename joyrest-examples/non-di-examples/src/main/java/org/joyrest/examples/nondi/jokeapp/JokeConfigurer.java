@@ -1,7 +1,7 @@
 package org.joyrest.examples.nondi.jokeapp;
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.NonDiConfigurer;
+import org.joyrest.context.configurer.NonDiConfigurer;
 import org.joyrest.jackson.JacksonReaderWriter;
 
 public class JokeConfigurer extends NonDiConfigurer {
