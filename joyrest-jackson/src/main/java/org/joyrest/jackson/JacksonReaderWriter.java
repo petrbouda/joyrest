@@ -14,7 +14,7 @@ public class JacksonReaderWriter extends AbstractReaderWriter {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
-	private final MediaType supportedMediaType = MediaType.JSON;
+	private static final MediaType SUPPORTED_MEDIA_TYPE = MediaType.JSON;
 
 	@Override
 	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
@@ -42,6 +42,6 @@ public class JacksonReaderWriter extends AbstractReaderWriter {
 
 	@Override
 	public MediaType getMediaType() {
-		return supportedMediaType;
+		return SUPPORTED_MEDIA_TYPE;
 	}
 }

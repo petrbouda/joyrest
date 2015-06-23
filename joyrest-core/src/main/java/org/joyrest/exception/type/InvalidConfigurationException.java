@@ -23,4 +23,8 @@ public class InvalidConfigurationException extends RuntimeException {
 		super(message);
 	}
 
+	public InvalidConfigurationException(String message, Exception ex) {
+		super(message, ex);
+	}
+
 }
