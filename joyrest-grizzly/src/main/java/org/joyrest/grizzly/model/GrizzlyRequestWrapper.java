@@ -1,11 +1,9 @@
 package org.joyrest.grizzly.model;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.joyrest.common.UnmodifiableMapCollector.toUnmodifiableMap;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -13,7 +11,6 @@ import java.util.stream.StreamSupport;
 import org.glassfish.grizzly.http.server.Request;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
-import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 
 public class GrizzlyRequestWrapper extends InternalRequest<Object> {
@@ -50,6 +47,11 @@ public class GrizzlyRequestWrapper extends InternalRequest<Object> {
 	@Override
 	public String getPath() {
 		return path;
+	}
+
+	@Override
+	public String getRemoteAddr() {
+		return request.getRemoteAddr();
 	}
 
 	@Override

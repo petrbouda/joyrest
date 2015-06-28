@@ -33,6 +33,11 @@ public abstract class InternalResponse<E> implements Response<E> {
 	public abstract HttpStatus getStatus();
 
 	@Override
+	public Response<E> header(String name, String value) {
+		return header(HeaderName.of(name), value);
+	}
+
+	@Override
 	public InternalResponse<E> entity(E entity) {
 		this.entity = entity;
 		return this;

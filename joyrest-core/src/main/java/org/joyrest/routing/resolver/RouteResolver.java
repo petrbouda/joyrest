@@ -19,7 +19,7 @@ import org.joyrest.model.request.InternalRequest;
 import org.joyrest.routing.InternalRoute;
 
 /**
- * Implementation of this class resolve one route's definition which corresponds to the incoming request.
+ * Implementation of this class resolve one route's definition which corresponds to the incoming provider.
  *
  * @see DefaultRouteResolver
  * @author pbouda
@@ -28,9 +28,9 @@ import org.joyrest.routing.InternalRoute;
 public interface RouteResolver {
 
 	/**
-	 * Find a route definition which corresponds to the incoming request
+	 * Find a route definition which corresponds to the incoming provider
 	 * 
-	 * @param request incoming request object
+	 * @param request incoming provider object
 	 * @return route definition that matches all conditions defined in a child class
 	 */
 	InternalRoute resolveRoute(InternalRequest<?> request);

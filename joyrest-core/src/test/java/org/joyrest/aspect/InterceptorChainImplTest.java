@@ -1,0 +1,62 @@
+package org.joyrest.aspect;
+
+import org.joyrest.aspect.aspects.FirstInterceptor;
+import org.joyrest.aspect.aspects.SecondInterceptor;
+import org.joyrest.aspect.aspects.SwallowInterceptor;
+import org.joyrest.aspect.aspects.ThirdInterceptor;
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.HttpMethod;
+import org.joyrest.model.http.HttpStatus;
+import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.request.Request;
+import org.joyrest.model.response.InternalResponse;
+import org.joyrest.model.response.Response;
+import org.joyrest.routing.InternalRoute;
+import org.joyrest.routing.RouteAction;
+import org.joyrest.stubs.RequestStub;
+import org.joyrest.stubs.ResponseStub;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class InterceptorChainImplTest {
+	
+	@Test
+	public void success_proceed() throws Exception {
+		InternalRoute route = basicRoute();
+		route.aspect(new FirstInterceptor());
+		route.aspect(new SecondInterceptor());
+		route.aspect(new ThirdInterceptor());
+
+		InternalRequest<Object> request = new RequestStub();
+		InternalResponse<Object> response = new ResponseStub();
+
+		InterceptorChain chain = new InterceptorChainImpl(route);
+		chain.proceed(request, response);
+
+		assertEquals(0, request.getHeaders().size());
+		assertEquals(HttpStatus.CONFLICT, response.getStatus());
+	}
+
+	@Test
+	public void swallowed_proceed() throws Exception {
+		InternalRoute route = basicRoute();
+		route.aspect(new SwallowInterceptor());
+
+		InternalRequest<Object> request = new RequestStub();
+		InternalResponse<Object> response = new ResponseStub();
+
+		InterceptorChain chain = new InterceptorChainImpl(route);
+		chain.proceed(request, response);
+
+		assertEquals("YES", request.getHeaders().get(HeaderName.of("Swallowed")));
+		assertNull(response.getStatus());
+	}
+
+	private static InternalRoute basicRoute() {
+		RouteAction<Request<?>, Response<?>> action =
+			(req, resp) -> resp.status(HttpStatus.CONFLICT);
+
+		return new InternalRoute("", HttpMethod.POST, action, null, null);
+	}
+}

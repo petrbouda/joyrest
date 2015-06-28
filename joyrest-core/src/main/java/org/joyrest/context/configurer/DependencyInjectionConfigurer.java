@@ -17,7 +17,7 @@ package org.joyrest.context.configurer;
 
 import java.util.Collection;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.Reader;
@@ -45,8 +45,8 @@ public abstract class DependencyInjectionConfigurer<T> extends AbstractConfigure
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Collection<Aspect> getAspects() {
-		return getBeans(Aspect.class);
+	protected Collection<Interceptor> getInterceptors() {
+		return getBeans(Interceptor.class);
 	}
 
 	/**

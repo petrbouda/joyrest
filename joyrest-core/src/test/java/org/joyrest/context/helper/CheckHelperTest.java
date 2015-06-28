@@ -1,10 +1,9 @@
 package org.joyrest.context.helper;
 
-import org.joyrest.aspect.Aspect;
-import org.joyrest.context.helper.aspects.DuplicatedAspect;
-import org.joyrest.context.helper.aspects.FirstAspect;
-import org.joyrest.context.helper.aspects.SecondAspect;
-import org.joyrest.context.helper.aspects.ThirdAspect;
+import org.joyrest.aspect.Interceptor;
+import org.joyrest.context.helper.aspects.*;
+import org.joyrest.context.helper.aspects.DuplicatedInterceptor;
+import org.joyrest.context.helper.aspects.FirstInterceptor;
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.junit.Test;
 
@@ -18,9 +17,9 @@ public class CheckHelperTest {
 
 	@Test
 	public void with_correct_orders() {
-		List<Aspect> aspects = Arrays.asList(new FirstAspect(), new SecondAspect(), new ThirdAspect());
+		List<Interceptor> interceptors = Arrays.asList(new FirstInterceptor(), new SecondInterceptor(), new ThirdInterceptor());
 		try {
-			orderDuplicationCheck(aspects);
+			orderDuplicationCheck(interceptors);
 		} catch (InvalidConfigurationException e) {
 			fail("There is some problem with order duplications");
 		}
@@ -28,7 +27,7 @@ public class CheckHelperTest {
 
 	@Test(expected = InvalidConfigurationException.class)
 	public void with_duplication_exception() {
-		List<Aspect> aspects = Arrays.asList(new FirstAspect(), new SecondAspect(), new DuplicatedAspect());
-		orderDuplicationCheck(aspects);
+		List<Interceptor> interceptors = Arrays.asList(new FirstInterceptor(), new SecondInterceptor(), new DuplicatedInterceptor());
+		orderDuplicationCheck(interceptors);
 	}
 }

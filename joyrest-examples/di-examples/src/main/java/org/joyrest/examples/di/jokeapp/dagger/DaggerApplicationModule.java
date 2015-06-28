@@ -1,6 +1,6 @@
 package org.joyrest.examples.di.jokeapp.dagger;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.dagger.DaggerConfigurer;
 import org.joyrest.examples.di.jokeapp.JokeController;
 import org.joyrest.examples.di.jokeapp.JokeService;
@@ -21,7 +21,7 @@ public class DaggerApplicationModule {
 
 	/* only for dagger-compiler purposes */
 	@Provides(type = Provides.Type.SET)
-	Aspect nullAspect() {
+	Interceptor nullAspect() {
 		return null;
 	}
 

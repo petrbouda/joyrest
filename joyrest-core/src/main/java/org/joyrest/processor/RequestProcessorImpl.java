@@ -17,8 +17,8 @@ package org.joyrest.processor;
 
 import static org.joyrest.utils.PathUtils.getPathParams;
 
-import org.joyrest.aspect.AspectChain;
-import org.joyrest.aspect.AspectChainImpl;
+import org.joyrest.aspect.InterceptorChain;
+import org.joyrest.aspect.InterceptorChainImpl;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.processor.ExceptionProcessor;
 import org.joyrest.exception.processor.ExceptionProcessorImpl;
@@ -68,7 +68,7 @@ public class RequestProcessorImpl implements RequestProcessor {
 
 		request.setPathParams(getPathParams(route, request.getPathParts()));
 
-		AspectChain chain = new AspectChainImpl(route);
+		InterceptorChain chain = new InterceptorChainImpl(route);
 		return chain.proceed(request, response);
 	}
 }

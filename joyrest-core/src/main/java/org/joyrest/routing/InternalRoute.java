@@ -27,7 +27,7 @@ import static org.joyrest.utils.PathUtils.createPathParts;
 
 import java.util.*;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
@@ -75,7 +75,7 @@ public class InternalRoute implements Route {
 	private List<MediaType> produces = singletonList(WILDCARD);
 
 	/* Collection of interceptors which will be applied with execution of this route */
-	private List<Aspect> aspects = new ArrayList<>();
+	private List<Interceptor> interceptors = new ArrayList<>();
 
 	@SuppressWarnings("rawtypes")
 	private RouteAction action;
@@ -167,9 +167,9 @@ public class InternalRoute implements Route {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Route aspect(Aspect... aspect) {
-		requireNonNull(aspect, "An added aspect cannot be null.");
-		aspects.addAll(Arrays.asList(aspect));
+	public Route aspect(Interceptor... interceptor) {
+		requireNonNull(interceptor, "An added interceptor cannot be null.");
+		interceptors.addAll(Arrays.asList(interceptor));
 		return this;
 	}
 
@@ -191,8 +191,8 @@ public class InternalRoute implements Route {
 		return response;
 	}
 
-	public List<Aspect> getAspects() {
-		return unmodifiableList(aspects);
+	public List<Interceptor> getInterceptors() {
+		return unmodifiableList(interceptors);
 	}
 
 	public Optional<Reader> getReader(MediaType mediaType) {

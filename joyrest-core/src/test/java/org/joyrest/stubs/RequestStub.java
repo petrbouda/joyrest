@@ -24,6 +24,11 @@ public class RequestStub extends InternalRequest<Object> {
 	private Map<String, String[]> queryParams = new HashMap<>();
 
 	@Override
+	public String getRemoteAddr() {
+		return "localhost";
+	}
+
+	@Override
 	public InputStream getInputStream() {
 		return inputStream;
 	}

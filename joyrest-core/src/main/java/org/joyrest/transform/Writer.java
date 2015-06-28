@@ -31,7 +31,7 @@ public interface Writer extends Transformer {
 	 * Writes an entity to the outputstream
 	 *
 	 * @param response an outcoming response
-	 * @param request an incoming request
+	 * @param request an incoming provider
 	 */
 	void writeTo(InternalResponse<?> response, InternalRequest<?> request);
 

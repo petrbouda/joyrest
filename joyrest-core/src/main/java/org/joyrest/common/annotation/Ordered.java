@@ -15,7 +15,7 @@
  */
 package org.joyrest.common.annotation;
 
-import org.joyrest.aspect.AspectChain;
+import org.joyrest.aspect.InterceptorChain;
 
 /**
  * Interface defines the ability to provide order as an integer
@@ -25,7 +25,7 @@ import org.joyrest.aspect.AspectChain;
 public interface Ordered {
 
 	/**
-	 * Order of the route in a {@link AspectChain}.
+	 * Order of the route in a {@link InterceptorChain}.
 	 *
 	 * @return order in a chain
 	 */

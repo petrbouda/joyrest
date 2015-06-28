@@ -61,6 +61,11 @@ public class ServletRequestWrapper extends InternalRequest<Object> {
 	}
 
 	@Override
+	public String getRemoteAddr() {
+		return request.getRemoteAddr();
+	}
+
+	@Override
 	public InputStream getInputStream() {
 		try {
 			return request.getInputStream();

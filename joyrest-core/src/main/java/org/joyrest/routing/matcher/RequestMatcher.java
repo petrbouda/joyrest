@@ -38,11 +38,11 @@ public final class RequestMatcher {
     }
 
     /**
-     * Matches route produces configurer and Accept-header in an incoming request
+     * Matches route produces configurer and Accept-header in an incoming provider
      *
      * @param route   route configurer
-     * @param request incoming request object
-     * @return returns {@code true} if the given route has produces Media-Type one of an Accept from an incoming request
+     * @param request incoming provider object
+     * @return returns {@code true} if the given route has produces Media-Type one of an Accept from an incoming provider
      */
     public static boolean matchProduces(InternalRoute route, InternalRequest<?> request) {
         if (nonEmpty(request.getAccept())) {
@@ -70,11 +70,11 @@ public final class RequestMatcher {
     }
 
     /**
-     * Matches route consumes configurer and Content-Type header in an incoming request
+     * Matches route consumes configurer and Content-Type header in an incoming provider
      *
      * @param route   route configurer
-     * @param request incoming request object
-     * @return returns {@code true} if the given route has consumes Media-Type one of a Content-Type from an incoming request
+     * @param request incoming provider object
+     * @return returns {@code true} if the given route has consumes Media-Type one of a Content-Type from an incoming provider
      */
     public static boolean matchConsumes(InternalRoute route, InternalRequest<?> request) {
         if (route.getConsumes().contains(WILDCARD))
@@ -84,11 +84,11 @@ public final class RequestMatcher {
     }
 
     /**
-     * Matches route an http method in an incoming request
+     * Matches route an http method in an incoming provider
      *
      * @param route   route configurer
-     * @param request incoming request object
-     * @return returns {@code true} if the given route has the same http method as an incoming request
+     * @param request incoming provider object
+     * @return returns {@code true} if the given route has the same http method as an incoming provider
      */
     public static boolean matchHttpMethod(InternalRoute route, InternalRequest<?> request) {
         return route.getHttpMethod() == request.getMethod();

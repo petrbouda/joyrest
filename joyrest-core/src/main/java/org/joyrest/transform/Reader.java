@@ -28,9 +28,9 @@ import org.joyrest.routing.entity.Type;
 public interface Reader extends Transformer {
 
 	/**
-	 * Reads the entity from an incoming request and creates the object from that
+	 * Reads the entity from an incoming provider and creates the object from that
 	 *
-	 * @param request an incoming request
+	 * @param request an incoming provider
 	 * @param clazz class to which is an entity cast
 	 * @param <T> type of the result object
 	 * @return created object

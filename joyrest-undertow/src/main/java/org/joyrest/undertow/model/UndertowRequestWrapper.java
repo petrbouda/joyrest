@@ -54,6 +54,11 @@ public class UndertowRequestWrapper extends InternalRequest<Object> {
 	}
 
 	@Override
+	public String getRemoteAddr() {
+		return request.getHostName();
+	}
+
+	@Override
 	public InputStream getInputStream() {
 		return request.getInputStream();
 	}

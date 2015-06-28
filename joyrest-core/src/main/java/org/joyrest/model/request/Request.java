@@ -15,6 +15,7 @@
  */
 package org.joyrest.model.request;
 
+import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ import org.joyrest.model.http.PathParam;
 /**
  * Request's object abstraction shows which method are available in API in {@link org.joyrest.routing.RouteAction}.
  *
- * @param <E> type of a request object
+ * @param <E> type of a provider object
  * @see InternalRequest
  * @see ImmutableRequest
  * @author pbouda
@@ -33,7 +34,14 @@ import org.joyrest.model.http.PathParam;
 public interface Request<E> {
 
 	/**
-	 * Returns all headers in a request object
+	 * Returns authenticated user
+	 *
+	 * @return authenticated user
+	 **/
+	Optional<Principal> getPrincipal();
+
+	/**
+	 * Returns all headers in a provider object
 	 *
 	 * @return all headers
 	 */
@@ -48,7 +56,15 @@ public interface Request<E> {
 	Optional<String> getHeader(HeaderName name);
 
 	/**
-	 * Returns all query params in a request object
+	 * Returns a concrete header according to {@code name} value
+	 *
+	 * @param name header's name
+	 * @return header value in {@link Optional} object
+	 */
+	Optional<String> getHeader(String name);
+
+	/**
+	 * Returns all query params in a provider object
 	 *
 	 * @return all query params
 	 */
@@ -63,7 +79,7 @@ public interface Request<E> {
 	Optional<String[]> getQueryParams(String name);
 
 	/**
-	 * Returns all path params in a request object
+	 * Returns all path params in a provider object
 	 *
 	 * @return all path params
 	 */
@@ -85,7 +101,7 @@ public interface Request<E> {
 	HttpMethod getMethod();
 
 	/**
-	 * Returns a request's path value
+	 * Returns a provider's path value
 	 *
 	 * @return path value
 	 */

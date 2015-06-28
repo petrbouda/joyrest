@@ -22,7 +22,7 @@ import javax.inject.Provider;
  */
 public final class DaggerConfigurer$DaggerConfigurationProvider$$InjectAdapter extends Binding<DaggerConfigurer.DaggerConfigurationProvider>
     implements Provider<DaggerConfigurer.DaggerConfigurationProvider>, MembersInjector<DaggerConfigurer.DaggerConfigurationProvider> {
-  private Binding<Set<org.joyrest.aspect.Aspect>> aspects;
+  private Binding<Set<org.joyrest.aspect.Interceptor>> interceptors;
   private Binding<Set<org.joyrest.transform.Reader>> readers;
   private Binding<Set<org.joyrest.transform.Writer>> writers;
   private Binding<Set<org.joyrest.exception.configuration.ExceptionConfiguration>> exceptionConfigurations;
@@ -39,7 +39,7 @@ public final class DaggerConfigurer$DaggerConfigurationProvider$$InjectAdapter e
   @Override
   @SuppressWarnings("unchecked")
   public void attach(Linker linker) {
-    aspects = (Binding<Set<org.joyrest.aspect.Aspect>>) linker.requestBinding("java.util.Set<org.joyrest.aspect.Aspect>", DaggerConfigurer.DaggerConfigurationProvider.class, getClass().getClassLoader());
+    interceptors = (Binding<Set<org.joyrest.aspect.Interceptor>>) linker.requestBinding("java.util.Set<org.joyrest.aspect.Interceptor>", DaggerConfigurer.DaggerConfigurationProvider.class, getClass().getClassLoader());
     readers = (Binding<Set<org.joyrest.transform.Reader>>) linker.requestBinding("java.util.Set<org.joyrest.transform.Reader>", DaggerConfigurer.DaggerConfigurationProvider.class, getClass().getClassLoader());
     writers = (Binding<Set<org.joyrest.transform.Writer>>) linker.requestBinding("java.util.Set<org.joyrest.transform.Writer>", DaggerConfigurer.DaggerConfigurationProvider.class, getClass().getClassLoader());
     exceptionConfigurations = (Binding<Set<org.joyrest.exception.configuration.ExceptionConfiguration>>) linker.requestBinding("java.util.Set<org.joyrest.exception.configuration.ExceptionConfiguration>", DaggerConfigurer.DaggerConfigurationProvider.class, getClass().getClassLoader());
@@ -52,7 +52,7 @@ public final class DaggerConfigurer$DaggerConfigurationProvider$$InjectAdapter e
    */
   @Override
   public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
-    injectMembersBindings.add(aspects);
+    injectMembersBindings.add(interceptors);
     injectMembersBindings.add(readers);
     injectMembersBindings.add(writers);
     injectMembersBindings.add(exceptionConfigurations);
@@ -76,7 +76,7 @@ public final class DaggerConfigurer$DaggerConfigurationProvider$$InjectAdapter e
    */
   @Override
   public void injectMembers(DaggerConfigurer.DaggerConfigurationProvider object) {
-    object.aspects = aspects.get();
+    object.interceptors = interceptors.get();
     object.readers = readers.get();
     object.writers = writers.get();
     object.exceptionConfigurations = exceptionConfigurations.get();

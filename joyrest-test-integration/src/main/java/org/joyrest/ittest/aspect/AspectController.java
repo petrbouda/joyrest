@@ -7,7 +7,7 @@ public class AspectController extends TypedControllerConfiguration {
 
 	@Override
 	protected void configure() {
-		setControllerPath("/ittest/aspect");
+		setControllerPath("/ittest/interceptor");
 
 		get((req, resp) -> resp.status(HttpStatus.OK));
 	}

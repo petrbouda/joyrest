@@ -1,20 +1,18 @@
 package org.joyrest.context.helper;
 
-import org.joyrest.aspect.Aspect;
-import org.joyrest.context.helper.aspects.FirstAspect;
-import org.joyrest.context.helper.aspects.SecondAspect;
-import org.joyrest.context.helper.aspects.ThirdAspect;
+import org.joyrest.aspect.Interceptor;
+import org.joyrest.context.helper.aspects.FirstInterceptor;
+import org.joyrest.context.helper.aspects.SecondInterceptor;
+import org.joyrest.context.helper.aspects.ThirdInterceptor;
 import org.joyrest.context.helper.transformer.FirstReader;
 import org.joyrest.context.helper.transformer.GeneralReader;
 import org.joyrest.context.helper.transformer.SecondReader;
-import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.transform.Reader;
 import org.junit.Test;
 
 import java.util.*;
 
-import static org.joyrest.context.helper.CheckHelper.orderDuplicationCheck;
 import static org.joyrest.context.helper.ConfigurationHelper.createTransformers;
 import static org.joyrest.context.helper.ConfigurationHelper.sort;
 import static org.junit.Assert.*;
@@ -23,12 +21,12 @@ public class ConfigurationHelperTest {
 	
 	@Test
 	public void testSort() throws Exception {
-		List<Aspect> aspects = Arrays.asList(new FirstAspect(), new ThirdAspect(), new SecondAspect());
-		List<Aspect> sorted = new ArrayList<>(sort(aspects));
+		List<Interceptor> interceptors = Arrays.asList(new FirstInterceptor(), new ThirdInterceptor(), new SecondInterceptor());
+		List<Interceptor> sorted = new ArrayList<>(sort(interceptors));
 
-		assertEquals(FirstAspect.ORDER, sorted.get(0).getOrder());
-		assertEquals(SecondAspect.ORDER, sorted.get(1).getOrder());
-		assertEquals(ThirdAspect.ORDER, sorted.get(2).getOrder());
+		assertEquals(FirstInterceptor.ORDER, sorted.get(0).getOrder());
+		assertEquals(SecondInterceptor.ORDER, sorted.get(1).getOrder());
+		assertEquals(ThirdInterceptor.ORDER, sorted.get(2).getOrder());
 	}
 
 	@Test

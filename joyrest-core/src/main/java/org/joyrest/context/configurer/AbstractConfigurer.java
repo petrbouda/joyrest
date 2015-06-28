@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.ApplicationContextImpl;
 import org.joyrest.context.autoconfigurar.AutoConfigurer;
@@ -47,7 +47,7 @@ import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.AbstractReaderWriter;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
-import org.joyrest.transform.aspect.SerializationAspect;
+import org.joyrest.transform.interceptor.SerializationInterceptor;
 
 /**
  * Abstract class as a helper for initialization an {@link ApplicationContext}.
@@ -60,14 +60,14 @@ import org.joyrest.transform.aspect.SerializationAspect;
  */
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
-	protected final List<Aspect> PREDEFINED_ASPECTS = singletonList(new SerializationAspect());
+	protected final List<Interceptor> PREDEFINED_ASPECTS = singletonList(new SerializationInterceptor());
 
 	/**
-	 * Returns all {@link Aspect aspects} registered in the application context
+	 * Returns all {@link Interceptor aspects} registered in the application context
 	 *
 	 * @return all registered aspects
 	 */
-	protected abstract Collection<Aspect> getAspects();
+	protected abstract Collection<Interceptor> getInterceptors();
 
 	/**
 	 * Returns all {@link Reader readers} registered in the application context
@@ -100,7 +100,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	/**
 	 * Method causes the initialization of the application context using the methods which returns a collection of beans such as
 	 *
-	 * @see AbstractConfigurer#getAspects()
+	 * @see AbstractConfigurer#getInterceptors()
 	 * @see AbstractConfigurer#getReaders()
 	 * @see AbstractConfigurer#getWriters()
 	 * @see AbstractConfigurer#getExceptionConfigurations()
@@ -113,9 +113,9 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
 		Map<Boolean, List<Reader>> readers = createTransformers(insertIntoNewList(getReaders(), readersWriters));
 		Map<Boolean, List<Writer>> writers = createTransformers(insertIntoNewList(getWriters(), readersWriters));
-		Collection<Aspect> aspects = sort(insertInto(getAspects(), PREDEFINED_ASPECTS));
+		Collection<Interceptor> interceptors = sort(insertInto(getInterceptors(), PREDEFINED_ASPECTS));
 
-		orderDuplicationCheck(aspects);
+		orderDuplicationCheck(interceptors);
 
 		Map<Class<? extends Exception>, InternalExceptionHandler> handlers =
 				insertInto(getExceptionConfigurations(), new InternalExceptionConfiguration()).stream()
@@ -131,7 +131,7 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 			.peek(ControllerConfiguration::initialize)
 			.flatMap(config -> config.getRoutes().stream())
 			.peek(route -> {
-				route.aspect(aspects.toArray(new Aspect[aspects.size()]));
+				route.aspect(interceptors.toArray(new Interceptor[interceptors.size()]));
 				populateRouteReaders(readers, route);
 				populateRouteWriters(writers, route);
 				logRoute(route);

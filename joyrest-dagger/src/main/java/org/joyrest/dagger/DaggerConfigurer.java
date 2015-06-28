@@ -9,7 +9,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
@@ -33,8 +33,8 @@ public class DaggerConfigurer extends AbstractConfigurer<Object> {
 	}
 
 	@Override
-	protected Collection<Aspect> getAspects() {
-		return createList(provider.aspects);
+	protected Collection<Interceptor> getInterceptors() {
+		return createList(provider.interceptors);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class DaggerConfigurer extends AbstractConfigurer<Object> {
 	public static class DaggerConfigurationProvider {
 
 		@Inject
-		Set<Aspect> aspects;
+		Set<Interceptor> interceptors;
 		@Inject
 		Set<Reader> readers;
 		@Inject

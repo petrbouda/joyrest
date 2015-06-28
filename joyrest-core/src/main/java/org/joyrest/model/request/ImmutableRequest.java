@@ -15,6 +15,7 @@
  */
 package org.joyrest.model.request;
 
+import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,9 +38,9 @@ public final class ImmutableRequest<E> implements Request<E> {
 	/**
 	 * Creates immutable version of original {@link Request} object
 	 *
-	 * @param request the original request object
-	 * @param <T> type of an entity in request object
-	 * @return immutable request
+	 * @param request the original provider object
+	 * @param <T> type of an entity in provider object
+	 * @return immutable provider
 	 */
 	public static <T> ImmutableRequest<T> of(Request<T> request) {
 		return new ImmutableRequest<>(request);
@@ -51,6 +52,19 @@ public final class ImmutableRequest<E> implements Request<E> {
 	@Override
 	public Optional<String> getHeader(HeaderName name) {
 		return request.getHeader(name);
+	}
+
+	@Override
+	public Optional<String> getHeader(String name) {
+		return request.getHeader(name);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Optional<Principal> getPrincipal() {
+		return request.getPrincipal();
 	}
 
 	/**

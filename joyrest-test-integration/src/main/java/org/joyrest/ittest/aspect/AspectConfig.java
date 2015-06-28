@@ -1,9 +1,8 @@
 package org.joyrest.ittest.aspect;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.routing.ControllerConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 //@Configuration
 public class AspectConfig {
@@ -14,18 +13,18 @@ public class AspectConfig {
 	}
 
 	@Bean
-	Aspect firstAspect() {
-		return new FirstAspect();
+	Interceptor firstAspect() {
+		return new FirstInterceptor();
 	}
 
 	@Bean
-	Aspect secondAspect() {
-		return new SecondAspect();
+	Interceptor secondAspect() {
+		return new SecondInterceptor();
 	}
 
 	@Bean
-	Aspect thirdAspect() {
-		return new ThirdAspect();
+	Interceptor thirdAspect() {
+		return new ThirdInterceptor();
 	}
 
 }

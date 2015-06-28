@@ -1,7 +1,7 @@
 digraph G1 {
   concentrate = true;
   n2 [label="DaggerConfigurer$DaggerConfigurationProvider"];
-  n3 [label="Set<org.joyrest.aspect.Aspect>"];
+  n3 [label="Set<org.joyrest.aspect.Interceptor>"];
   n2 -> n3;
   n4 [label="Set<org.joyrest.exception.configuration.ExceptionConfiguration>"];
   n2 -> n4;
@@ -12,7 +12,7 @@ digraph G1 {
   n7 [label="Set<org.joyrest.transform.Writer>"];
   n2 -> n7;
   JokeController -> JokeService;
-  n8 [label="Unbound:org.joyrest.aspect.Aspect"];
+  n8 [label="Unbound:org.joyrest.aspect.Interceptor"];
   n3 -> n8;
   n9 [label="Unbound:org.joyrest.exception.configuration.ExceptionConfiguration"];
   n4 -> n9;

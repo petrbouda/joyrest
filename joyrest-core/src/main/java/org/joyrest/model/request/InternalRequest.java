@@ -24,6 +24,7 @@ import static org.joyrest.utils.CollectionUtils.nonEmpty;
 import static org.joyrest.utils.PathUtils.createPathParts;
 
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ import org.joyrest.model.http.PathParam;
 
 /**
  *
- * @param <E> typed of the entity which is wrapped by the request object
+ * @param <E> typed of the entity which is wrapped by the provider object
  * @see ImmutableRequest
  * @see Request
  * @author pbouda
@@ -55,12 +56,31 @@ public abstract class InternalRequest<E> implements Request<E> {
 
 	protected List<MediaType> accept;
 
+	protected Principal principal;
+
+	/**
+	 * Returns remote address of an incoming request
+	 *
+	 * @return incoming request's address
+	 */
+	public abstract String getRemoteAddr();
+
 	/**
 	 * Returns an inputstream object of an incoming entity
 	 *
 	 * @return incoming entity's input stream
 	 */
 	public abstract InputStream getInputStream();
+
+	/**
+	 * Returns a concrete header according to {@code name} value
+	 *
+	 * @param name header's name
+	 * @return header value in {@link Optional} object
+	 */
+	public Optional<String> getHeader(String name) {
+		return getHeader(HeaderName.of(name));
+	}
 
 	/**
 	 * Returns a content-type header value
@@ -143,5 +163,14 @@ public abstract class InternalRequest<E> implements Request<E> {
 
 	public void setMatchedAccept(MediaType matchedAccept) {
 		this.matchedAccept = matchedAccept;
+	}
+
+	@Override
+	public Optional<Principal> getPrincipal() {
+		return Optional.ofNullable(principal);
+	}
+
+	public void setPrincipal(Principal principal) {
+		this.principal = principal;
 	}
 }

@@ -37,6 +37,15 @@ public interface Response<E> {
 	Response<E> header(HeaderName name, String value);
 
 	/**
+	 * Adds a new header to a response object
+	 *
+	 * @param name header's name
+	 * @param value header's value
+	 * @return current object
+	 */
+	Response<E> header(String name, String value);
+
+	/**
 	 * Adds a status value to a response object
 	 *
 	 * @param status http status code

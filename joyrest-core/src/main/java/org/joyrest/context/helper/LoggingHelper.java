@@ -23,7 +23,7 @@ public final class LoggingHelper {
 			route.getHttpMethod(), route.getPath(), route.getConsumes(), route.getProduces(),
 			route.getRequestType(), route.getResponseType()));
 
-		route.getAspects().stream()
+		route.getInterceptors().stream()
 			.forEach(aspect ->
 				log.debug(() -> String.format("Aspect [%s] added to the Route [METHOD[%s], PATH[%s]]",
 					aspect.getClass().getSimpleName(), route.getHttpMethod(), route.getPath())));

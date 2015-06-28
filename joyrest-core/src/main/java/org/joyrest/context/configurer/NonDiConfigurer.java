@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.routing.ControllerConfiguration;
@@ -35,7 +35,7 @@ import org.joyrest.transform.Writer;
  */
 public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 
-	private final Collection<Aspect> aspects = new HashSet<>();
+	private final Collection<Interceptor> interceptors = new HashSet<>();
 	private final Collection<Reader> readers = new HashSet<>();
 	private final Collection<Writer> writers = new HashSet<>();
 	private final Collection<ExceptionConfiguration> exceptionConfigurations = new HashSet<>();
@@ -51,19 +51,19 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	abstract public ApplicationContext initialize();
 
 	/**
-	 * Add a new {@link Aspect} to the application context.
+	 * Add a new {@link Interceptor} to the application context.
 	 *
-	 * @param aspect registered aspect
+	 * @param interceptor registered interceptor
 	 */
-	protected void addAspect(Aspect aspect) {
-		requireNonNull(aspect, "A registered aspect cannot be null.");
-		aspects.add(aspect);
+	protected void addAspect(Interceptor interceptor) {
+		requireNonNull(interceptor, "A registered interceptor cannot be null.");
+		interceptors.add(interceptor);
 	}
 
 	/**
 	 * Add a new {@link Reader} to the application context.
 	 *
-	 * @param reader registered aspect
+	 * @param reader registered interceptor
 	 */
 	protected void addReader(Reader reader) {
 		requireNonNull(reader, "A registered reader cannot be null.");
@@ -73,7 +73,7 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	/**
 	 * Add a new {@link Writer} to the application context.
 	 *
-	 * @param writer registered aspect
+	 * @param writer registered interceptor
 	 */
 	protected void addWriter(Writer writer) {
 		requireNonNull(writer, "A registered writer cannot be null.");
@@ -83,7 +83,7 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	/**
 	 * Add a new {@link ExceptionConfiguration} to the application context.
 	 *
-	 * @param exceptionConfiguration registered aspect
+	 * @param exceptionConfiguration registered interceptor
 	 */
 	protected void addExceptionConfiguration(ExceptionConfiguration exceptionConfiguration) {
 		requireNonNull(exceptionConfiguration, "A registered exception configurer cannot be null.");
@@ -93,7 +93,7 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	/**
 	 * Add a new {@link ControllerConfiguration} to the application context.
 	 *
-	 * @param controllerConfiguration registered aspect
+	 * @param controllerConfiguration registered interceptor
 	 */
 	protected void addControllerConfiguration(ControllerConfiguration controllerConfiguration) {
 		requireNonNull(controllerConfiguration, "A registered controller configurer cannot be null.");
@@ -104,8 +104,8 @@ public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected final Collection<Aspect> getAspects() {
-		return aspects;
+	protected final Collection<Interceptor> getInterceptors() {
+		return interceptors;
 	}
 
 	/**

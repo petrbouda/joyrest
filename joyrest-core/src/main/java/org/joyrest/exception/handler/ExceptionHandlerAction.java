@@ -35,7 +35,7 @@ public interface ExceptionHandlerAction<RESP, E extends Exception> {
 	/**
 	 * Method represents the action that is execute when the given exception is thrown.
 	 *
-	 * @param request request object injected in the handler action
+	 * @param request provider object injected in the handler action
 	 * @param response response object injected in the handler action
 	 * @param exception object of the thrown exception
 	 */

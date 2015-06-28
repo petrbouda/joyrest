@@ -15,11 +15,11 @@
  */
 package org.joyrest.routing;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.model.http.MediaType;
 
 /**
- * Route definition which contains all needed information about processing an incoming request.
+ * Route definition which contains all needed information about processing an incoming provider.
  *
  * @see RouteAction
  * @see InternalRoute
@@ -28,12 +28,12 @@ import org.joyrest.model.http.MediaType;
 public interface Route {
 
 	/**
-	 * Adds an aspect to the route definition
+	 * Adds an interceptor to the route definition
 	 *
-	 * @param aspect added aspect
+	 * @param interceptor added interceptor
 	 * @return current route
 	 */
-	Route aspect(Aspect... aspect);
+	Route aspect(Interceptor... interceptor);
 
 	/**
 	 * Adds a consumed Media-Type to the route definition

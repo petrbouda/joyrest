@@ -32,6 +32,10 @@ public final class JoyLogger {
 		this.logger = LoggerFactory.getLogger(clazz);
 	}
 
+	public boolean isDebug() {
+		return logger.isDebugEnabled();
+	}
+
 	public void error(Supplier<String> message) {
 		if (logger.isErrorEnabled()) {
 			logger.error(message.get());

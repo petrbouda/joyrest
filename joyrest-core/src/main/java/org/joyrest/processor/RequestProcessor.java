@@ -29,7 +29,7 @@ import org.joyrest.model.response.Response;
 public interface RequestProcessor {
 
 	/**
-	 * Modify {@link InternalResponse response} on the base of the incoming {@link InternalRequest request}
+	 * Modify {@link InternalResponse response} on the base of the incoming {@link InternalRequest provider}
 	 * as a abstraction of any server data.
 	 *
 	 * @param request incoming model in the form of {@link InternalRequest}

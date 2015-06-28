@@ -31,7 +31,7 @@ public final class DaggerApplicationModule$$ModuleAdapter extends ModuleAdapter<
    */
   @Override
   public void getBindings(BindingsGroup bindings, DaggerApplicationModule module) {
-    SetBinding.add(bindings, "java.util.Set<org.joyrest.aspect.Aspect>", new NullAspectProvidesAdapter(module));
+    SetBinding.add(bindings, "java.util.Set<org.joyrest.aspect.Interceptor>", new NullAspectProvidesAdapter(module));
     SetBinding.add(bindings, "java.util.Set<org.joyrest.exception.configuration.ExceptionConfiguration>", new JokeExceptionConfigurationProvidesAdapter(module));
     SetBinding.add(bindings, "java.util.Set<org.joyrest.transform.Writer>", new JsonWriterProvidesAdapter(module));
     SetBinding.add(bindings, "java.util.Set<org.joyrest.transform.Reader>", new JsonReaderProvidesAdapter(module));
@@ -40,28 +40,28 @@ public final class DaggerApplicationModule$$ModuleAdapter extends ModuleAdapter<
   }
 
   /**
-   * A {@code Binding<org.joyrest.aspect.Aspect>} implementation which satisfies
+   * A {@code Binding<org.joyrest.aspect.Interceptor>} implementation which satisfies
    * Dagger's infrastructure requirements including:
    *
-   * Being a {@code Provider<org.joyrest.aspect.Aspect>} and handling creation and
+   * Being a {@code Provider<org.joyrest.aspect.Interceptor>} and handling creation and
    * preparation of object instances.
    */
-  public static final class NullAspectProvidesAdapter extends ProvidesBinding<org.joyrest.aspect.Aspect>
-      implements Provider<org.joyrest.aspect.Aspect> {
+  public static final class NullAspectProvidesAdapter extends ProvidesBinding<org.joyrest.aspect.Interceptor>
+      implements Provider<org.joyrest.aspect.Interceptor> {
     private final DaggerApplicationModule module;
 
     public NullAspectProvidesAdapter(DaggerApplicationModule module) {
-      super("org.joyrest.aspect.Aspect", NOT_SINGLETON, "org.joyrest.examples.di.jokeapp.dagger.DaggerApplicationModule", "nullAspect");
+      super("org.joyrest.aspect.Interceptor", NOT_SINGLETON, "org.joyrest.examples.di.jokeapp.dagger.DaggerApplicationModule", "nullAspect");
       this.module = module;
       setLibrary(true);
     }
 
     /**
      * Returns the fully provisioned instance satisfying the contract for
-     * {@code Provider<org.joyrest.aspect.Aspect>}.
+     * {@code Provider<org.joyrest.aspect.Interceptor>}.
      */
     @Override
-    public org.joyrest.aspect.Aspect get() {
+    public org.joyrest.aspect.Interceptor get() {
       return module.nullAspect();
     }
   }

@@ -18,7 +18,7 @@ public class AspectIT extends AbstractRestIntegrationTest {
 		given()
 			.when()
 				.contentType(ContentType.ANY)
-				.get("/ittest/aspect")
+				.get("/ittest/interceptor")
 			.then()
 				.header("result", equalTo("success"))
 				.statusCode(HttpStatus.OK.code());

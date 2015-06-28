@@ -41,6 +41,13 @@ public class RestException extends RuntimeException {
 		this(status, message, emptyMap());
 	}
 
+	public RestException(HttpStatus status, String message, Throwable e) {
+		super(message, e);
+		this.status = status;
+		this.message = message;
+		this.headers = emptyMap();
+	}
+
 	public RestException(HttpStatus status, String message, Map<HeaderName, String> headers) {
 		this.status = status;
 		this.message = message;

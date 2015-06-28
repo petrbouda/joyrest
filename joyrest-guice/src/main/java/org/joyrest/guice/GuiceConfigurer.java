@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.*;
 
-import org.joyrest.aspect.Aspect;
+import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
@@ -31,8 +31,8 @@ public class GuiceConfigurer extends AbstractConfigurer<Module> {
 	}
 
 	@Override
-	protected Collection<Aspect> getAspects() {
-		return provide(new TypeLiteral<Set<Aspect>>() {});
+	protected Collection<Interceptor> getInterceptors() {
+		return provide(new TypeLiteral<Set<Interceptor>>() {});
 	}
 
 	@Override
