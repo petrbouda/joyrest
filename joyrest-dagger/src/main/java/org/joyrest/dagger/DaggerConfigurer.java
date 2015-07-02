@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.configurer.ConfigurationContext;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.Reader;
@@ -21,40 +22,28 @@ import dagger.ObjectGraph;
 
 public class DaggerConfigurer extends AbstractConfigurer<Object> {
 
-	private DaggerConfigurationProvider provider = null;
+	private final ConfigurationContext context = new ConfigurationContext();
 
 	@Override
 	public ApplicationContext initialize(Object applicationConfig) {
 		requireNonNull(applicationConfig, "Application module must be non-null for configuring Dagger.");
 
 		ObjectGraph graph = ObjectGraph.create(applicationConfig);
-		provider = graph.inject(new DaggerConfigurationProvider());
+		DaggerConfigurationProvider provider = graph.inject(new DaggerConfigurationProvider());
+
+		context.addAll(Interceptor.class, provider.interceptors);
+		context.addAll(Reader.class, provider.readers);
+		context.addAll(Writer.class, provider.writers);
+		context.addAll(ExceptionConfiguration.class, provider.exceptionConfigurations);
+		context.addAll(ControllerConfiguration.class, provider.controllerConfiguration);
+
 		return initializeContext();
 	}
 
 	@Override
-	protected Collection<Interceptor> getInterceptors() {
-		return createList(provider.interceptors);
-	}
-
-	@Override
-	protected Collection<Reader> getReaders() {
-		return createList(provider.readers);
-	}
-
-	@Override
-	protected Collection<Writer> getWriters() {
-		return createList(provider.writers);
-	}
-
-	@Override
-	protected Collection<ExceptionConfiguration> getExceptionConfigurations() {
-		return createList(provider.exceptionConfigurations);
-	}
-
-	@Override
-	protected Collection<ControllerConfiguration> getControllerConfiguration() {
-		return createList(provider.controllerConfiguration);
+	@SuppressWarnings("unchecked")
+	public <B> Collection<B> getBeans(Class<B> clazz) {
+		return (Collection<B>) context.get(clazz);
 	}
 
 	/*

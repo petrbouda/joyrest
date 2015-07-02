@@ -1,7 +1,7 @@
 package org.joyrest.grizzly.model;
 
 import static java.util.Objects.nonNull;
-import static org.joyrest.common.UnmodifiableMapCollector.toUnmodifiableMap;
+import static org.joyrest.common.collection.UnmodifiableMapCollector.toUnmodifiableMap;
 
 import java.io.InputStream;
 import java.util.Map;

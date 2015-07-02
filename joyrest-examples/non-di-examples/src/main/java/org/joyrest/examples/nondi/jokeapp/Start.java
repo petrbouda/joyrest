@@ -1,14 +1,26 @@
 package org.joyrest.examples.nondi.jokeapp;
 
 import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.configurer.ConfigurationContext;
+import org.joyrest.context.configurer.NonDiConfigurer;
 import org.joyrest.grizzly.GrizzlyServer;
+import org.joyrest.jackson.JacksonReaderWriter;
+import org.joyrest.routing.ControllerConfiguration;
+import org.joyrest.transform.Reader;
+import org.joyrest.transform.Writer;
 
 public class Start {
 
 	public static void main(String... args) throws Exception {
-		JokeConfigurer configurer = new JokeConfigurer();
-		ApplicationContext applicationContext = configurer.initialize();
+		JacksonReaderWriter readerWriter = new JacksonReaderWriter();
+		JokeController jokeController = new JokeController(new JokeServiceImpl());
+
+		ConfigurationContext beanContext = new ConfigurationContext();
+		beanContext.add(ControllerConfiguration.class, jokeController);
+		beanContext.add(Reader.class, readerWriter);
+		beanContext.add(Writer.class, readerWriter);
+
+		ApplicationContext applicationContext = new NonDiConfigurer().initialize(beanContext);
 		GrizzlyServer.start(applicationContext, 5000, "/services");
 	}
-
 }

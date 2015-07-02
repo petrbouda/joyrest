@@ -1,7 +1,7 @@
 package org.joyrest.common;
 
 import static java.util.function.Function.identity;
-import static org.joyrest.common.UnmodifiableMapCollector.toUnmodifiableMap;
+import static org.joyrest.common.collection.UnmodifiableMapCollector.toUnmodifiableMap;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Map;

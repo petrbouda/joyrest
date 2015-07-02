@@ -16,136 +16,34 @@
 package org.joyrest.context.configurer;
 
 import static java.util.Objects.requireNonNull;
-
 import java.util.Collection;
-import java.util.HashSet;
 
-import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.exception.configuration.ExceptionConfiguration;
-import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.transform.Reader;
-import org.joyrest.transform.Writer;
 
 /**
- * Abstract Configurer which is mainly used for an implementation of a new configurer that is not based on any
- * Dependency Injection Framework.
+ * Configurer which is mainly used for an implementation of a new configurer that is not based on any Dependency Injection
+ * Framework.
  *
  * {@inheritDoc}
  */
-public abstract class NonDiConfigurer extends AbstractConfigurer<Object> {
+public class NonDiConfigurer extends AbstractConfigurer<ConfigurationContext> {
 
-	private final Collection<Interceptor> interceptors = new HashSet<>();
-	private final Collection<Reader> readers = new HashSet<>();
-	private final Collection<Writer> writers = new HashSet<>();
-	private final Collection<ExceptionConfiguration> exceptionConfigurations = new HashSet<>();
-	private final Collection<ControllerConfiguration> controllerConfigurations = new HashSet<>();
+	private ConfigurationContext context;
 
-	/**
-	 * Method in which is application context of {@link NonDiConfigurer} initialized. After a registering all useful beans is
-	 * needed to call the method {@link AbstractConfigurer#initializeContext()} that finishes the creation of the application
-	 * context.
-	 *
-	 * @return application context with all registered beans
-	 */
-	abstract public ApplicationContext initialize();
-
-	/**
-	 * Add a new {@link Interceptor} to the application context.
-	 *
-	 * @param interceptor registered interceptor
-	 */
-	protected void addAspect(Interceptor interceptor) {
-		requireNonNull(interceptor, "A registered interceptor cannot be null.");
-		interceptors.add(interceptor);
-	}
-
-	/**
-	 * Add a new {@link Reader} to the application context.
-	 *
-	 * @param reader registered interceptor
-	 */
-	protected void addReader(Reader reader) {
-		requireNonNull(reader, "A registered reader cannot be null.");
-		readers.add(reader);
-	}
-
-	/**
-	 * Add a new {@link Writer} to the application context.
-	 *
-	 * @param writer registered interceptor
-	 */
-	protected void addWriter(Writer writer) {
-		requireNonNull(writer, "A registered writer cannot be null.");
-		writers.add(writer);
-	}
-
-	/**
-	 * Add a new {@link ExceptionConfiguration} to the application context.
-	 *
-	 * @param exceptionConfiguration registered interceptor
-	 */
-	protected void addExceptionConfiguration(ExceptionConfiguration exceptionConfiguration) {
-		requireNonNull(exceptionConfiguration, "A registered exception configurer cannot be null.");
-		exceptionConfigurations.add(exceptionConfiguration);
-	}
-
-	/**
-	 * Add a new {@link ControllerConfiguration} to the application context.
-	 *
-	 * @param controllerConfiguration registered interceptor
-	 */
-	protected void addControllerConfiguration(ControllerConfiguration controllerConfiguration) {
-		requireNonNull(controllerConfiguration, "A registered controller configurer cannot be null.");
-		controllerConfigurations.add(controllerConfiguration);
+	@Override
+	@SuppressWarnings("unchecked")
+	public <B> Collection<B> getBeans(Class<B> clazz) {
+		return (Collection<B>) context.get(clazz);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected final Collection<Interceptor> getInterceptors() {
-		return interceptors;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected final Collection<Reader> getReaders() {
-		return readers;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected final Collection<Writer> getWriters() {
-		return writers;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected final Collection<ExceptionConfiguration> getExceptionConfigurations() {
-		return exceptionConfigurations;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected final Collection<ControllerConfiguration> getControllerConfiguration() {
-		return controllerConfigurations;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ApplicationContext initialize(Object applicationConfig) {
-		throw new UnsupportedOperationException("Non-DI Configurer does not support this method.");
+	public ApplicationContext initialize(ConfigurationContext context) {
+		requireNonNull(context, "ApplicationContext cannot be null.");
+		this.context = context;
+		return initializeContext();
 	}
 
 }

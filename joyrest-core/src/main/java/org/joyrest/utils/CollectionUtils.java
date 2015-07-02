@@ -4,12 +4,15 @@ import static java.util.Objects.isNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class CollectionUtils {
 
 	public static final boolean nonEmpty(Collection<?> col) {
 		return col != null && !col.isEmpty();
+	}
+
+	public static final boolean isEmpty(Collection<?> col) {
+		return col != null && col.isEmpty();
 	}
 
 	public static final boolean isSingletonList(Collection<?> col) {

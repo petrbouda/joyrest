@@ -1,13 +1,11 @@
 package org.joyrest.servlet.model;
 
 import static java.util.Collections.list;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.joyrest.common.UnmodifiableMapCollector.toUnmodifiableMap;
+import static org.joyrest.common.collection.UnmodifiableMapCollector.toUnmodifiableMap;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
-import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 
 public class ServletRequestWrapper extends InternalRequest<Object> {

@@ -58,6 +58,9 @@ public class JoyAuthorizationServerSecurityConfiguration extends WebSecurityConf
 			this.endpoints = endpoints;
 			this.endpointsConfigurer = endpoints.getEndpointsConfigurer();
 			this.clientDetailsService = clientDetailsConfigurer.and().build();
+
+			endpointsConfigurer.setClientDetailsService(clientDetailsService);
+			endpointsConfigurer.authenticationManager(authenticationManager());
 		} catch (Exception e) {
 			throw new IllegalStateException("Cannot configure server security", e);
 		}
@@ -65,7 +68,7 @@ public class JoyAuthorizationServerSecurityConfiguration extends WebSecurityConf
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication();
+		//	auth.inMemoryAuthentication();
 		AuthorizationContext.getInstance().putBean(AuthenticationManagerBuilder.class, auth);
 	}
 
