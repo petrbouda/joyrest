@@ -18,88 +18,87 @@ package org.joyrest.context.initializer;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.joyrest.aspect.Interceptor;
-import org.joyrest.exception.configuration.ExceptionConfiguration;
+import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.routing.ControllerConfiguration;
+import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 
 public class InitContext {
 
-	private final Map<Class<?>, Collection<?>> map;
+	------> NENI TO POTREBA!!
 
-	private final Collection<Reader> readers;
+//	private final Set<Reader> readers;
+//
+//	private final Set<Writer> writers;
+//
+//	private final Set<Interceptor> interceptors;
+//
+//	private final Set<ControllerConfiguration> controllerConfigurations;
 
-	private final Collection<Writer> writers;
+	private final Map<Class<? extends Exception>, InternalExceptionHandler> exceptionConfigurations;
 
-	private final Collection<Interceptor> interceptors;
-
-	private final Collection<ExceptionConfiguration> exceptionConfigurations;
-
-	private final Collection<ControllerConfiguration> controllerConfigurations;
+	private final Set<InternalRoute> routes;
 
 	private InitContext(
-		Collection<Reader> readers,
-		Collection<Writer> writers,
-		Collection<Interceptor> interceptors,
-		Collection<ExceptionConfiguration> exceptionConfigurations,
-		Collection<ControllerConfiguration> controllerConfigurations) {
+			Set<Reader> readers,
+			Set<Writer> writers,
+			Set<Interceptor> interceptors,
+			Set<ControllerConfiguration> controllerConfigurations,
+			Map<Class<? extends Exception>, InternalExceptionHandler> exceptionConfigurations,
+			Set<InternalRoute> routes) {
 
 		this.readers = readers;
 		this.writers = writers;
 		this.interceptors = interceptors;
 		this.exceptionConfigurations = exceptionConfigurations;
 		this.controllerConfigurations = controllerConfigurations;
-
-		this.map = new HashMap<>();
-		this.map.put(Reader.class, readers);
-		this.map.put(Writer.class, writers);
-		this.map.put(Interceptor.class, interceptors);
-		this.map.put(ExceptionConfiguration.class, exceptionConfigurations);
-		this.map.put(ControllerConfiguration.class, controllerConfigurations);
+		this.routes = routes;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> Collection<T> getBeans(Class<T> clazz) {
-		return (Collection<T>) this.map.get(clazz);
-	}
-
-	public Collection<Reader> getReaders() {
+	public Set<Reader> getReaders() {
 		return readers;
 	}
 
-	public Collection<Writer> getWriters() {
+	public Set<Writer> getWriters() {
 		return writers;
 	}
 
-	public Collection<Interceptor> getInterceptors() {
+	public Set<Interceptor> getInterceptors() {
 		return interceptors;
 	}
 
-	public Collection<ExceptionConfiguration> getExceptionConfigurations() {
+	public Set<ControllerConfiguration> getControllerConfigurations() {
+		return controllerConfigurations;
+	}
+
+	public Map<Class<? extends Exception>, InternalExceptionHandler> getExceptionConfigurations() {
 		return exceptionConfigurations;
 	}
 
-	public Collection<ControllerConfiguration> getControllerConfigurations() {
-		return controllerConfigurations;
+	public Set<InternalRoute> getRoutes() {
+		return routes;
 	}
 
 	public final static class Builder {
 
-		private final Collection<Reader> readers = new HashSet<>();
+		private final Set<Reader> readers = new HashSet<>();
 
-		private final Collection<Writer> writers = new HashSet<>();
+		private final Set<Writer> writers = new HashSet<>();
 
-		private final Collection<Interceptor> interceptors = new HashSet<>();
+		private final Set<Interceptor> interceptors = new HashSet<>();
 
-		private final Collection<ExceptionConfiguration> exceptionConfigurations = new HashSet<>();
+		private final Set<ControllerConfiguration> controllerConfigurations = new HashSet<>();
 
-		private final Collection<ControllerConfiguration> controllerConfigurations = new HashSet<>();
+		private final Map<Class<? extends Exception>, InternalExceptionHandler> exceptionConfigurations = new HashMap<>();
+
+		private final Set<InternalRoute> routes = new HashSet<>();
 
 		public Builder readers(Reader... readers) {
 			requireNonNull(readers);
@@ -119,7 +118,7 @@ public class InitContext {
 			return this;
 		}
 
-		public Builder exceptionConfigurations(ExceptionConfiguration... exceptionConfigurations) {
+		public Builder exceptionConfigurations(Class<? extends Exception> clazz, InternalExceptionHandler handler) {
 			requireNonNull(exceptionConfigurations);
 			this.exceptionConfigurations.addAll(asList(exceptionConfigurations));
 			return this;
@@ -131,8 +130,14 @@ public class InitContext {
 			return this;
 		}
 
+		public Builder routes(InternalRoute... routes) {
+			requireNonNull(routes);
+			this.routes.addAll(asList(routes));
+			return this;
+		}
+
 		public InitContext build() {
-			return new InitContext(readers, writers, interceptors, exceptionConfigurations, controllerConfigurations);
+			return new InitContext(readers, writers, interceptors, controllerConfigurations, exceptionConfigurations, routes);
 		}
 	}
 }

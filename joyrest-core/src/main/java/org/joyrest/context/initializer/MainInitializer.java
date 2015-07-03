@@ -32,7 +32,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.autoconfigurar.AutoConfigurer;
@@ -52,16 +51,16 @@ public class MainInitializer implements Initializer {
 	protected final List<Interceptor> PREDEFINED_ASPECTS = singletonList(new SerializationInterceptor());
 
 	@Override
-	public void init(InitContext context) {
+	public void init(InitContext.Builder contextBuilder, BeanFactory beanFactory) {
 		List<AbstractReaderWriter> readersWriters = AutoConfigurer.configureReadersWriters();
-		Map<Boolean, List<Reader>> readers = createTransformers(insertIntoNewList(context.getReaders(), readersWriters));
-		Map<Boolean, List<Writer>> writers = createTransformers(insertIntoNewList(getBeans(Writer.class), readersWriters));
-		Collection<Interceptor> interceptors = sort(insertIntoNewList(getBeans(Interceptor.class), PREDEFINED_ASPECTS));
+		Map<Boolean, List<Reader>> readers = createTransformers(insertIntoNewList(beanFactory.get(Reader.class), readersWriters));
+		Map<Boolean, List<Writer>> writers = createTransformers(insertIntoNewList(beanFactory.get(Writer.class), readersWriters));
+		Collection<Interceptor> interceptors = sort(insertIntoNewList(beanFactory.get(Interceptor.class), PREDEFINED_ASPECTS));
 
 		orderDuplicationCheck(interceptors);
 
 		Map<Class<? extends Exception>, InternalExceptionHandler> handlers =
-			insertIntoNewList(getBeans(ExceptionConfiguration.class), new InternalExceptionConfiguration()).stream()
+			insertIntoNewList(beanFactory.get(ExceptionConfiguration.class), new InternalExceptionConfiguration()).stream()
 					.peek(ExceptionConfiguration::initialize)
 					.flatMap(config -> config.getExceptionHandlers().stream())
 					.peek(handler -> {
@@ -70,7 +69,7 @@ public class MainInitializer implements Initializer {
 					})
 					.collect(toMap(InternalExceptionHandler::getExceptionClass, identity()));
 
-		Set<InternalRoute> routes = getBeans(ControllerConfiguration.class).stream()
+		beanFactory.get(ControllerConfiguration.class).stream()
 			.peek(ControllerConfiguration::initialize)
 			.flatMap(config -> config.getRoutes().stream())
 			.peek(route -> {
@@ -78,7 +77,7 @@ public class MainInitializer implements Initializer {
 				populateRouteReaders(readers, route);
 				populateRouteWriters(writers, route);
 				logRoute(route);
-			}).collect(toSet());
+			}).forEach(contextBuilder::routes);
 	}
 
 	/**

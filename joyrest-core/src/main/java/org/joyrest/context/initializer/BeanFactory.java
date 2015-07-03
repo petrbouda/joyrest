@@ -15,8 +15,19 @@
  */
 package org.joyrest.context.initializer;
 
-public interface Initializer {
+import java.util.Collection;
+import java.util.function.Function;
 
-	void init(InitContext.Builder contextBuilder, BeanFactory beanFactory);
+public class BeanFactory {
 
+	private final Function<Class<?>, Collection<Object>> beanFactory;
+
+	public BeanFactory(Function<Class<?>, Collection<Object>> beanFactory) {
+		this.beanFactory = beanFactory;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <B> Collection<B> get(Class<B> clazz) {
+		return (Collection<B>) beanFactory.apply(clazz);
+	}
 }

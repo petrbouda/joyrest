@@ -38,6 +38,9 @@ import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.ApplicationContextImpl;
 import org.joyrest.context.autoconfigurar.AutoConfigurer;
+import org.joyrest.context.initializer.BeanFactory;
+import org.joyrest.context.initializer.InitContext;
+import org.joyrest.context.initializer.MainInitializer;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.exception.configuration.TypedExceptionConfiguration;
 import org.joyrest.exception.handler.InternalExceptionHandler;
@@ -68,36 +71,16 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	 * @return initialized {@code application context}
 	 */
 	protected ApplicationContext initializeContext() {
-		List<AbstractReaderWriter> readersWriters = AutoConfigurer.configureReadersWriters();
-		Map<Boolean, List<Reader>> readers = createTransformers(insertIntoNewList(getBeans(Reader.class), readersWriters));
-		Map<Boolean, List<Writer>> writers = createTransformers(insertIntoNewList(getBeans(Writer.class), readersWriters));
-		Collection<Interceptor> interceptors = sort(insertIntoNewList(getBeans(Interceptor.class), PREDEFINED_ASPECTS));
+		BeanFactory beanFactory = new BeanFactory(this::getBeans);
+		InitContext.Builder contextBuilder = new InitContext.Builder();
 
-		orderDuplicationCheck(interceptors);
-
-		Map<Class<? extends Exception>, InternalExceptionHandler> handlers =
-				insertInto(getBeans(ExceptionConfiguration.class), new InternalExceptionConfiguration()).stream()
-					.peek(ExceptionConfiguration::initialize)
-					.flatMap(config -> config.getExceptionHandlers().stream())
-					.peek(handler -> {
-						populateHandlerWriters(writers, handler, nonNull(handler.getResponseType()));
-						logExceptionHandler(handler);
-					})
-					.collect(toMap(InternalExceptionHandler::getExceptionClass, identity()));
-
-		Set<InternalRoute> routes = getBeans(ControllerConfiguration.class).stream()
-			.peek(ControllerConfiguration::initialize)
-			.flatMap(config -> config.getRoutes().stream())
-			.peek(route -> {
-				route.aspect(interceptors.toArray(new Interceptor[interceptors.size()]));
-				populateRouteReaders(readers, route);
-				populateRouteWriters(writers, route);
-				logRoute(route);
-			}).collect(toSet());
+		MainInitializer mainInitializer = new MainInitializer();
+		mainInitializer.init(contextBuilder, beanFactory);
+		InitContext initContext = contextBuilder.build();
 
 		ApplicationContextImpl context = new ApplicationContextImpl();
-		context.setRoutes(routes);
-		context.setExceptionHandlers(handlers);
+		context.setRoutes(initContext.getRoutes());
+		context.setExceptionHandlers(initContext.getExceptionConfigurations());
 		return context;
 	}
 
