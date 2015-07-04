@@ -1,21 +1,21 @@
 package org.joyrest.spring;
 
-import static java.util.Objects.requireNonNull;
+import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.configurer.AbstractConfigurer;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.configurer.DependencyInjectionConfigurer;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Class that is able to configure JoyREST Framework for Spring Dependency Injection Framework.
  *
  * @author pbouda
  */
-public final class SpringJavaConfigurer extends DependencyInjectionConfigurer<Object> {
+public final class SpringJavaConfigurer extends AbstractConfigurer<Object> {
 
 	private org.springframework.context.ApplicationContext context = null;
 
@@ -32,7 +32,7 @@ public final class SpringJavaConfigurer extends DependencyInjectionConfigurer<Ob
 	}
 
 	@Override
-	protected <B> List<B> getBeans(Class<B> clazz) {
+	public <B> List<B> getBeans(Class<B> clazz) {
 		return new ArrayList<>(context.getBeansOfType(clazz).values());
 	}
 }

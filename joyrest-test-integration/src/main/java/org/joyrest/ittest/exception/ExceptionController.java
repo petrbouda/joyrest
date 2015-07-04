@@ -16,7 +16,7 @@ public class ExceptionController extends TypedControllerConfiguration {
 		setControllerPath("/ittest/exception");
 
 		get("badRequest", (req, resp) -> {
-			throw new RestException(HttpStatus.BAD_REQUEST, "Bad Request !!!");
+			throw new RestException(HttpStatus.BAD_REQUEST, "Bad Request");
 		});
 
 		get("numberFormat", (req, resp) -> {

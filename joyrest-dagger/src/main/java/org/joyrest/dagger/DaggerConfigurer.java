@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import org.joyrest.aspect.Interceptor;
 import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.configurer.ConfigurationContext;
+import org.joyrest.context.configurer.ApplicationConfiguration;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.Reader;
@@ -22,7 +22,7 @@ import dagger.ObjectGraph;
 
 public class DaggerConfigurer extends AbstractConfigurer<Object> {
 
-	private final ConfigurationContext context = new ConfigurationContext();
+	private final ApplicationConfiguration context = new ApplicationConfiguration();
 
 	@Override
 	public ApplicationContext initialize(Object applicationConfig) {
@@ -44,15 +44,6 @@ public class DaggerConfigurer extends AbstractConfigurer<Object> {
 	@SuppressWarnings("unchecked")
 	public <B> Collection<B> getBeans(Class<B> clazz) {
 		return (Collection<B>) context.get(clazz);
-	}
-
-	/*
-	 * dagger provides an unmodifiable nullable set and this method convert this to modifiable list with non-null elements
-	 */
-	private <E> Collection<E> createList(Collection<E> collection) {
-		return collection.stream()
-			.filter(Objects::nonNull)
-			.collect(toList());
 	}
 
 	public static class DaggerConfigurationProvider {

@@ -1,17 +1,16 @@
 package org.joyrest.guice;
 
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
+import com.google.inject.*;
+import org.joyrest.context.ApplicationContext;
+import org.joyrest.context.configurer.AbstractConfigurer;
+import org.joyrest.logging.JoyLogger;
 
 import java.util.*;
 
-import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.configurer.DependencyInjectionConfigurer;
-import org.joyrest.logging.JoyLogger;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
-import com.google.inject.*;
-
-public class GuiceConfigurer extends DependencyInjectionConfigurer<Module> {
+public class GuiceConfigurer extends AbstractConfigurer<Module> {
 
 	private final static JoyLogger log = new JoyLogger(GuiceConfigurer.class);
 
@@ -26,8 +25,9 @@ public class GuiceConfigurer extends DependencyInjectionConfigurer<Module> {
 	}
 
 	@Override
-	protected <B> Collection<B> getBeans(Class<B> clazz) {
-		return provide(new TypeLiteral<Set<B>>() {});
+	public <B> Collection<B> getBeans(Class<B> clazz) {
+		return provide(new TypeLiteral<Set<B>>() {
+		});
 	}
 
 	/*

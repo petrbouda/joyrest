@@ -51,7 +51,7 @@ public class FeedDataStoreManager implements DataStoreObserver {
 	 */
 	@Override
 	public void saveAll(Collection<Serializable> entities) {
-		entities.stream().forEach(this::createTask);
+		entities.forEach(this::createTask);
 	}
 
 	private void createTask(Serializable serializableEntity) {
@@ -76,7 +76,7 @@ public class FeedDataStoreManager implements DataStoreObserver {
 	 */
 	@Override
 	public void removeAll(Collection<String> keys) {
-		keys.stream().forEach(this::removeTask);
+		keys.forEach(this::removeTask);
 	}
 
 	private void removeTask(String key) {

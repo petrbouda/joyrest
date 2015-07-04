@@ -17,6 +17,6 @@ package org.joyrest.context.configurer;
 
 import org.joyrest.common.collection.MultiValueHashMap;
 
-public class ConfigurationContext extends MultiValueHashMap<Class<?>, Object> {
+public class ApplicationConfiguration extends MultiValueHashMap<Class<?>, Object> {
 
 }

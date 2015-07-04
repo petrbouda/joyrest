@@ -9,21 +9,21 @@ import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.configurer.DependencyInjectionConfigurer;
+import org.joyrest.context.configurer.AbstractConfigurer;
 
 /**
  * Class that is able to configure JoyREST Framework for HK2 Dependency Injection Framework.
  *
  * @author pbouda
  */
-public final class HK2Configurer extends DependencyInjectionConfigurer<Binder> {
+public final class HK2Configurer extends AbstractConfigurer<Binder> {
 
 	public static final String JOYREST_BEAN_CONTEXT = "JoyrestContext";
 
 	private ServiceLocator locator = null;
 
 	@Override
-	protected <B> List<B> getBeans(Class<B> clazz) {
+	public <B> List<B> getBeans(Class<B> clazz) {
 		return locator.getAllServices(clazz);
 	}
 

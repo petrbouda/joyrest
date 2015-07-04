@@ -1,7 +1,7 @@
 package org.joyrest.examples.nondi.jokeapp;
 
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.configurer.ConfigurationContext;
+import org.joyrest.context.configurer.ApplicationConfiguration;
 import org.joyrest.context.configurer.NonDiConfigurer;
 import org.joyrest.grizzly.GrizzlyServer;
 import org.joyrest.jackson.JacksonReaderWriter;
@@ -15,7 +15,7 @@ public class Start {
 		JacksonReaderWriter readerWriter = new JacksonReaderWriter();
 		JokeController jokeController = new JokeController(new JokeServiceImpl());
 
-		ConfigurationContext beanContext = new ConfigurationContext();
+		ApplicationConfiguration beanContext = new ApplicationConfiguration();
 		beanContext.add(ControllerConfiguration.class, jokeController);
 		beanContext.add(Reader.class, readerWriter);
 		beanContext.add(Writer.class, readerWriter);

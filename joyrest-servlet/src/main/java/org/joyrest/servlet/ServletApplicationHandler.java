@@ -1,27 +1,25 @@
 package org.joyrest.servlet;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static org.joyrest.servlet.JoyrestProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
-import static org.joyrest.servlet.JoyrestProperties.CONFIGURER_PROPERTY;
-
-import java.io.IOException;
-import java.util.function.Function;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.configurer.Configurer;
-import org.joyrest.context.configurer.NonDiConfigurer;
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.logging.JoyLogger;
 import org.joyrest.processor.RequestProcessor;
 import org.joyrest.processor.RequestProcessorImpl;
 import org.joyrest.servlet.model.ServletRequestWrapper;
 import org.joyrest.servlet.model.ServletResponseWrapper;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.function.Function;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.joyrest.servlet.JoyrestProperties.APPLICATION_JAVA_CONFIG_PROPERTY;
+import static org.joyrest.servlet.JoyrestProperties.CONFIGURER_PROPERTY;
 
 public class ServletApplicationHandler extends HttpServlet implements Filter {
 
@@ -72,13 +70,16 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 	private void initializeProcessor(Function<String, String> paramProvider) throws ServletException {
 		if (isNull(applicationConfig)) {
 			String configClass = paramProvider.apply(APPLICATION_JAVA_CONFIG_PROPERTY);
-			if(nonNull(configClass))
+			if (nonNull(configClass))
 				this.applicationConfig = getInstanceFromClazz(configClass);
+			else
+				throw new InvalidConfigurationException("Servlet Handler cannot be initialized because property '"
+					+ APPLICATION_JAVA_CONFIG_PROPERTY + "' missing.");
 		}
 
 		if (isNull(configurer)) {
 			String configurerClass = paramProvider.apply(CONFIGURER_PROPERTY);
-			if(nonNull(configurerClass))
+			if (nonNull(configurerClass))
 				this.configurer = getInstanceFromClazz(paramProvider.apply(CONFIGURER_PROPERTY), Configurer.class);
 			else
 				throw new InvalidConfigurationException("Servlet Handler cannot be initialized because property '"
@@ -86,21 +87,18 @@ public class ServletApplicationHandler extends HttpServlet implements Filter {
 		}
 
 		ApplicationContext context;
-		if(nonNull(applicationConfig)) {
+		if (nonNull(applicationConfig)) {
 			context = configurer.initialize(applicationConfig);
 		} else {
-			if(configurer instanceof NonDiConfigurer)
-				context = ((NonDiConfigurer) configurer).initialize();
-			else
-				throw new InvalidConfigurationException("Servlet Handler cannot be initialized because of DI-dependent " +
-					"configurer without an application config.");
+			throw new InvalidConfigurationException("Servlet Handler cannot be initialized because of " +
+				"configurer without an application config.");
 		}
 		this.processor = new RequestProcessorImpl(context);
 	}
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
-			throws IOException, ServletException {
+		throws IOException, ServletException {
 		try {
 			processRequest((HttpServletRequest) req, (HttpServletResponse) resp);
 		} catch (ClassCastException cce) {

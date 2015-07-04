@@ -20,14 +20,14 @@ import java.util.function.Function;
 
 public class BeanFactory {
 
-	private final Function<Class<?>, Collection<Object>> beanFactory;
+	private final Function<Class<Object>, Collection<Object>> beanFactory;
 
-	public BeanFactory(Function<Class<?>, Collection<Object>> beanFactory) {
+	public BeanFactory(Function<Class<Object>, Collection<Object>> beanFactory) {
 		this.beanFactory = beanFactory;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <B> Collection<B> get(Class<B> clazz) {
-		return (Collection<B>) beanFactory.apply(clazz);
+		return (Collection<B>) beanFactory.apply((Class<Object>) clazz);
 	}
 }

@@ -1,6 +1,7 @@
 package org.joyrest.examples.combiner.manager;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +50,7 @@ public class FeedDownloadTask implements Runnable {
 
 		List<FeedEntry> entries = fetchedCombinedFeed.getUrls().parallelStream()
 			.map(feedDownloader)
-			.flatMap(syndEntries -> syndEntries.parallelStream())
+			.flatMap(Collection::parallelStream)
 			.map(entryMapper)
 			.filter(Objects::nonNull)
 			.sorted((e1, e2) -> e2.getPublishDate().compareTo(e1.getPublishDate()))

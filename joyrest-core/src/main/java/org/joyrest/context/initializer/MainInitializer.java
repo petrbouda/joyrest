@@ -15,11 +15,26 @@
  */
 package org.joyrest.context.initializer;
 
+import org.joyrest.aspect.Interceptor;
+import org.joyrest.context.autoconfigurar.AutoConfigurer;
+import org.joyrest.exception.configuration.ExceptionConfiguration;
+import org.joyrest.exception.configuration.TypedExceptionConfiguration;
+import org.joyrest.exception.handler.InternalExceptionHandler;
+import org.joyrest.exception.type.RestException;
+import org.joyrest.routing.ControllerConfiguration;
+import org.joyrest.transform.AbstractReaderWriter;
+import org.joyrest.transform.Reader;
+import org.joyrest.transform.Writer;
+import org.joyrest.transform.interceptor.SerializationInterceptor;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 import static org.joyrest.context.helper.CheckHelper.orderDuplicationCheck;
 import static org.joyrest.context.helper.ConfigurationHelper.createTransformers;
 import static org.joyrest.context.helper.ConfigurationHelper.sort;
@@ -28,30 +43,12 @@ import static org.joyrest.context.helper.LoggingHelper.logRoute;
 import static org.joyrest.context.helper.PopulateHelper.*;
 import static org.joyrest.utils.CollectionUtils.insertIntoNewList;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.joyrest.aspect.Interceptor;
-import org.joyrest.context.autoconfigurar.AutoConfigurer;
-import org.joyrest.exception.configuration.ExceptionConfiguration;
-import org.joyrest.exception.configuration.TypedExceptionConfiguration;
-import org.joyrest.exception.handler.InternalExceptionHandler;
-import org.joyrest.exception.type.RestException;
-import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.routing.InternalRoute;
-import org.joyrest.transform.AbstractReaderWriter;
-import org.joyrest.transform.Reader;
-import org.joyrest.transform.Writer;
-import org.joyrest.transform.interceptor.SerializationInterceptor;
-
 public class MainInitializer implements Initializer {
 
 	protected final List<Interceptor> PREDEFINED_ASPECTS = singletonList(new SerializationInterceptor());
 
 	@Override
-	public void init(InitContext.Builder contextBuilder, BeanFactory beanFactory) {
+	public void init(InitContext context, BeanFactory beanFactory) {
 		List<AbstractReaderWriter> readersWriters = AutoConfigurer.configureReadersWriters();
 		Map<Boolean, List<Reader>> readers = createTransformers(insertIntoNewList(beanFactory.get(Reader.class), readersWriters));
 		Map<Boolean, List<Writer>> writers = createTransformers(insertIntoNewList(beanFactory.get(Writer.class), readersWriters));
@@ -61,13 +58,15 @@ public class MainInitializer implements Initializer {
 
 		Map<Class<? extends Exception>, InternalExceptionHandler> handlers =
 			insertIntoNewList(beanFactory.get(ExceptionConfiguration.class), new InternalExceptionConfiguration()).stream()
-					.peek(ExceptionConfiguration::initialize)
-					.flatMap(config -> config.getExceptionHandlers().stream())
-					.peek(handler -> {
-						populateHandlerWriters(writers, handler, nonNull(handler.getResponseType()));
-						logExceptionHandler(handler);
-					})
-					.collect(toMap(InternalExceptionHandler::getExceptionClass, identity()));
+			.peek(ExceptionConfiguration::initialize)
+			.flatMap(config -> config.getExceptionHandlers().stream())
+			.peek(handler -> {
+				populateHandlerWriters(writers, handler, nonNull(handler.getResponseType()));
+				logExceptionHandler(handler);
+			})
+			.collect(toMap(InternalExceptionHandler::getExceptionClass, identity()));
+
+		context.setExceptionHandlers(handlers);
 
 		beanFactory.get(ControllerConfiguration.class).stream()
 			.peek(ControllerConfiguration::initialize)
@@ -77,12 +76,12 @@ public class MainInitializer implements Initializer {
 				populateRouteReaders(readers, route);
 				populateRouteWriters(writers, route);
 				logRoute(route);
-			}).forEach(contextBuilder::routes);
+			}).forEach(context::addRoute);
 	}
 
 	/**
 	 * Internal implementation of {@link RestException} handler.
-	 * */
+	 */
 	private class InternalExceptionConfiguration extends TypedExceptionConfiguration {
 
 		@Override

@@ -37,14 +37,14 @@ public class MultiValueHashMap<K, V> extends HashMap<K, List<V>> implements Mult
 	}
 
 	@Override
-	public void addAll(K key, List<V> value) {
-		requireNonNull(value);
+	public void addAll(K key, List<V> values) {
+		requireNonNull(values);
 
-		if(CollectionUtils.isEmpty(value))
+		if(CollectionUtils.isEmpty(values))
 			return;
 
 		List<V> curValues = get(key);
-		curValues.stream()
+		values.stream()
 			.filter(Objects::nonNull)
 			.forEach(curValues::add);
 	}

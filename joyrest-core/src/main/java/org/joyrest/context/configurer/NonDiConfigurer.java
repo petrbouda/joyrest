@@ -26,9 +26,9 @@ import org.joyrest.context.ApplicationContext;
  *
  * {@inheritDoc}
  */
-public class NonDiConfigurer extends AbstractConfigurer<ConfigurationContext> {
+public class NonDiConfigurer extends AbstractConfigurer<ApplicationConfiguration> {
 
-	private ConfigurationContext context;
+	private ApplicationConfiguration context;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -36,12 +36,10 @@ public class NonDiConfigurer extends AbstractConfigurer<ConfigurationContext> {
 		return (Collection<B>) context.get(clazz);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public ApplicationContext initialize(ConfigurationContext context) {
+	public ApplicationContext initialize(ApplicationConfiguration context) {
 		requireNonNull(context, "ApplicationContext cannot be null.");
+
 		this.context = context;
 		return initializeContext();
 	}
