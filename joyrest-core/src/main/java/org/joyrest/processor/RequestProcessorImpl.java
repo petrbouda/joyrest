@@ -17,8 +17,8 @@ package org.joyrest.processor;
 
 import static org.joyrest.utils.PathUtils.getPathParams;
 
-import org.joyrest.aspect.InterceptorChain;
-import org.joyrest.aspect.InterceptorChainImpl;
+import org.joyrest.interceptor.InterceptorChain;
+import org.joyrest.interceptor.InterceptorChainImpl;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.processor.ExceptionProcessor;
 import org.joyrest.exception.processor.ExceptionProcessorImpl;

@@ -19,8 +19,8 @@ import static org.joyrest.exception.type.RestException.notAcceptableSupplier;
 import static org.joyrest.exception.type.RestException.unsupportedMediaTypeSupplier;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
-import org.joyrest.aspect.Interceptor;
-import org.joyrest.aspect.InterceptorChain;
+import org.joyrest.interceptor.Interceptor;
+import org.joyrest.interceptor.InterceptorChain;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;

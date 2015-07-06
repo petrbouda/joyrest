@@ -1,62 +1,48 @@
 package org.joyrest.dagger;
 
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
+import java.util.*;
+import java.util.function.Supplier;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import org.joyrest.aspect.Interceptor;
-import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.context.ApplicationContext;
-import org.joyrest.context.configurer.ApplicationConfiguration;
-import org.joyrest.exception.configuration.ExceptionConfiguration;
-import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.transform.Reader;
-import org.joyrest.transform.Writer;
-
-import dagger.ObjectGraph;
+import org.joyrest.context.configurer.AbstractConfigurer;
+import org.joyrest.dagger.template.ConfigurationTemplate;
+import org.joyrest.logging.JoyLogger;
 
 public class DaggerConfigurer extends AbstractConfigurer<Object> {
 
-	private final ApplicationConfiguration context = new ApplicationConfiguration();
+	private static final JoyLogger log = new JoyLogger(DaggerConfigurer.class);
+
+	@SuppressWarnings("rawtypes")
+	private final Map<Class, Supplier> beanFactory = new HashMap<>();
+
+	public ApplicationContext initialize() {
+		return initializeContext();
+	}
 
 	@Override
-	public ApplicationContext initialize(Object applicationConfig) {
-		requireNonNull(applicationConfig, "Application module must be non-null for configuring Dagger.");
+	public ApplicationContext initialize(Object nullConfiguration) {
+		throw new UnsupportedOperationException("This method is not supported for initialization of Dagger application, " +
+				"use DaggerConfigurer#initialize() method instead.");
+	}
 
-		ObjectGraph graph = ObjectGraph.create(applicationConfig);
-		DaggerConfigurationProvider provider = graph.inject(new DaggerConfigurationProvider());
+	public <B> DaggerConfigurer addSupplier(Class<B> clazz, Supplier<Set<B>> supplier) {
+		beanFactory.put(clazz, supplier);
+		return this;
+	}
 
-		context.addAll(Interceptor.class, provider.interceptors);
-		context.addAll(Reader.class, provider.readers);
-		context.addAll(Writer.class, provider.writers);
-		context.addAll(ExceptionConfiguration.class, provider.exceptionConfigurations);
-		context.addAll(ControllerConfiguration.class, provider.controllerConfiguration);
-
-		return initializeContext();
+	public DaggerConfigurer addDaggerTemplate(ConfigurationTemplate template) {
+		template.getSuppliers().forEach(beanFactory::putIfAbsent);
+		return this;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <B> Collection<B> getBeans(Class<B> clazz) {
-		return (Collection<B>) context.get(clazz);
-	}
-
-	public static class DaggerConfigurationProvider {
-
-		@Inject
-		Set<Interceptor> interceptors;
-		@Inject
-		Set<Reader> readers;
-		@Inject
-		Set<Writer> writers;
-		@Inject
-		Set<ExceptionConfiguration> exceptionConfigurations;
-		@Inject
-		Set<ControllerConfiguration> controllerConfiguration;
+		try {
+			return (Collection<B>) beanFactory.get(clazz).get();
+		} catch (NullPointerException npe) {
+			log.warn(() -> "There is no registered bean of the type " + clazz.getSimpleName());
+			return Collections.emptySet();
+		}
 	}
 }

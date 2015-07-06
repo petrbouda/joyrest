@@ -4,8 +4,8 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.joyrest.ittest.aspect.ContextHolder.RegistryKey.*;
 
-import org.joyrest.aspect.Interceptor;
-import org.joyrest.aspect.InterceptorChain;
+import org.joyrest.interceptor.Interceptor;
+import org.joyrest.interceptor.InterceptorChain;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;

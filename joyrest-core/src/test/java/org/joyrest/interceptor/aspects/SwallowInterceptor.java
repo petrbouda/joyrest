@@ -1,9 +1,9 @@
-package org.joyrest.aspect.aspects;
+package org.joyrest.interceptor.aspects;
 
 import java.util.Map;
 
-import org.joyrest.aspect.Interceptor;
-import org.joyrest.aspect.InterceptorChain;
+import org.joyrest.interceptor.Interceptor;
+import org.joyrest.interceptor.InterceptorChain;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;

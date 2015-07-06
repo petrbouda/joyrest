@@ -20,8 +20,8 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.ServletException;
 
-import org.joyrest.aspect.Interceptor;
-import org.joyrest.aspect.InterceptorChain;
+import org.joyrest.interceptor.Interceptor;
+import org.joyrest.interceptor.InterceptorChain;
 import org.joyrest.exception.type.RestException;
 import org.joyrest.model.http.HttpStatus;
 import org.joyrest.model.request.InternalRequest;

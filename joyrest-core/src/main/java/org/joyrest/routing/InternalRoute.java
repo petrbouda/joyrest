@@ -27,7 +27,7 @@ import static org.joyrest.utils.PathUtils.createPathParts;
 
 import java.util.*;
 
-import org.joyrest.aspect.Interceptor;
+import org.joyrest.interceptor.Interceptor;
 import org.joyrest.logging.JoyLogger;
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;

@@ -1,6 +1,6 @@
 package org.joyrest.context.helper;
 
-import org.joyrest.aspect.Interceptor;
+import org.joyrest.interceptor.Interceptor;
 import org.joyrest.context.helper.aspects.*;
 import org.joyrest.context.helper.aspects.DuplicatedInterceptor;
 import org.joyrest.context.helper.aspects.FirstInterceptor;

@@ -15,7 +15,7 @@
  */
 package org.joyrest.routing;
 
-import org.joyrest.aspect.Interceptor;
+import org.joyrest.interceptor.Interceptor;
 import org.joyrest.model.http.MediaType;
 
 /**

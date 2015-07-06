@@ -15,7 +15,7 @@
  */
 package org.joyrest.common.annotation;
 
-import org.joyrest.aspect.InterceptorChain;
+import org.joyrest.interceptor.InterceptorChain;
 
 /**
  * Interface defines the ability to provide order as an integer

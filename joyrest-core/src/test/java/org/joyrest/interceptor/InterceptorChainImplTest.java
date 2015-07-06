@@ -1,9 +1,9 @@
-package org.joyrest.aspect;
+package org.joyrest.interceptor;
 
-import org.joyrest.aspect.aspects.FirstInterceptor;
-import org.joyrest.aspect.aspects.SecondInterceptor;
-import org.joyrest.aspect.aspects.SwallowInterceptor;
-import org.joyrest.aspect.aspects.ThirdInterceptor;
+import org.joyrest.interceptor.aspects.FirstInterceptor;
+import org.joyrest.interceptor.aspects.SecondInterceptor;
+import org.joyrest.interceptor.aspects.SwallowInterceptor;
+import org.joyrest.interceptor.aspects.ThirdInterceptor;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.HttpStatus;

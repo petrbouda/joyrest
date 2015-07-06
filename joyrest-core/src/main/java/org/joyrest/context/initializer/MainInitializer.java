@@ -15,7 +15,7 @@
  */
 package org.joyrest.context.initializer;
 
-import org.joyrest.aspect.Interceptor;
+import org.joyrest.interceptor.Interceptor;
 import org.joyrest.context.autoconfigurar.AutoConfigurer;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
 import org.joyrest.exception.configuration.TypedExceptionConfiguration;

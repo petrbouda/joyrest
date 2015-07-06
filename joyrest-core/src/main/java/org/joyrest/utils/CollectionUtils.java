@@ -4,6 +4,8 @@ import static java.util.Objects.isNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class CollectionUtils {
 
@@ -35,17 +37,21 @@ public class CollectionUtils {
 		return collection;
 	}
 
-	public static <T, T2 extends T> Collection<T> insertIntoNewList(Collection<T> collection, T2 insert) {
+	public static <T> Collection<T> insertIntoNewList(Collection<T> collection, T insert) {
 		if (isNull(insert))
 			return new ArrayList<>(collection);
 
-		return new ArrayList<>(insertInto(collection, insert));
+		List<T> list = new ArrayList<>(collection);
+		Collections.addAll(list, insert);
+		return list;
 	}
 
 	public static <T, T2 extends T> Collection<T> insertIntoNewList(Collection<T> collection, Collection<T2> insert) {
 		if (isNull(insert))
 			return new ArrayList<>(collection);
 
-		return new ArrayList<>(insertInto(collection, insert));
+		List<T> list = new ArrayList<>(collection);
+		list.addAll(insert);
+		return list;
 	}
 }

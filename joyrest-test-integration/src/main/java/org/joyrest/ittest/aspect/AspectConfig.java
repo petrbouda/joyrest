@@ -1,6 +1,6 @@
 package org.joyrest.ittest.aspect;
 
-import org.joyrest.aspect.Interceptor;
+import org.joyrest.interceptor.Interceptor;
 import org.joyrest.routing.ControllerConfiguration;
 import org.springframework.context.annotation.Bean;
 

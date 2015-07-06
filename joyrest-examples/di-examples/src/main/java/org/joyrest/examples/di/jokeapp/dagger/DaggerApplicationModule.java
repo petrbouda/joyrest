@@ -1,20 +1,19 @@
 package org.joyrest.examples.di.jokeapp.dagger;
 
-import org.joyrest.aspect.Interceptor;
-import org.joyrest.dagger.DaggerConfigurer;
 import org.joyrest.examples.di.jokeapp.JokeController;
 import org.joyrest.examples.di.jokeapp.JokeService;
 import org.joyrest.examples.di.jokeapp.JokeServiceImpl;
 import org.joyrest.exception.configuration.ExceptionConfiguration;
-import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.gson.GsonReaderWriter;
+import org.joyrest.interceptor.Interceptor;
+import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 
 import dagger.Module;
 import dagger.Provides;
 
-@Module(injects = { DaggerConfigurer.DaggerConfigurationProvider.class, JokeController.class }, library = true)
+@Module
 public class DaggerApplicationModule {
 
 	private final GsonReaderWriter jsonReaderWriter = new GsonReaderWriter();
