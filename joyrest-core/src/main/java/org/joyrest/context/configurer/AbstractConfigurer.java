@@ -15,14 +15,17 @@
  */
 package org.joyrest.context.configurer;
 
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.ApplicationContextImpl;
+import org.joyrest.context.autoconfigurar.AutoConfigurer;
 import org.joyrest.context.initializer.BeanFactory;
 import org.joyrest.context.initializer.InitContext;
+import org.joyrest.context.initializer.Initializer;
 import org.joyrest.context.initializer.MainInitializer;
-
-import java.util.Collection;
-import java.util.function.Function;
 
 /**
  * Abstract class as a helper for initialization an {@link ApplicationContext}.
@@ -40,17 +43,20 @@ public abstract class AbstractConfigurer<T> implements Configurer<T> {
 	 * @return initialized {@code application context}
 	 */
 	protected ApplicationContext initializeContext() {
-		Function<Class<Object>, Collection<Object>> getBeans = this::getBeans;
+		Function<Class<Object>, List<Object>> getBeans = this::getBeans;
 
 		BeanFactory beanFactory = new BeanFactory(getBeans);
 		InitContext context = new InitContext();
+
+		AutoConfigurer.configureInitializers()
+			.forEach(initializer -> initializer.init(context, beanFactory));
 
 		MainInitializer mainInitializer = new MainInitializer();
 		mainInitializer.init(context, beanFactory);
 
 		ApplicationContextImpl applicationContext = new ApplicationContextImpl();
 		applicationContext.setRoutes(context.getRoutes());
-		applicationContext.setExceptionHandlers(context.getExceptionConfigurations());
+		applicationContext.setExceptionHandlers(context.getExceptionHandlers());
 		return applicationContext;
 	}
 

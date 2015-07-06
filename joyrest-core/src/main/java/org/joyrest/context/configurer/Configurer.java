@@ -15,9 +15,10 @@
  */
 package org.joyrest.context.configurer;
 
-import org.joyrest.context.ApplicationContext;
+import java.util.List;
+import java.util.Set;
 
-import java.util.Collection;
+import org.joyrest.context.ApplicationContext;
 
 /**
  * Implementation of this interface is able to configure JoyREST framework for specified dependency injection framework.
@@ -38,15 +39,14 @@ public interface Configurer<T> {
 	 */
 	ApplicationContext initialize(T applicationConfig);
 
-
 	/**
-	 * Method which is used to retrieve a collection of beans from some dependency injection context according to a class of
-	 * retrieved beans.
+	 * Method which is used to retrieve a collection of beans from some dependency injection context according to a class of retrieved
+	 * beans.
 	 *
 	 * @param clazz class that determined which beans will be retrieved
 	 * @param <B> type of the retrieved beans
 	 * @return collection of the retrieved beans according to the given class
 	 */
-	<B> Collection<B> getBeans(Class<B> clazz);
+	<B> List<B> getBeans(Class<B> clazz);
 
 }

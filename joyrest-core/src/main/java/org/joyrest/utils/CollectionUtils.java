@@ -1,11 +1,11 @@
 package org.joyrest.utils;
 
-import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class CollectionUtils {
 
@@ -21,37 +21,19 @@ public class CollectionUtils {
 		return col != null && col.size() == 1;
 	}
 
-	public static <T> Collection<T> insertInto(Collection<T> collection, T element) {
-		if (isNull(element))
-			return collection;
+	public static <T> List<T> concat(List<? extends T> a, List<? extends T> b, List<? extends T> c) {
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+		Objects.requireNonNull(c);
 
-		collection.add(element);
-		return collection;
+		Stream<T> first = Stream.concat(a.stream(), b.stream());
+		return Stream.concat(first, c.stream()).collect(toList());
 	}
 
-	public static <T1, T2 extends T1> Collection<T1> insertInto(Collection<T1> collection, Collection<T2> insert) {
-		if (isNull(insert))
-			return collection;
+	public static <T> List<T> concat(List<? extends T> a, List<? extends T> b) {
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
 
-		collection.addAll(insert);
-		return collection;
-	}
-
-	public static <T> Collection<T> insertIntoNewList(Collection<T> collection, T insert) {
-		if (isNull(insert))
-			return new ArrayList<>(collection);
-
-		List<T> list = new ArrayList<>(collection);
-		Collections.addAll(list, insert);
-		return list;
-	}
-
-	public static <T, T2 extends T> Collection<T> insertIntoNewList(Collection<T> collection, Collection<T2> insert) {
-		if (isNull(insert))
-			return new ArrayList<>(collection);
-
-		List<T> list = new ArrayList<>(collection);
-		list.addAll(insert);
-		return list;
+		return Stream.concat(a.stream(), b.stream()).collect(toList());
 	}
 }

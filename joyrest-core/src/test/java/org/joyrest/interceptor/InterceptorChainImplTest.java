@@ -24,9 +24,9 @@ public class InterceptorChainImplTest {
 	@Test
 	public void success_proceed() throws Exception {
 		InternalRoute route = basicRoute();
-		route.aspect(new FirstInterceptor());
-		route.aspect(new SecondInterceptor());
-		route.aspect(new ThirdInterceptor());
+		route.interceptor(new FirstInterceptor());
+		route.interceptor(new SecondInterceptor());
+		route.interceptor(new ThirdInterceptor());
 
 		InternalRequest<Object> request = new RequestStub();
 		InternalResponse<Object> response = new ResponseStub();
@@ -41,7 +41,7 @@ public class InterceptorChainImplTest {
 	@Test
 	public void swallowed_proceed() throws Exception {
 		InternalRoute route = basicRoute();
-		route.aspect(new SwallowInterceptor());
+		route.interceptor(new SwallowInterceptor());
 
 		InternalRequest<Object> request = new RequestStub();
 		InternalResponse<Object> response = new ResponseStub();

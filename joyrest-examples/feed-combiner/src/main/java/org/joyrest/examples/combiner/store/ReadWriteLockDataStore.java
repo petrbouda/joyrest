@@ -32,7 +32,7 @@ public class ReadWriteLockDataStore implements InMemoryDataStore, ObservableData
 	private final Lock readerLock = lock.readLock();
 	private final Lock writerLock = lock.writeLock();
 	private HashMap<String, Serializable> datastore = new HashMap<>();
-	// observers which get information about saving and removing entities
+	// observers which getAll information about saving and removing entities
 	private Set<DataStoreObserver> observers = new CopyOnWriteArraySet<DataStoreObserver>();
 
 	/**

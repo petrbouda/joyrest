@@ -18,6 +18,7 @@ package org.joyrest.oauth2.configuration;
 import org.joyrest.oauth2.InitializedBeanPostProcessor;
 import org.joyrest.oauth2.context.AuthorizationContext;
 import org.joyrest.oauth2.filter.PrincipalPersistenceFilter;
+import org.joyrest.oauth2.initializer.AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -25,6 +26,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
@@ -34,11 +36,7 @@ import org.springframework.security.web.session.SessionManagementFilter;
 
 public class JoyAuthorizationServerSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private final ClientDetailsServiceConfigurer clientDetailsConfigurer =
-		new ClientDetailsServiceConfigurer(new ClientDetailsServiceBuilder());
-
-	private final AuthorizationServerSecurityConfigurer securityConfigurer =
-		new AuthorizationServerSecurityConfigurer();
+	private final AuthorizationServerSecurityConfigurer securityConfigurer = new AuthorizationServerSecurityConfigurer();
 
 	private final AuthorizationServerEndpointsConfigurer endpointsConfigurer;
 
@@ -46,18 +44,18 @@ public class JoyAuthorizationServerSecurityConfiguration extends WebSecurityConf
 
 	private final ClientDetailsService clientDetailsService;
 
-	public JoyAuthorizationServerSecurityConfiguration(AuthorizationServerConfigurerAdapter serverConfigurer,
+	private final UserDetailsService userDetailsService;
+
+	public JoyAuthorizationServerSecurityConfiguration(AuthorizationServerConfiguration configuration,
 		JoyAuthorizationServerEndpointsConfiguration endpoints) {
 		try {
 			setApplicationContext(AuthorizationContext.getInstance());
 			setObjectPostProcessor(new InitializedBeanPostProcessor());
 
-			serverConfigurer.configure(securityConfigurer);
-			serverConfigurer.configure(clientDetailsConfigurer);
-
 			this.endpoints = endpoints;
 			this.endpointsConfigurer = endpoints.getEndpointsConfigurer();
-			this.clientDetailsService = clientDetailsConfigurer.and().build();
+			this.clientDetailsService = configuration.getClientDetailsService();
+			this.userDetailsService = configuration.getUserDetailsService();
 
 			endpointsConfigurer.setClientDetailsService(clientDetailsService);
 			endpointsConfigurer.authenticationManager(authenticationManager());
@@ -68,7 +66,7 @@ public class JoyAuthorizationServerSecurityConfiguration extends WebSecurityConf
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		//	auth.inMemoryAuthentication();
+		auth.userDetailsService(userDetailsService);
 		AuthorizationContext.getInstance().putBean(AuthenticationManagerBuilder.class, auth);
 	}
 

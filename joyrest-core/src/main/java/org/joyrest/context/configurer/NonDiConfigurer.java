@@ -16,13 +16,13 @@
 package org.joyrest.context.configurer;
 
 import static java.util.Objects.requireNonNull;
-import java.util.Collection;
+
+import java.util.List;
 
 import org.joyrest.context.ApplicationContext;
 
 /**
- * Configurer which is mainly used for an implementation of a new configurer that is not based on any Dependency Injection
- * Framework.
+ * Configurer which is mainly used for an implementation of a new configurer that is not based on any Dependency Injection Framework.
  *
  * {@inheritDoc}
  */
@@ -32,8 +32,8 @@ public class NonDiConfigurer extends AbstractConfigurer<ApplicationConfiguration
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <B> Collection<B> getBeans(Class<B> clazz) {
-		return (Collection<B>) context.get(clazz);
+	public <B> List<B> getBeans(Class<B> clazz) {
+		return (List<B>) context.get(clazz);
 	}
 
 	@Override

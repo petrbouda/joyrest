@@ -15,6 +15,7 @@
  */
 package org.joyrest.routing;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
@@ -98,7 +99,7 @@ public class InternalRoute implements Route {
 	 */
 	@Override
 	public Route consumes(MediaType... consumes) {
-		this.consumes = Arrays.asList(consumes);
+		this.consumes = asList(consumes);
 		return this;
 	}
 
@@ -111,7 +112,7 @@ public class InternalRoute implements Route {
 	 */
 	@Override
 	public Route produces(MediaType... produces) {
-		this.produces = Arrays.asList(produces);
+		this.produces = asList(produces);
 		return this;
 	}
 
@@ -167,9 +168,9 @@ public class InternalRoute implements Route {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Route aspect(Interceptor... interceptor) {
+	public Route interceptor(Interceptor... interceptor) {
 		requireNonNull(interceptor, "An added interceptor cannot be null.");
-		interceptors.addAll(Arrays.asList(interceptor));
+		interceptors.addAll(asList(interceptor));
 		return this;
 	}
 

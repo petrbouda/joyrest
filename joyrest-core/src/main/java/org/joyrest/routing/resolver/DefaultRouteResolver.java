@@ -19,6 +19,7 @@ import static org.joyrest.exception.type.RestException.*;
 import static org.joyrest.model.http.HeaderName.ACCEPT;
 import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
+import java.util.List;
 import java.util.Set;
 
 import org.joyrest.context.ApplicationContext;
@@ -37,7 +38,7 @@ public class DefaultRouteResolver implements RouteResolver {
 	private final PathComparator pathComparator = new PathComparator();
 
 	/* All routes configures in an application */
-	private final Set<InternalRoute> routes;
+	private final List<InternalRoute> routes;
 
 	public DefaultRouteResolver(ApplicationContext context) {
 		this.routes = context.getRoutes();

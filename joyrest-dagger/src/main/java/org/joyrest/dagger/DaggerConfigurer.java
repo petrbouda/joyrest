@@ -8,6 +8,8 @@ import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.dagger.template.ConfigurationTemplate;
 import org.joyrest.logging.JoyLogger;
 
+import static java.util.Collections.emptyList;
+
 public class DaggerConfigurer extends AbstractConfigurer<Object> {
 
 	private static final JoyLogger log = new JoyLogger(DaggerConfigurer.class);
@@ -36,13 +38,13 @@ public class DaggerConfigurer extends AbstractConfigurer<Object> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <B> Collection<B> getBeans(Class<B> clazz) {
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public <B> List<B> getBeans(Class<B> clazz) {
 		try {
-			return (Collection<B>) beanFactory.get(clazz).get();
+			return (List<B>) new ArrayList((Set) beanFactory.get(clazz).get());
 		} catch (NullPointerException npe) {
 			log.warn(() -> "There is no registered bean of the type " + clazz.getSimpleName());
-			return Collections.emptySet();
+			return emptyList();
 		}
 	}
 }

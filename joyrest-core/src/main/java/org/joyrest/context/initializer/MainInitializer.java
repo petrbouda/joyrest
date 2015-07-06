@@ -15,22 +15,6 @@
  */
 package org.joyrest.context.initializer;
 
-import org.joyrest.interceptor.Interceptor;
-import org.joyrest.context.autoconfigurar.AutoConfigurer;
-import org.joyrest.exception.configuration.ExceptionConfiguration;
-import org.joyrest.exception.configuration.TypedExceptionConfiguration;
-import org.joyrest.exception.handler.InternalExceptionHandler;
-import org.joyrest.exception.type.RestException;
-import org.joyrest.routing.ControllerConfiguration;
-import org.joyrest.transform.AbstractReaderWriter;
-import org.joyrest.transform.Reader;
-import org.joyrest.transform.Writer;
-import org.joyrest.transform.interceptor.SerializationInterceptor;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
@@ -41,38 +25,62 @@ import static org.joyrest.context.helper.ConfigurationHelper.sort;
 import static org.joyrest.context.helper.LoggingHelper.logExceptionHandler;
 import static org.joyrest.context.helper.LoggingHelper.logRoute;
 import static org.joyrest.context.helper.PopulateHelper.*;
-import static org.joyrest.utils.CollectionUtils.insertIntoNewList;
+import static org.joyrest.utils.CollectionUtils.concat;
+
+import java.util.List;
+import java.util.Map;
+
+import org.joyrest.context.autoconfigurar.AutoConfigurer;
+import org.joyrest.exception.configuration.ExceptionConfiguration;
+import org.joyrest.exception.configuration.TypedExceptionConfiguration;
+import org.joyrest.exception.handler.InternalExceptionHandler;
+import org.joyrest.exception.type.RestException;
+import org.joyrest.interceptor.Interceptor;
+import org.joyrest.routing.ControllerConfiguration;
+import org.joyrest.transform.AbstractReaderWriter;
+import org.joyrest.transform.Reader;
+import org.joyrest.transform.Writer;
+import org.joyrest.transform.interceptor.SerializationInterceptor;
 
 public class MainInitializer implements Initializer {
 
-	protected final List<Interceptor> PREDEFINED_ASPECTS = singletonList(new SerializationInterceptor());
+	protected final List<Interceptor> PREDEFINED_INTERCEPTORS = singletonList(new SerializationInterceptor());
+
+	protected final List<ExceptionConfiguration> PREDEFINED_HANDLERS = singletonList(new InternalExceptionConfiguration());
 
 	@Override
 	public void init(InitContext context, BeanFactory beanFactory) {
 		List<AbstractReaderWriter> readersWriters = AutoConfigurer.configureReadersWriters();
-		Map<Boolean, List<Reader>> readers = createTransformers(insertIntoNewList(beanFactory.get(Reader.class), readersWriters));
-		Map<Boolean, List<Writer>> writers = createTransformers(insertIntoNewList(beanFactory.get(Writer.class), readersWriters));
-		Collection<Interceptor> interceptors = sort(insertIntoNewList(beanFactory.get(Interceptor.class), PREDEFINED_ASPECTS));
+
+		Map<Boolean, List<Reader>> readers = createTransformers(
+				concat(beanFactory.getAll(Reader.class), context.getReaders(), readersWriters));
+		Map<Boolean, List<Writer>> writers = createTransformers(
+				concat(beanFactory.getAll(Writer.class), context.getWriters(), readersWriters));
+		List<Interceptor> interceptors = sort(
+				concat(beanFactory.getAll(Interceptor.class), context.getInterceptors(), PREDEFINED_INTERCEPTORS));
+		List<ExceptionConfiguration> handlers =
+				concat(beanFactory.getAll(ExceptionConfiguration.class), context.getExceptionConfigurations(), PREDEFINED_HANDLERS);
+		List<ControllerConfiguration> controllers =
+				concat(beanFactory.getAll(ControllerConfiguration.class), context.getControllerConfigurations());
 
 		orderDuplicationCheck(interceptors);
 
-		Map<Class<? extends Exception>, InternalExceptionHandler> handlers =
-			insertIntoNewList(beanFactory.get(ExceptionConfiguration.class), new InternalExceptionConfiguration()).stream()
-			.peek(ExceptionConfiguration::initialize)
-			.flatMap(config -> config.getExceptionHandlers().stream())
-			.peek(handler -> {
-				populateHandlerWriters(writers, handler, nonNull(handler.getResponseType()));
-				logExceptionHandler(handler);
-			})
-			.collect(toMap(InternalExceptionHandler::getExceptionClass, identity()));
+		Map<Class<? extends Exception>, InternalExceptionHandler> handlerMap =
+				handlers.stream()
+					.peek(ExceptionConfiguration::initialize)
+					.flatMap(config -> config.getExceptionHandlers().stream())
+					.peek(handler -> {
+						populateHandlerWriters(writers, handler, nonNull(handler.getResponseType()));
+						logExceptionHandler(handler);
+					})
+					.collect(toMap(InternalExceptionHandler::getExceptionClass, identity()));
+		context.setExceptionHandlers(handlerMap);
 
-		context.setExceptionHandlers(handlers);
-
-		beanFactory.get(ControllerConfiguration.class).stream()
+		controllers.stream()
 			.peek(ControllerConfiguration::initialize)
 			.flatMap(config -> config.getRoutes().stream())
 			.peek(route -> {
-				route.aspect(interceptors.toArray(new Interceptor[interceptors.size()]));
+				route.interceptor(interceptors.toArray(new Interceptor[interceptors.size()]));
 				populateRouteReaders(readers, route);
 				populateRouteWriters(writers, route);
 				logRoute(route);

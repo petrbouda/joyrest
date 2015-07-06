@@ -15,6 +15,7 @@
  */
 package org.joyrest.context;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public interface ApplicationContext {
 	 *
 	 * @return collection of {@link InternalRoute} configured into an application
 	 */
-	Set<InternalRoute> getRoutes();
+	List<InternalRoute> getRoutes();
 
 	/**
 	 * Returns all instances of exception handlers that were added into an application

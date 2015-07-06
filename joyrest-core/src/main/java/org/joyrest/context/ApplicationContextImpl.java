@@ -15,14 +15,12 @@
  */
 package org.joyrest.context;
 
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.joyrest.exception.handler.ExceptionHandler;
 import org.joyrest.exception.handler.InternalExceptionHandler;
@@ -35,7 +33,7 @@ import org.joyrest.routing.Route;
 public class ApplicationContextImpl implements ApplicationContext {
 
 	/* Set of all configured items in this application */
-	private Set<InternalRoute> routes = new HashSet<>();
+	private List<InternalRoute> routes = new ArrayList<>();
 
 	private Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers = new HashMap<>();
 
@@ -43,8 +41,8 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<InternalRoute> getRoutes() {
-		return unmodifiableSet(routes);
+	public List<InternalRoute> getRoutes() {
+		return unmodifiableList(routes);
 	}
 
 	/**
@@ -52,7 +50,7 @@ public class ApplicationContextImpl implements ApplicationContext {
 	 *
 	 * @param routes set of routes defined in application
 	 */
-	public void setRoutes(Set<InternalRoute> routes) {
+	public void setRoutes(List<InternalRoute> routes) {
 		requireNonNull(routes);
 		this.routes = routes;
 	}

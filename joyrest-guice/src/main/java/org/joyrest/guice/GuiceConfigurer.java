@@ -1,14 +1,18 @@
 package org.joyrest.guice;
 
-import com.google.inject.*;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.context.configurer.AbstractConfigurer;
 import org.joyrest.logging.JoyLogger;
 
-import java.util.*;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
+import com.google.inject.*;
 
 public class GuiceConfigurer extends AbstractConfigurer<Module> {
 
@@ -25,15 +29,14 @@ public class GuiceConfigurer extends AbstractConfigurer<Module> {
 	}
 
 	@Override
-	public <B> Collection<B> getBeans(Class<B> clazz) {
-		return provide(new TypeLiteral<Set<B>>() {
-		});
+	public <B> List<B> getBeans(Class<B> clazz) {
+		return provide(new TypeLiteral<Set<B>>() {});
 	}
 
 	/*
 	 * dagger provides an unmodifiable nullable set and this method convert this to modifiable list with non-null elements
 	 */
-	private <E> Collection<E> provide(TypeLiteral<Set<E>> type) {
+	private <E> List<E> provide(TypeLiteral<Set<E>> type) {
 		List<E> collection;
 		try {
 			Set<E> retrieved = injector.getInstance(Key.get(type));

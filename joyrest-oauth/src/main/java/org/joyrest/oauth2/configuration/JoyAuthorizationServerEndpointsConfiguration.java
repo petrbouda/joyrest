@@ -16,7 +16,7 @@
 package org.joyrest.oauth2.configuration;
 
 import org.joyrest.oauth2.endpoint.TokenEndpoint;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurer;
+import org.joyrest.oauth2.initializer.AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
@@ -29,12 +29,10 @@ public class JoyAuthorizationServerEndpointsConfiguration {
 
 	private final AuthorizationServerEndpointsConfigurer endpoints = new AuthorizationServerEndpointsConfigurer();
 
-	public JoyAuthorizationServerEndpointsConfiguration(AuthorizationServerConfigurer configurer) {
-		try {
-			configurer.configure(endpoints);
-		} catch (Exception e) {
-			throw new IllegalStateException("Cannot configure endpoints", e);
-		}
+	public JoyAuthorizationServerEndpointsConfiguration(AuthorizationServerConfiguration configuration) {
+		endpoints.setClientDetailsService(configuration.getClientDetailsService());
+		endpoints.tokenStore(configuration.getTokenStore());
+
 	}
 
 	public TokenEndpoint tokenEndpoint() {

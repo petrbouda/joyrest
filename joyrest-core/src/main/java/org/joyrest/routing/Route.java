@@ -33,7 +33,7 @@ public interface Route {
 	 * @param interceptor added interceptor
 	 * @return current route
 	 */
-	Route aspect(Interceptor... interceptor);
+	Route interceptor(Interceptor... interceptor);
 
 	/**
 	 * Adds a consumed Media-Type to the route definition
