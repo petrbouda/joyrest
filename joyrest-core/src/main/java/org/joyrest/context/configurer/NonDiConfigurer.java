@@ -15,33 +15,34 @@
  */
 package org.joyrest.context.configurer;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.List;
 
 import org.joyrest.context.ApplicationContext;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * Configurer which is mainly used for an implementation of a new configurer that is not based on any Dependency Injection Framework.
+ * Configurer which is mainly used for an implementation of a new configurer that is not based on any Dependency Injection
+ * Framework.
  *
  * {@inheritDoc}
  */
 public class NonDiConfigurer extends AbstractConfigurer<ApplicationConfiguration> {
 
-	private ApplicationConfiguration context;
+    private ApplicationConfiguration context;
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <B> List<B> getBeans(Class<B> clazz) {
-		return (List<B>) context.get(clazz);
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public <B> List<B> getBeans(Class<B> clazz) {
+        return (List<B>) context.get(clazz);
+    }
 
-	@Override
-	public ApplicationContext initialize(ApplicationConfiguration context) {
-		requireNonNull(context, "ApplicationContext cannot be null.");
+    @Override
+    public ApplicationContext initialize(ApplicationConfiguration context) {
+        requireNonNull(context, "ApplicationContext cannot be null.");
 
-		this.context = context;
-		return initializeContext();
-	}
+        this.context = context;
+        return initializeContext();
+    }
 
 }

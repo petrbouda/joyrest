@@ -15,18 +15,12 @@
  */
 package org.joyrest.routing;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.Objects.isNull;
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import static org.joyrest.model.http.MediaType.*;
-import static org.joyrest.utils.PathUtils.createPathParts;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.joyrest.interceptor.Interceptor;
 import org.joyrest.logging.JoyLogger;
@@ -39,6 +33,17 @@ import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
+import static org.joyrest.model.http.MediaType.WILDCARD;
+import static org.joyrest.utils.PathUtils.createPathParts;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Container for all information about one route {@link InternalRoute}
@@ -47,207 +52,199 @@ import org.joyrest.transform.Writer;
  */
 public class InternalRoute implements Route {
 
-	private final static JoyLogger logger = new JoyLogger(InternalRoute.class);
+    private final static JoyLogger logger = new JoyLogger(InternalRoute.class);
 
-	private final static String SLASH = "/";
+    private final static String SLASH = "/";
 
-	private final HttpMethod httpMethod;
+    private final HttpMethod httpMethod;
 
-	/* List of the all path's parts which contains this route */
-	private final List<RoutePart<?>> routeParts;
+    /* List of the all path's parts which contains this route */
+    private final List<RoutePart<?>> routeParts;
 
-	/* Map of the all path params which contains this route */
-	private final Map<String, RoutePart<?>> pathParams = new HashMap<>();
+    /* Map of the all path params which contains this route */
+    private final Map<String, RoutePart<?>> pathParams = new HashMap<>();
 
-	/* All Readers and Writers added to the application dedicated for this route */
-	private Map<MediaType, Reader> readers = new HashMap<>();
-	private Map<MediaType, Writer> writers = new HashMap<>();
+    /* All Readers and Writers added to the application dedicated for this route */
+    private Map<MediaType, Reader> readers = new HashMap<>();
+    private Map<MediaType, Writer> writers = new HashMap<>();
 
-	/* It is not FINAL because of adding a controller path */
-	private String path;
+    /* It is not FINAL because of adding a controller path */
+    private String path;
 
-	/* Flag that indicates having a resource path in the list of the RouteParts */
-	private boolean hasControllerPath = false;
+    /* Flag that indicates having a resource path in the list of the RouteParts */
+    private boolean hasControllerPath = false;
 
-	/* Must match with ContentType header in the client's model */
-	private List<MediaType> consumes = singletonList(WILDCARD);
+    /* Must match with ContentType header in the client's model */
+    private List<MediaType> consumes = singletonList(WILDCARD);
 
-	/* Final MediaType of the Response is determined by the Accept header in the client's model */
-	private List<MediaType> produces = singletonList(WILDCARD);
+    /* Final MediaType of the Response is determined by the Accept header in the client's model */
+    private List<MediaType> produces = singletonList(WILDCARD);
 
-	/* Collection of interceptors which will be applied with execution of this route */
-	private List<Interceptor> interceptors = new ArrayList<>();
+    /* Collection of interceptors which will be applied with execution of this route */
+    private List<Interceptor> interceptors = new ArrayList<>();
 
-	@SuppressWarnings("rawtypes")
-	private RouteAction action;
+    @SuppressWarnings("rawtypes")
+    private RouteAction action;
 
-	private Type<?> requestType;
-	private Type<?> responseType;
+    private Type<?> requestType;
+    private Type<?> responseType;
 
-	public InternalRoute(String path, HttpMethod httpMethod,
-			RouteAction action, Type<?> requestClazz, Type<?> responseClazz) {
-		this.path = path;
-		this.httpMethod = httpMethod;
-		this.action = action;
-		this.requestType = requestClazz;
-		this.responseType = responseClazz;
-		this.routeParts = createRouteParts(path);
-	}
+    public InternalRoute(String path, HttpMethod httpMethod,
+                         RouteAction action, Type<?> requestClazz, Type<?> responseClazz) {
+        this.path = path;
+        this.httpMethod = httpMethod;
+        this.action = action;
+        this.requestType = requestClazz;
+        this.responseType = responseClazz;
+        this.routeParts = createRouteParts(path);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Route consumes(MediaType... consumes) {
-		this.consumes = asList(consumes);
-		return this;
-	}
+    @Override
+    public Route consumes(MediaType... consumes) {
+        this.consumes = asList(consumes);
+        return this;
+    }
 
-	public List<MediaType> getConsumes() {
-		return unmodifiableList(consumes);
-	}
+    public List<MediaType> getConsumes() {
+        return unmodifiableList(consumes);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Route produces(MediaType... produces) {
-		this.produces = asList(produces);
-		return this;
-	}
+    @Override
+    public Route produces(MediaType... produces) {
+        this.produces = asList(produces);
+        return this;
+    }
 
-	public List<MediaType> getProduces() {
-		return unmodifiableList(produces);
-	}
+    public List<MediaType> getProduces() {
+        return unmodifiableList(produces);
+    }
 
-	private List<RoutePart<?>> createRouteParts(String path) {
-		return createPathParts(path).stream()
-			.map(new ParamParser(path))
-			.peek(part -> {
-				// Save path params to the map
-				if(part.getType() == RoutePart.Type.PARAM)
-					pathParams.put(part.getValue(), part);
-			})
-			.collect(toList());
-	}
+    private List<RoutePart<?>> createRouteParts(String path) {
+        return createPathParts(path).stream()
+            .map(new ParamParser(path))
+            .peek(part -> {
+                // Save path params to the map
+                if (part.getType() == RoutePart.Type.PARAM) {
+                    pathParams.put(part.getValue(), part);
+                }
+            })
+            .collect(toList());
+    }
 
-	public List<RoutePart<?>> getRouteParts() {
-		return isNull(routeParts) ? new ArrayList<>() : unmodifiableList(routeParts);
-	}
+    public List<RoutePart<?>> getRouteParts() {
+        return isNull(routeParts) ? new ArrayList<>() : unmodifiableList(routeParts);
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public Map<String, RoutePart<?>> getPathParams() {
-		return unmodifiableMap(pathParams);
-	}
+    public Map<String, RoutePart<?>> getPathParams() {
+        return unmodifiableMap(pathParams);
+    }
 
-	public HttpMethod getHttpMethod() {
-		return httpMethod;
-	}
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
 
-	public void addControllerPath(List<RoutePart<String>> parts) {
-		if (!hasControllerPath) {
-			routeParts.addAll(0, parts);
-			path = addControllerPathToPath(parts);
-			hasControllerPath = true;
-		} else {
-			logger.warn(() -> "A controller path has been already set.");
-		}
-	}
+    public void addControllerPath(List<RoutePart<String>> parts) {
+        if (!hasControllerPath) {
+            routeParts.addAll(0, parts);
+            path = addControllerPathToPath(parts);
+            hasControllerPath = true;
+        } else {
+            logger.warn(() -> "A controller path has been already set.");
+        }
+    }
 
-	private String addControllerPathToPath(List<RoutePart<String>> parts) {
-		String basePath = parts.stream()
-				.map(RoutePart::getValue)
-				.collect(joining(SLASH, SLASH, ""));
-		return SLASH.contains(path) ? basePath : basePath + path;
-	}
+    private String addControllerPathToPath(List<RoutePart<String>> parts) {
+        String basePath = parts.stream()
+            .map(RoutePart::getValue)
+            .collect(joining(SLASH, SLASH, ""));
+        return SLASH.contains(path) ? basePath : basePath + path;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Route interceptor(Interceptor... interceptor) {
-		requireNonNull(interceptor, "An added interceptor cannot be null.");
-		interceptors.addAll(asList(interceptor));
-		return this;
-	}
+    @Override
+    public Route interceptor(Interceptor... interceptor) {
+        requireNonNull(interceptor, "An added interceptor cannot be null.");
+        interceptors.addAll(asList(interceptor));
+        return this;
+    }
 
-	public Type getRequestType() {
-		return requestType;
-	}
+    public Type getRequestType() {
+        return requestType;
+    }
 
-	public Type<?> getResponseType() {
-		return responseType;
-	}
+    public Type<?> getResponseType() {
+        return responseType;
+    }
 
-	public boolean hasRequestBody() {
-		return Objects.nonNull(requestType);
-	}
+    public boolean hasRequestBody() {
+        return Objects.nonNull(requestType);
+    }
 
-	@SuppressWarnings("unchecked")
-	public InternalResponse<Object> execute(InternalRequest<Object> request, InternalResponse<Object> response) {
-		action.perform(ImmutableRequest.of(request), response);
-		return response;
-	}
+    @SuppressWarnings("unchecked")
+    public InternalResponse<Object> execute(InternalRequest<Object> request, InternalResponse<Object> response) {
+        action.perform(ImmutableRequest.of(request), response);
+        return response;
+    }
 
-	public List<Interceptor> getInterceptors() {
-		return unmodifiableList(interceptors);
-	}
+    public List<Interceptor> getInterceptors() {
+        return unmodifiableList(interceptors);
+    }
 
-	public Optional<Reader> getReader(MediaType mediaType) {
-		return Optional.ofNullable(readers.get(mediaType));
-	}
+    public Optional<Reader> getReader(MediaType mediaType) {
+        return Optional.ofNullable(readers.get(mediaType));
+    }
 
-	public Map<MediaType, Reader> getReaders() {
-		return readers;
-	}
+    public Map<MediaType, Reader> getReaders() {
+        return readers;
+    }
 
-	public Map<MediaType, Writer> getWriters() {
-		return writers;
-	}
+    public void setReaders(Map<MediaType, Reader> readers) {
+        requireNonNull(readers);
+        this.readers = readers;
+    }
 
-	public void setReaders(Map<MediaType, Reader> readers) {
-		requireNonNull(readers);
-		this.readers = readers;
-	}
+    public Map<MediaType, Writer> getWriters() {
+        return writers;
+    }
 
-	public void addReader(Reader reader) {
-		requireNonNull(reader);
-		this.readers.put(reader.getMediaType(), reader);
-	}
+    public void setWriters(Map<MediaType, Writer> writers) {
+        requireNonNull(writers);
+        this.writers = writers;
+    }
 
-	public Optional<Writer> getWriter(MediaType mediaType) {
-		return Optional.ofNullable(writers.get(mediaType));
-	}
+    public void addReader(Reader reader) {
+        requireNonNull(reader);
+        this.readers.put(reader.getMediaType(), reader);
+    }
 
-	public void setWriters(Map<MediaType, Writer> writers) {
-		requireNonNull(writers);
-		this.writers = writers;
-	}
+    public Optional<Writer> getWriter(MediaType mediaType) {
+        return Optional.ofNullable(writers.get(mediaType));
+    }
 
-	public void addWriter(Writer writer) {
-		requireNonNull(writer);
-		this.writers.put(writer.getMediaType(), writer);
-	}
+    public void addWriter(Writer writer) {
+        requireNonNull(writer);
+        this.writers.put(writer.getMediaType(), writer);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(httpMethod, path);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(httpMethod, path);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		}
-		@SuppressWarnings("unchecked")
-		final InternalRoute other = (InternalRoute) obj;
-		return Objects.equals(this.httpMethod, other.httpMethod)
-				&& Objects.equals(this.path, other.path);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        @SuppressWarnings("unchecked")
+        final InternalRoute other = (InternalRoute) obj;
+        return Objects.equals(this.httpMethod, other.httpMethod)
+            && Objects.equals(this.path, other.path);
+    }
 }

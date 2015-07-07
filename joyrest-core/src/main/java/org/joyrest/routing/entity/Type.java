@@ -17,17 +17,17 @@ package org.joyrest.routing.entity;
 
 public class Type<T> {
 
-	private final Class<?> type;
+    private final Class<?> type;
 
-	public Type(Class<?> type) {
-		this.type = type;
-	}
+    public Type(Class<?> type) {
+        this.type = type;
+    }
 
-	public Class<?> getType() {
-		return type;
-	}
+    public Class<?> getType() {
+        return type;
+    }
 
-	public String toString() {
-		return type.getSimpleName();
-	}
+    public String toString() {
+        return type.getSimpleName();
+    }
 }

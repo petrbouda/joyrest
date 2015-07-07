@@ -26,12 +26,12 @@ package org.joyrest.routing;
  */
 public interface RouteAction<REQ, RESP> {
 
-	/**
-	 * Performs this route action
-	 *
-	 * @param request injected provider into the route action
-	 * @param response injected response into the route action
-	 */
-	void perform(REQ request, RESP response);
+    /**
+     * Performs this route action
+     *
+     * @param request injected provider into the route action
+     * @param response injected response into the route action
+     */
+    void perform(REQ request, RESP response);
 
 }

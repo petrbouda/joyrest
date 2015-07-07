@@ -19,71 +19,56 @@ import org.joyrest.hk2.extension.property.Property;
 
 public class CombinedFeedService implements CrudService<CombinedFeed> {
 
-	@Inject
-	private InMemoryDataStore datastore;
+    @Inject
+    private InMemoryDataStore datastore;
 
-	@Inject
-	private IdGenerator idGenerator;
+    @Inject
+    private IdGenerator idGenerator;
 
-	@Property(ApplicationProperties.DEFAULT_REFRESH_PERIOD)
-	private Long defaultRefreshPeriod;
+    @Property(ApplicationProperties.DEFAULT_REFRESH_PERIOD)
+    private Long defaultRefreshPeriod;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CombinedFeed save(CombinedFeed insertedFeed) {
-		String entityId = idGenerator.getId();
+    @Override
+    public CombinedFeed save(CombinedFeed insertedFeed) {
+        String entityId = idGenerator.getId();
 
-		CombinedFeedBuilder feedBuilder = CombinedFeedBuilder.of(insertedFeed).id(entityId).feedEntries(null);
-		if (insertedFeed.getRefreshPeriod() == 0) {
-			feedBuilder.refreshPeriod(defaultRefreshPeriod);
-		}
+        CombinedFeedBuilder feedBuilder = CombinedFeedBuilder.of(insertedFeed).id(entityId).feedEntries(null);
+        if (insertedFeed.getRefreshPeriod() == 0) {
+            feedBuilder.refreshPeriod(defaultRefreshPeriod);
+        }
 
-		CombinedFeed combinedFeed = feedBuilder.build();
-		datastore.put(entityId, combinedFeed);
-		return combinedFeed;
-	}
+        CombinedFeed combinedFeed = feedBuilder.build();
+        datastore.put(entityId, combinedFeed);
+        return combinedFeed;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Optional<Serializable> delete(String feedId) {
-		return Optional.ofNullable(datastore.put(feedId, null));
-	}
+    @Override
+    public Optional<Serializable> delete(String feedId) {
+        return Optional.ofNullable(datastore.put(feedId, null));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CombinedFeed update(CombinedFeed feed) {
-		throw new UnsupportedOperationException("This operation is not implemented yet.");
-	}
+    @Override
+    public CombinedFeed update(CombinedFeed feed) {
+        throw new UnsupportedOperationException("This operation is not implemented yet.");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Optional<CombinedFeed> get(String feedId) {
-		return Optional.ofNullable(datastore.get(feedId, CombinedFeed.class));
-	}
+    @Override
+    public Optional<CombinedFeed> get(String feedId) {
+        return Optional.ofNullable(datastore.get(feedId, CombinedFeed.class));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<CombinedFeed> getAll() {
-		// TODO ugly, for purposes of CRUD controller
-		if (datastore instanceof ReadWriteLockDataStore) {
-			ReadWriteLockDataStore rwDatastore = (ReadWriteLockDataStore) datastore;
-			Collection<Serializable> entities = rwDatastore.getAll();
-			return entities.parallelStream()
-				.filter(entity -> entity instanceof CombinedFeed)
-				.map(CombinedFeed.class::cast)
-				.collect(Collectors.toList());
-		}
+    @Override
+    public List<CombinedFeed> getAll() {
+        // TODO ugly, for purposes of CRUD controller
+        if (datastore instanceof ReadWriteLockDataStore) {
+            ReadWriteLockDataStore rwDatastore = (ReadWriteLockDataStore) datastore;
+            Collection<Serializable> entities = rwDatastore.getAll();
+            return entities.parallelStream()
+                .filter(entity -> entity instanceof CombinedFeed)
+                .map(CombinedFeed.class::cast)
+                .collect(Collectors.toList());
+        }
 
-		return new ArrayList<>();
-	}
+        return new ArrayList<>();
+    }
 }

@@ -15,33 +15,33 @@
  */
 package org.joyrest.context.initializer;
 
-import static org.joyrest.utils.CollectionUtils.isEmpty;
-
 import java.util.List;
 import java.util.function.Function;
 
 import org.joyrest.exception.type.InvalidConfigurationException;
+import static org.joyrest.utils.CollectionUtils.isEmpty;
 
 @SuppressWarnings("unchecked")
 public class BeanFactory {
 
-	private final Function<Class<Object>, List<Object>> beanFactory;
+    private final Function<Class<Object>, List<Object>> beanFactory;
 
-	public BeanFactory(Function<Class<Object>, List<Object>> beanFactory) {
-		this.beanFactory = beanFactory;
-	}
+    public BeanFactory(Function<Class<Object>, List<Object>> beanFactory) {
+        this.beanFactory = beanFactory;
+    }
 
-	public <B> List<B> getAll(Class<B> clazz) {
-		return (List<B>) beanFactory.apply((Class<Object>) clazz);
-	}
+    public <B> List<B> getAll(Class<B> clazz) {
+        return (List<B>) beanFactory.apply((Class<Object>) clazz);
+    }
 
-	public <B> B get(Class<B> clazz) {
-		List<Object> objects = beanFactory.apply((Class<Object>) clazz);
-		if (isEmpty(objects))
-			throw new InvalidConfigurationException(String.format("There is no registered bean of the type '%s'",
-					clazz.getSimpleName()));
+    public <B> B get(Class<B> clazz) {
+        List<Object> objects = beanFactory.apply((Class<Object>) clazz);
+        if (isEmpty(objects)) {
+            throw new InvalidConfigurationException(String.format("There is no registered bean of the type '%s'",
+                clazz.getSimpleName()));
+        }
 
-		return (B) objects.get(0);
-	}
+        return (B) objects.get(0);
+    }
 
 }

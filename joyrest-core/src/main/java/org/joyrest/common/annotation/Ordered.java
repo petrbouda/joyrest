@@ -24,11 +24,11 @@ import org.joyrest.interceptor.InterceptorChain;
  **/
 public interface Ordered {
 
-	/**
-	 * Order of the route in a {@link InterceptorChain}.
-	 *
-	 * @return order in a chain
-	 */
-	int getOrder();
+    /**
+     * Order of the route in a {@link InterceptorChain}.
+     *
+     * @return order in a chain
+     */
+    int getOrder();
 
 }

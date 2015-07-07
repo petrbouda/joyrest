@@ -15,16 +15,16 @@
  */
 package org.joyrest.routing.matcher;
 
+import java.util.List;
+
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.routing.InternalRoute;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 import static org.joyrest.model.http.MediaType.WILDCARD;
 import static org.joyrest.utils.CollectionUtils.isSingletonList;
 import static org.joyrest.utils.CollectionUtils.nonEmpty;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Helper utility class for matching an incoming requests against a route configurer
@@ -58,15 +58,17 @@ public final class RequestMatcher {
     }
 
     private static List<MediaType> getAcceptedMediaTypes(List<MediaType> routeProduces, List<MediaType> requestAccepts) {
-        if (isSingletonList(routeProduces) && WILDCARD.equals(routeProduces.get(0)))
+        if (isSingletonList(routeProduces) && WILDCARD.equals(routeProduces.get(0))) {
             return requestAccepts;
+        }
 
-        if (isSingletonList(requestAccepts) && WILDCARD.equals(requestAccepts.get(0)))
+        if (isSingletonList(requestAccepts) && WILDCARD.equals(requestAccepts.get(0))) {
             return routeProduces;
+        }
 
         return requestAccepts.stream()
-                .filter(routeProduces::contains)
-                .collect(toList());
+            .filter(routeProduces::contains)
+            .collect(toList());
     }
 
     /**
@@ -77,8 +79,9 @@ public final class RequestMatcher {
      * @return returns {@code true} if the given route has consumes Media-Type one of a Content-Type from an incoming provider
      */
     public static boolean matchConsumes(InternalRoute route, InternalRequest<?> request) {
-        if (route.getConsumes().contains(WILDCARD))
+        if (route.getConsumes().contains(WILDCARD)) {
             return true;
+        }
 
         return route.getConsumes().contains(request.getContentType());
     }

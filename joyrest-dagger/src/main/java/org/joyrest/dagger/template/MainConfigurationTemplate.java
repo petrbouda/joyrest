@@ -28,25 +28,25 @@ import org.joyrest.transform.Writer;
 
 public interface MainConfigurationTemplate extends ConfigurationTemplate {
 
-	Set<Writer> writers();
+    Set<Writer> writers();
 
-	Set<Reader> readers();
+    Set<Reader> readers();
 
-	Set<Interceptor> interceptors();
+    Set<Interceptor> interceptors();
 
-	Set<ControllerConfiguration> controllerConfigurations();
+    Set<ControllerConfiguration> controllerConfigurations();
 
-	Set<ExceptionConfiguration> exceptionConfigurations();
+    Set<ExceptionConfiguration> exceptionConfigurations();
 
-	@Override
-	default Map<Class<?>, Supplier<Set<?>>> getSuppliers() {
-		HashMap<Class<?>, Supplier<Set<?>>> beanFactory = new HashMap<>();
-		beanFactory.put(Writer.class, this::writers);
-		beanFactory.put(Reader.class, this::readers);
-		beanFactory.put(Interceptor.class, this::interceptors);
-		beanFactory.put(ControllerConfiguration.class, this::controllerConfigurations);
-		beanFactory.put(ExceptionConfiguration.class, this::exceptionConfigurations);
-		return beanFactory;
-	}
+    @Override
+    default Map<Class<?>, Supplier<Set<?>>> getSuppliers() {
+        HashMap<Class<?>, Supplier<Set<?>>> beanFactory = new HashMap<>();
+        beanFactory.put(Writer.class, this::writers);
+        beanFactory.put(Reader.class, this::readers);
+        beanFactory.put(Interceptor.class, this::interceptors);
+        beanFactory.put(ControllerConfiguration.class, this::controllerConfigurations);
+        beanFactory.put(ExceptionConfiguration.class, this::exceptionConfigurations);
+        return beanFactory;
+    }
 
 }

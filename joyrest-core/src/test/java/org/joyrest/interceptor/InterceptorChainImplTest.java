@@ -16,47 +16,47 @@ import org.joyrest.routing.RouteAction;
 import org.joyrest.stubs.RequestStub;
 import org.joyrest.stubs.ResponseStub;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class InterceptorChainImplTest {
-	
-	@Test
-	public void success_proceed() throws Exception {
-		InternalRoute route = basicRoute();
-		route.interceptor(new FirstInterceptor());
-		route.interceptor(new SecondInterceptor());
-		route.interceptor(new ThirdInterceptor());
 
-		InternalRequest<Object> request = new RequestStub();
-		InternalResponse<Object> response = new ResponseStub();
+    private static InternalRoute basicRoute() {
+        RouteAction<Request<?>, Response<?>> action =
+            (req, resp) -> resp.status(HttpStatus.CONFLICT);
 
-		InterceptorChain chain = new InterceptorChainImpl(route);
-		chain.proceed(request, response);
+        return new InternalRoute("", HttpMethod.POST, action, null, null);
+    }
 
-		assertEquals(0, request.getHeaders().size());
-		assertEquals(HttpStatus.CONFLICT, response.getStatus());
-	}
+    @Test
+    public void success_proceed() throws Exception {
+        InternalRoute route = basicRoute();
+        route.interceptor(new FirstInterceptor());
+        route.interceptor(new SecondInterceptor());
+        route.interceptor(new ThirdInterceptor());
 
-	@Test
-	public void swallowed_proceed() throws Exception {
-		InternalRoute route = basicRoute();
-		route.interceptor(new SwallowInterceptor());
+        InternalRequest<Object> request = new RequestStub();
+        InternalResponse<Object> response = new ResponseStub();
 
-		InternalRequest<Object> request = new RequestStub();
-		InternalResponse<Object> response = new ResponseStub();
+        InterceptorChain chain = new InterceptorChainImpl(route);
+        chain.proceed(request, response);
 
-		InterceptorChain chain = new InterceptorChainImpl(route);
-		chain.proceed(request, response);
+        assertEquals(0, request.getHeaders().size());
+        assertEquals(HttpStatus.CONFLICT, response.getStatus());
+    }
 
-		assertEquals("YES", request.getHeaders().get(HeaderName.of("Swallowed")));
-		assertNull(response.getStatus());
-	}
+    @Test
+    public void swallowed_proceed() throws Exception {
+        InternalRoute route = basicRoute();
+        route.interceptor(new SwallowInterceptor());
 
-	private static InternalRoute basicRoute() {
-		RouteAction<Request<?>, Response<?>> action =
-			(req, resp) -> resp.status(HttpStatus.CONFLICT);
+        InternalRequest<Object> request = new RequestStub();
+        InternalResponse<Object> response = new ResponseStub();
 
-		return new InternalRoute("", HttpMethod.POST, action, null, null);
-	}
+        InterceptorChain chain = new InterceptorChainImpl(route);
+        chain.proceed(request, response);
+
+        assertEquals("YES", request.getHeaders().get(HeaderName.of("Swallowed")));
+        assertNull(response.getStatus());
+    }
 }

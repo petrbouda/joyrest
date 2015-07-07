@@ -27,20 +27,20 @@ import org.joyrest.routing.InternalRoute;
  */
 public interface Writer extends Transformer {
 
-	/**
-	 * Writes an entity to the outputstream
-	 *
-	 * @param response an outcoming response
-	 * @param request an incoming provider
-	 */
-	void writeTo(InternalResponse<?> response, InternalRequest<?> request);
+    /**
+     * Writes an entity to the outputstream
+     *
+     * @param response an outcoming response
+     * @param request an incoming provider
+     */
+    void writeTo(InternalResponse<?> response, InternalRequest<?> request);
 
-	/**
-	 * Figures out whether is writer compatible for the given route
-	 *
-	 * @param route compared route
-	 * @return returns {@code true} if the writer is compatible with the given route
-	 */
-	boolean isWriterCompatible(InternalRoute route);
+    /**
+     * Figures out whether is writer compatible for the given route
+     *
+     * @param route compared route
+     * @return returns {@code true} if the writer is compatible with the given route
+     */
+    boolean isWriterCompatible(InternalRoute route);
 
 }

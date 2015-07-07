@@ -15,14 +15,14 @@
  */
 package org.joyrest.oauth2.context;
 
-import org.springframework.security.core.Authentication;
-
 import java.io.Serializable;
+
+import org.springframework.security.core.Authentication;
 
 public interface JoySecurityContext extends Serializable {
 
-	Authentication getAuthentication();
+    Authentication getAuthentication();
 
-	void setAuthentication(Authentication authentication);
+    void setAuthentication(Authentication authentication);
 
 }

@@ -20,29 +20,29 @@ import static java.util.Objects.requireNonNull;
 
 public class JoySecurityContextHolder {
 
-	private static final ThreadLocal<JoySecurityContext> contextHolder = new ThreadLocal<>();
+    private static final ThreadLocal<JoySecurityContext> contextHolder = new ThreadLocal<>();
 
-	public static void clearContext() {
-		contextHolder.remove();
-	}
+    public static void clearContext() {
+        contextHolder.remove();
+    }
 
-	public static JoySecurityContext getContext() {
-		JoySecurityContext ctx = contextHolder.get();
+    public static JoySecurityContext getContext() {
+        JoySecurityContext ctx = contextHolder.get();
 
-		if (isNull(ctx)) {
-			ctx = createEmptyContext();
-			contextHolder.set(ctx);
-		}
+        if (isNull(ctx)) {
+            ctx = createEmptyContext();
+            contextHolder.set(ctx);
+        }
 
-		return ctx;
-	}
+        return ctx;
+    }
 
-	public static void setContext(JoySecurityContext context) {
-		requireNonNull(context, "Security Context cannot be null.");
-		contextHolder.set(context);
-	}
+    public static void setContext(JoySecurityContext context) {
+        requireNonNull(context, "Security Context cannot be null.");
+        contextHolder.set(context);
+    }
 
-	private static JoySecurityContext createEmptyContext() {
-		return new JoySecurityContextImpl();
-	}
+    private static JoySecurityContext createEmptyContext() {
+        return new JoySecurityContextImpl();
+    }
 }

@@ -27,38 +27,38 @@ import org.joyrest.model.http.HttpStatus;
  */
 public interface Response<E> {
 
-	/**
-	 * Adds a new header to a response object
-	 *
-	 * @param name header's name
-	 * @param value header's value
-	 * @return current object
-	 */
-	Response<E> header(HeaderName name, String value);
+    /**
+     * Adds a new header to a response object
+     *
+     * @param name header's name
+     * @param value header's value
+     * @return current object
+     */
+    Response<E> header(HeaderName name, String value);
 
-	/**
-	 * Adds a new header to a response object
-	 *
-	 * @param name header's name
-	 * @param value header's value
-	 * @return current object
-	 */
-	Response<E> header(String name, String value);
+    /**
+     * Adds a new header to a response object
+     *
+     * @param name header's name
+     * @param value header's value
+     * @return current object
+     */
+    Response<E> header(String name, String value);
 
-	/**
-	 * Adds a status value to a response object
-	 *
-	 * @param status http status code
-	 * @return current object
-	 */
-	Response<E> status(HttpStatus status);
+    /**
+     * Adds a status value to a response object
+     *
+     * @param status http status code
+     * @return current object
+     */
+    Response<E> status(HttpStatus status);
 
-	/**
-	 * Adds an entity to a response object
-	 *
-	 * @param entity entity object
-	 * @return current object
-	 */
-	Response<E> entity(E entity);
+    /**
+     * Adds an entity to a response object
+     *
+     * @param entity entity object
+     * @return current object
+     */
+    Response<E> entity(E entity);
 
 }

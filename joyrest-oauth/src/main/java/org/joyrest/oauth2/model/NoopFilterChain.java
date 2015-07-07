@@ -15,21 +15,22 @@
  */
 package org.joyrest.oauth2.model;
 
-import org.joyrest.logging.JoyLogger;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.io.IOException;
+
+import org.joyrest.logging.JoyLogger;
 
 public class NoopFilterChain implements FilterChain {
 
-	private static final JoyLogger log = new JoyLogger(NoopFilterChain.class);
+    private static final JoyLogger log = new JoyLogger(NoopFilterChain.class);
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-		log.debug(() -> "Call '" + NoopFilterChain.class.getSimpleName()
-			+ "' with request=" + request + ", response=" + response);
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+        log.debug(() -> "Call '" + NoopFilterChain.class.getSimpleName()
+            + "' with request=" + request + ", response=" + response);
+    }
 }

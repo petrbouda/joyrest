@@ -17,7 +17,6 @@ package org.joyrest.context;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.joyrest.context.configurer.Configurer;
 import org.joyrest.exception.handler.InternalExceptionHandler;
@@ -33,18 +32,18 @@ import org.joyrest.routing.InternalRoute;
  */
 public interface ApplicationContext {
 
-	/**
-	 * Returns all instances of {@link InternalRoute} that were added into an application
-	 *
-	 * @return collection of {@link InternalRoute} configured into an application
-	 */
-	List<InternalRoute> getRoutes();
+    /**
+     * Returns all instances of {@link InternalRoute} that were added into an application
+     *
+     * @return collection of {@link InternalRoute} configured into an application
+     */
+    List<InternalRoute> getRoutes();
 
-	/**
-	 * Returns all instances of exception handlers that were added into an application
-	 *
-	 * @return map of exception handlers configured into an application
-	 */
-	Map<Class<? extends Exception>, InternalExceptionHandler> getExceptionHandlers();
+    /**
+     * Returns all instances of exception handlers that were added into an application
+     *
+     * @return map of exception handlers configured into an application
+     */
+    Map<Class<? extends Exception>, InternalExceptionHandler> getExceptionHandlers();
 
 }

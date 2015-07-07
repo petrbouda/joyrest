@@ -22,8 +22,8 @@ import java.util.function.Supplier;
 
 public interface ConfigurationTemplate {
 
-	default Map<Class<?>, Supplier<Set<?>>> getSuppliers() {
-		return new HashMap<>();
-	}
+    default Map<Class<?>, Supplier<Set<?>>> getSuppliers() {
+        return new HashMap<>();
+    }
 
 }

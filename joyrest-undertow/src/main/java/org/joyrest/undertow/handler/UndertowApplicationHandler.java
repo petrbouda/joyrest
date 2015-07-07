@@ -11,20 +11,20 @@ import io.undertow.server.HttpServerExchange;
 
 public class UndertowApplicationHandler implements HttpHandler {
 
-	/* Class for processing an incoming model and generated response */
-	private final RequestProcessor processor;
+    /* Class for processing an incoming model and generated response */
+    private final RequestProcessor processor;
 
-	public UndertowApplicationHandler(ApplicationContext applicationContext) {
-		this(new RequestProcessorImpl(applicationContext));
-	}
+    public UndertowApplicationHandler(ApplicationContext applicationContext) {
+        this(new RequestProcessorImpl(applicationContext));
+    }
 
-	public UndertowApplicationHandler(RequestProcessor processor) {
-		this.processor = processor;
-	}
+    public UndertowApplicationHandler(RequestProcessor processor) {
+        this.processor = processor;
+    }
 
-	@Override
-	public void handleRequest(HttpServerExchange exchange) throws Exception {
-		exchange.startBlocking();
-		processor.process(new UndertowRequestWrapper(exchange), new UndertowResponseWrapper(exchange));
-	}
+    @Override
+    public void handleRequest(HttpServerExchange exchange) throws Exception {
+        exchange.startBlocking();
+        processor.process(new UndertowRequestWrapper(exchange), new UndertowResponseWrapper(exchange));
+    }
 }

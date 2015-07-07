@@ -16,38 +16,38 @@ import dagger.Provides;
 @Module
 public class DaggerApplicationModule {
 
-	private final GsonReaderWriter jsonReaderWriter = new GsonReaderWriter();
+    private final GsonReaderWriter jsonReaderWriter = new GsonReaderWriter();
 
-	/* only for dagger-compiler purposes */
-	@Provides(type = Provides.Type.SET)
-	Interceptor nullAspect() {
-		return null;
-	}
+    /* only for dagger-compiler purposes */
+    @Provides(type = Provides.Type.SET)
+    Interceptor nullAspect() {
+        return null;
+    }
 
-	/* only for dagger-compiler purposes */
-	@Provides(type = Provides.Type.SET)
-	ExceptionConfiguration jokeExceptionConfiguration() {
-		return null;
-	}
+    /* only for dagger-compiler purposes */
+    @Provides(type = Provides.Type.SET)
+    ExceptionConfiguration jokeExceptionConfiguration() {
+        return null;
+    }
 
-	@Provides(type = Provides.Type.SET)
-	Writer jsonWriter() {
-		return jsonReaderWriter;
-	}
+    @Provides(type = Provides.Type.SET)
+    Writer jsonWriter() {
+        return jsonReaderWriter;
+    }
 
-	@Provides(type = Provides.Type.SET)
-	Reader jsonReader() {
-		return jsonReaderWriter;
-	}
+    @Provides(type = Provides.Type.SET)
+    Reader jsonReader() {
+        return jsonReaderWriter;
+    }
 
-	@Provides(type = Provides.Type.SET)
-	ControllerConfiguration jokeControllerConfiguration() {
-		return new JokeController();
-	}
+    @Provides(type = Provides.Type.SET)
+    ControllerConfiguration jokeControllerConfiguration() {
+        return new JokeController();
+    }
 
-	@Provides
-	JokeService jokeService() {
-		return new JokeServiceImpl();
-	}
+    @Provides
+    JokeService jokeService() {
+        return new JokeServiceImpl();
+    }
 
 }

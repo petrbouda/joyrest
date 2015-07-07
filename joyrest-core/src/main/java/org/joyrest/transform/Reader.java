@@ -27,22 +27,22 @@ import org.joyrest.routing.entity.Type;
  */
 public interface Reader extends Transformer {
 
-	/**
-	 * Reads the entity from an incoming provider and creates the object from that
-	 *
-	 * @param request an incoming provider
-	 * @param clazz class to which is an entity cast
-	 * @param <T> type of the result object
-	 * @return created object
-	 */
-	<T> T readFrom(InternalRequest<Object> request, Type<T> clazz);
+    /**
+     * Reads the entity from an incoming provider and creates the object from that
+     *
+     * @param request an incoming provider
+     * @param clazz class to which is an entity cast
+     * @param <T> type of the result object
+     * @return created object
+     */
+    <T> T readFrom(InternalRequest<Object> request, Type<T> clazz);
 
-	/**
-	 * Figures out whether is reader compatible for the given route
-	 *
-	 * @param route compared route
-	 * @return returns {@code true} if the reader is compatible with the given route
-	 */
-	boolean isReaderCompatible(InternalRoute route);
+    /**
+     * Figures out whether is reader compatible for the given route
+     *
+     * @param route compared route
+     * @return returns {@code true} if the reader is compatible with the given route
+     */
+    boolean isReaderCompatible(InternalRoute route);
 
 }

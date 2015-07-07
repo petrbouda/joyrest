@@ -15,60 +15,58 @@
  */
 package org.joyrest.processor;
 
-import static org.joyrest.utils.PathUtils.getPathParams;
-
-import org.joyrest.interceptor.InterceptorChain;
-import org.joyrest.interceptor.InterceptorChainImpl;
 import org.joyrest.context.ApplicationContext;
 import org.joyrest.exception.processor.ExceptionProcessor;
 import org.joyrest.exception.processor.ExceptionProcessorImpl;
+import org.joyrest.interceptor.InterceptorChain;
+import org.joyrest.interceptor.InterceptorChainImpl;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.resolver.DefaultRouteResolver;
 import org.joyrest.routing.resolver.RouteResolver;
+import static org.joyrest.utils.PathUtils.getPathParams;
 
 /**
  * {@inheritDoc}
  *
  * <p>
- * The processor gets {@link ApplicationContext} with all information which can be provided by framework regarding configured routes.
+ * The processor gets {@link ApplicationContext} with all information which can be provided by framework regarding configured
+ * routes.
  * </p>
  *
  * @author pbouda
  */
 public class RequestProcessorImpl implements RequestProcessor {
 
-	/* Classes for route resolving - find the correct route according to the incoming model */
-	private final RouteResolver defaultRouteResolver;
+    /* Classes for route resolving - find the correct route according to the incoming model */
+    private final RouteResolver defaultRouteResolver;
 
-	/* Class for a exception processing */
-	private final ExceptionProcessor exceptionProcessor;
+    /* Class for a exception processing */
+    private final ExceptionProcessor exceptionProcessor;
 
-	public RequestProcessorImpl(ApplicationContext context) {
-		this.defaultRouteResolver = new DefaultRouteResolver(context);
-		this.exceptionProcessor = new ExceptionProcessorImpl(context);
-	}
+    public RequestProcessorImpl(ApplicationContext context) {
+        this.defaultRouteResolver = new DefaultRouteResolver(context);
+        this.exceptionProcessor = new ExceptionProcessorImpl(context);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void process(final InternalRequest<Object> request, final InternalResponse<Object> response) throws Exception {
-		try {
-			processRequest(request, response);
-		} catch (Exception ex) {
-			exceptionProcessor.process(ex, request, response);
-		}
-	}
+    @Override
+    public void process(final InternalRequest<Object> request, final InternalResponse<Object> response) throws Exception {
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            exceptionProcessor.process(ex, request, response);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	private InternalResponse<Object> processRequest(final InternalRequest<Object> request, final InternalResponse<Object> response) {
-		final InternalRoute route = defaultRouteResolver.resolveRoute(request);
+    @SuppressWarnings("unchecked")
+    private InternalResponse<Object> processRequest(final InternalRequest<Object> request,
+                                                    final InternalResponse<Object> response) {
+        final InternalRoute route = defaultRouteResolver.resolveRoute(request);
 
-		request.setPathParams(getPathParams(route, request.getPathParts()));
+        request.setPathParams(getPathParams(route, request.getPathParts()));
 
-		InterceptorChain chain = new InterceptorChainImpl(route);
-		return chain.proceed(request, response);
-	}
+        InterceptorChain chain = new InterceptorChainImpl(route);
+        return chain.proceed(request, response);
+    }
 }

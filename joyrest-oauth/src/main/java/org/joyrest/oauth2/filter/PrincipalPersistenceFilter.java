@@ -23,20 +23,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.joyrest.oauth2.context.JoySecurityContextHolder;
-import org.joyrest.oauth2.model.JoyHttpServletRequestWrapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public final class PrincipalPersistenceFilter extends OncePerRequestFilter {
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-		throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+        throws ServletException, IOException {
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		JoySecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        JoySecurityContextHolder.getContext().setAuthentication(authentication);
 
-		filterChain.doFilter(request, response);
-	}
+        filterChain.doFilter(request, response);
+    }
 }

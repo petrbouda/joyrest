@@ -15,9 +15,12 @@
  */
 package org.joyrest.transform;
 
-import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
@@ -27,6 +30,7 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.entity.Type;
+import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
 
 /**
  * Class is able to read and write entity which corresponds to string
@@ -35,65 +39,53 @@ import org.joyrest.routing.entity.Type;
  */
 public class StringReaderWriter extends AbstractReaderWriter {
 
-	private final static JoyLogger logger = JoyLogger.of(StringReaderWriter.class);
+    private final static JoyLogger logger = JoyLogger.of(StringReaderWriter.class);
 
-	private final MediaType supportedMediaType = MediaType.PLAIN_TEXT;
+    private final MediaType supportedMediaType = MediaType.PLAIN_TEXT;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
-		Charset charset = Optional.of(request.getContentType())
-			.flatMap(mediaType -> mediaType.getParam("charset"))
-			.map(Charset::forName)
-			.orElse(DEFAULT_CHARSET);
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
+        Charset charset = Optional.of(request.getContentType())
+            .flatMap(mediaType -> mediaType.getParam("charset"))
+            .map(Charset::forName)
+            .orElse(DEFAULT_CHARSET);
 
-		StringBuilder builder = new BufferedReader(
-				new InputStreamReader(request.getInputStream(), charset)).lines()
-			.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
-		return (T) builder.toString();
-	}
+        StringBuilder builder = new BufferedReader(
+            new InputStreamReader(request.getInputStream(), charset)).lines()
+            .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
+        return (T) builder.toString();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
-		try {
-			if (!response.getEntity().isPresent()) {
-				logger.warn(() -> "No entity in the response to write to an output stream.");
-				return;
-			}
+    @Override
+    public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
+        try {
+            if (!response.getEntity().isPresent()) {
+                logger.warn(() -> "No entity in the response to write to an output stream.");
+                return;
+            }
 
-			Charset charset = request.getHeader(HeaderName.ACCEPT_CHARSET)
-				.map(Charset::forName)
-				.orElse(DEFAULT_CHARSET);
+            Charset charset = request.getHeader(HeaderName.ACCEPT_CHARSET)
+                .map(Charset::forName)
+                .orElse(DEFAULT_CHARSET);
 
-			java.io.Writer writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), charset));
-			writer.append((CharSequence) response.getEntity().get());
-			writer.flush();
-		} catch (UnsupportedEncodingException e) {
-			throw internalServerErrorSupplier("Unsupported Encoding Exception").get();
-		} catch (IOException e) {
-			throw internalServerErrorSupplier("IO Exception occurred during writing from String").get();
-		}
-	}
+            java.io.Writer writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), charset));
+            writer.append((CharSequence) response.getEntity().get());
+            writer.flush();
+        } catch (UnsupportedEncodingException e) {
+            throw internalServerErrorSupplier("Unsupported Encoding Exception").get();
+        } catch (IOException e) {
+            throw internalServerErrorSupplier("IO Exception occurred during writing from String").get();
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isClassCompatible(Class<?> clazz) {
-		return true;
-	}
+    @Override
+    public boolean isClassCompatible(Class<?> clazz) {
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MediaType getMediaType() {
-		return supportedMediaType;
-	}
+    @Override
+    public MediaType getMediaType() {
+        return supportedMediaType;
+    }
 }

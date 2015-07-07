@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ParamsConfig {
 
-	@Bean
-	ControllerConfiguration paramsController() {
-		return new ParamsController();
-	}
+    @Bean
+    ControllerConfiguration paramsController() {
+        return new ParamsController();
+    }
 
 }

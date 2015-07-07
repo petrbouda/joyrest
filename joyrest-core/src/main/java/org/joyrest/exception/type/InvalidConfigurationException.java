@@ -17,14 +17,14 @@ package org.joyrest.exception.type;
 
 public class InvalidConfigurationException extends RuntimeException {
 
-	private static final long serialVersionUID = 3036905776427215166L;
+    private static final long serialVersionUID = 3036905776427215166L;
 
-	public InvalidConfigurationException(String message) {
-		super(message);
-	}
+    public InvalidConfigurationException(String message) {
+        super(message);
+    }
 
-	public InvalidConfigurationException(String message, Exception ex) {
-		super(message, ex);
-	}
+    public InvalidConfigurationException(String message, Exception ex) {
+        super(message, ex);
+    }
 
 }

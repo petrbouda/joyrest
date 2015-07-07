@@ -17,6 +17,6 @@ package org.joyrest.context.initializer;
 
 public interface Initializer {
 
-	void init(InitContext context, BeanFactory beanFactory);
+    void init(InitContext context, BeanFactory beanFactory);
 
 }

@@ -15,8 +15,6 @@
  */
 package org.joyrest.exception.handler;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +26,8 @@ import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Writer;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Internal representation of an exception handler.
  *
@@ -37,54 +37,51 @@ import org.joyrest.transform.Writer;
  */
 public class InternalExceptionHandler implements ExceptionHandler {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private final ExceptionHandlerAction action;
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private final ExceptionHandlerAction action;
 
-	private final Type<?> responseType;
+    private final Type<?> responseType;
 
-	private final Class<? extends Exception> exceptionClass;
+    private final Class<? extends Exception> exceptionClass;
 
-	private Map<MediaType, Writer> writers = new HashMap<>();
+    private Map<MediaType, Writer> writers = new HashMap<>();
 
-	public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz, ExceptionHandlerAction<RESP, T> action) {
-		this(clazz, action, null);
-	}
+    public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz, ExceptionHandlerAction<RESP, T> action) {
+        this(clazz, action, null);
+    }
 
-	public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz,
-			ExceptionHandlerAction<RESP, T> action, Type<RESP> resp) {
-		this.exceptionClass = clazz;
-		this.action = action;
-		this.responseType = resp;
-	}
+    public <T extends Exception, RESP> InternalExceptionHandler(Class<T> clazz,
+                                                                ExceptionHandlerAction<RESP, T> action, Type<RESP> resp) {
+        this.exceptionClass = clazz;
+        this.action = action;
+        this.responseType = resp;
+    }
 
-	public Class<? extends Exception> getExceptionClass() {
-		return exceptionClass;
-	}
+    public Class<? extends Exception> getExceptionClass() {
+        return exceptionClass;
+    }
 
-	public Type<?> getResponseType() {
-		return responseType;
-	}
+    public Type<?> getResponseType() {
+        return responseType;
+    }
 
-	public void addWriter(Writer writer) {
-		requireNonNull(writer);
-		this.writers.put(writer.getMediaType(), writer);
-	}
+    public void addWriter(Writer writer) {
+        requireNonNull(writer);
+        this.writers.put(writer.getMediaType(), writer);
+    }
 
-	public Optional<Writer> getWriter(MediaType mediaType) {
-		return Optional.ofNullable(writers.get(mediaType));
-	}
+    public Optional<Writer> getWriter(MediaType mediaType) {
+        return Optional.ofNullable(writers.get(mediaType));
+    }
 
-	public Map<MediaType, Writer> getWriters() {
-		return writers;
-	}
+    public Map<MediaType, Writer> getWriters() {
+        return writers;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Exception> InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response, T ex) {
-		action.perform(ImmutableRequest.of(request), response, ex);
-		return response;
-	}
+    @SuppressWarnings("unchecked")
+    public <T extends Exception> InternalResponse<?> execute(InternalRequest<?> request, InternalResponse<?> response, T ex) {
+        action.perform(ImmutableRequest.of(request), response, ex);
+        return response;
+    }
 
 }

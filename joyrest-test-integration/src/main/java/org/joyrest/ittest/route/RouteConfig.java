@@ -7,24 +7,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RouteConfig {
 
-	@Bean
-	ControllerConfiguration postRouteController() {
-		return new PostRouteController();
-	}
+    @Bean
+    ControllerConfiguration postRouteController() {
+        return new PostRouteController();
+    }
 
-	@Bean
-	ControllerConfiguration getRouteController() {
-		return new GetRouteController();
-	}
+    @Bean
+    ControllerConfiguration getRouteController() {
+        return new GetRouteController();
+    }
 
-	@Bean
-	ControllerConfiguration putRouteController() {
-		return new PutRouteController();
-	}
+    @Bean
+    ControllerConfiguration putRouteController() {
+        return new PutRouteController();
+    }
 
-	@Bean
-	ControllerConfiguration deleteRouteController() {
-		return new DeleteRouteController();
-	}
+    @Bean
+    ControllerConfiguration deleteRouteController() {
+        return new DeleteRouteController();
+    }
 
 }

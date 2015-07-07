@@ -20,10 +20,10 @@ import java.util.Map;
 
 public interface MultiValueMap<K, V> extends Map<K, List<V>> {
 
-	void addAll(K key, V... value);
+    void addAll(K key, V... value);
 
-	void addAll(K key, List<V> value);
+    void addAll(K key, List<V> value);
 
-	void add(K key, V value);
+    void add(K key, V value);
 
 }

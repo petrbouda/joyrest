@@ -19,11 +19,11 @@ import java.util.function.Function;
 
 public class StringVariable extends AbstractVariable<String> {
 
-	public static final StringVariable INSTANCE = new StringVariable();
-	public static final String NAME = "str";
+    public static final StringVariable INSTANCE = new StringVariable();
+    public static final String NAME = "str";
 
-	public StringVariable() {
-		super(NAME, Function.identity());
-	}
+    public StringVariable() {
+        super(NAME, Function.identity());
+    }
 
 }

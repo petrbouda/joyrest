@@ -30,72 +30,72 @@ import org.joyrest.routing.entity.Type;
 
 public class XmlReaderWriter extends AbstractReaderWriter {
 
-	private static final MediaType SUPPORTED_MEDIA_TYPE = MediaType.XML;
+    private static final MediaType SUPPORTED_MEDIA_TYPE = MediaType.XML;
 
-	private final Marshaller marshaller;
+    private final Marshaller marshaller;
 
-	private final Unmarshaller unmarshaller;
+    private final Unmarshaller unmarshaller;
 
-	public XmlReaderWriter(Class<?>... clazz) {
-		try {
-			JAXBContext context = JAXBContext.newInstance(clazz);
-			this.marshaller = context.createMarshaller();
-			this.unmarshaller = context.createUnmarshaller();
-		} catch (JAXBException e) {
-			throw new InvalidConfigurationException("Unable to create XML Reader and Writer.", e);
-		}
-	}
+    public XmlReaderWriter(Class<?>... clazz) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(clazz);
+            this.marshaller = context.createMarshaller();
+            this.unmarshaller = context.createUnmarshaller();
+        } catch (JAXBException e) {
+            throw new InvalidConfigurationException("Unable to create XML Reader and Writer.", e);
+        }
+    }
 
-	public XmlReaderWriter(String contextPath) {
-		try {
-			JAXBContext context = JAXBContext.newInstance(contextPath);
-			this.marshaller = context.createMarshaller();
-			this.unmarshaller = context.createUnmarshaller();
-		} catch (JAXBException e) {
-			throw new InvalidConfigurationException("Unable to create XML Reader and Writer.", e);
-		}
-	}
+    public XmlReaderWriter(String contextPath) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(contextPath);
+            this.marshaller = context.createMarshaller();
+            this.unmarshaller = context.createUnmarshaller();
+        } catch (JAXBException e) {
+            throw new InvalidConfigurationException("Unable to create XML Reader and Writer.", e);
+        }
+    }
 
-	public XmlReaderWriter(JAXBContext context) {
-		try {
-			this.marshaller = context.createMarshaller();
-			this.unmarshaller = context.createUnmarshaller();
-		} catch (JAXBException e) {
-			throw new InvalidConfigurationException("Unable to create XML Reader and Writer.", e);
-		}
-	}
+    public XmlReaderWriter(JAXBContext context) {
+        try {
+            this.marshaller = context.createMarshaller();
+            this.unmarshaller = context.createUnmarshaller();
+        } catch (JAXBException e) {
+            throw new InvalidConfigurationException("Unable to create XML Reader and Writer.", e);
+        }
+    }
 
-	public XmlReaderWriter(Marshaller marshaller, Unmarshaller unmarshaller) {
-		this.marshaller = marshaller;
-		this.unmarshaller = unmarshaller;
-	}
+    public XmlReaderWriter(Marshaller marshaller, Unmarshaller unmarshaller) {
+        this.marshaller = marshaller;
+        this.unmarshaller = unmarshaller;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
-		try {
-			return (T) unmarshaller.unmarshal(request.getInputStream());
-		} catch (JAXBException e) {
-			throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "Enable to unmarshall incoming body.");
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
+        try {
+            return (T) unmarshaller.unmarshal(request.getInputStream());
+        } catch (JAXBException e) {
+            throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "Enable to unmarshall incoming body.");
+        }
+    }
 
-	@Override
-	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
-		try {
-			marshaller.marshal(response.getEntity().get(), response.getOutputStream());
-		} catch (JAXBException e) {
-			throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "Enable to marshall outgoing body.");
-		}
-	}
+    @Override
+    public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
+        try {
+            marshaller.marshal(response.getEntity().get(), response.getOutputStream());
+        } catch (JAXBException e) {
+            throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, "Enable to marshall outgoing body.");
+        }
+    }
 
-	@Override
-	public MediaType getMediaType() {
-		return SUPPORTED_MEDIA_TYPE;
-	}
+    @Override
+    public MediaType getMediaType() {
+        return SUPPORTED_MEDIA_TYPE;
+    }
 
-	@Override
-	public boolean isClassCompatible(Class<?> clazz) {
-		return true;
-	}
+    @Override
+    public boolean isClassCompatible(Class<?> clazz) {
+        return true;
+    }
 }

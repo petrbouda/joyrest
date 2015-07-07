@@ -28,14 +28,14 @@ import org.joyrest.model.response.Response;
 @FunctionalInterface
 public interface RequestProcessor {
 
-	/**
-	 * Modify {@link InternalResponse response} on the base of the incoming {@link InternalRequest provider}
-	 * as a abstraction of any server data.
-	 *
-	 * @param request incoming model in the form of {@link InternalRequest}
-	 * @param response response in which is stored a processing result
-	 * @throws java.lang.Exception exception occurred during processing in joyrest framework
-	 */
-	void process(InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;
+    /**
+     * Modify {@link InternalResponse response} on the base of the incoming {@link InternalRequest provider}
+     * as a abstraction of any server data.
+     *
+     * @param request incoming model in the form of {@link InternalRequest}
+     * @param response response in which is stored a processing result
+     * @throws java.lang.Exception exception occurred during processing in joyrest framework
+     */
+    void process(InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;
 
 }

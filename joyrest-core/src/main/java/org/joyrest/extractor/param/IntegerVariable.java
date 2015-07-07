@@ -17,11 +17,11 @@ package org.joyrest.extractor.param;
 
 public class IntegerVariable extends AbstractVariable<Integer> {
 
-	public static final IntegerVariable INSTANCE = new IntegerVariable();
-	public static final String NAME = "int";
+    public static final IntegerVariable INSTANCE = new IntegerVariable();
+    public static final String NAME = "int";
 
-	private IntegerVariable() {
-		super(NAME, Integer::parseInt);
-	}
+    private IntegerVariable() {
+        super(NAME, Integer::parseInt);
+    }
 
 }

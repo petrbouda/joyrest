@@ -15,8 +15,6 @@
  */
 package org.joyrest.context.initializer;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,112 +28,114 @@ import org.joyrest.routing.InternalRoute;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 
+import static java.util.Objects.requireNonNull;
+
 public class InitContext {
 
-	private List<Reader> readers = new ArrayList<>();
+    private List<Reader> readers = new ArrayList<>();
 
-	private List<Writer> writers = new ArrayList<>();
+    private List<Writer> writers = new ArrayList<>();
 
-	private List<Interceptor> interceptors = new ArrayList<>();
+    private List<Interceptor> interceptors = new ArrayList<>();
 
-	private List<ControllerConfiguration> controllerConfigurations = new ArrayList<>();
+    private List<ControllerConfiguration> controllerConfigurations = new ArrayList<>();
 
-	private List<ExceptionConfiguration> exceptionConfigurations = new ArrayList<>();
+    private List<ExceptionConfiguration> exceptionConfigurations = new ArrayList<>();
 
-	private Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers = new HashMap<>();
+    private Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers = new HashMap<>();
 
-	private List<InternalRoute> routes = new ArrayList<>();
+    private List<InternalRoute> routes = new ArrayList<>();
 
-	public void setExceptionHandlers(Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers) {
-		this.exceptionHandlers = exceptionHandlers;
-	}
+    public Map<Class<? extends Exception>, InternalExceptionHandler> getExceptionHandlers() {
+        return exceptionHandlers;
+    }
 
-	public Map<Class<? extends Exception>, InternalExceptionHandler> getExceptionHandlers() {
-		return exceptionHandlers;
-	}
+    public void setExceptionHandlers(Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers) {
+        this.exceptionHandlers = exceptionHandlers;
+    }
 
-	public void setRoutes(List<InternalRoute> routes) {
-		this.routes = routes;
-	}
+    public List<InternalRoute> getRoutes() {
+        return routes;
+    }
 
-	public List<InternalRoute> getRoutes() {
-		return routes;
-	}
+    public void setRoutes(List<InternalRoute> routes) {
+        this.routes = routes;
+    }
 
-	public List<Reader> getReaders() {
-		return readers;
-	}
+    public List<Reader> getReaders() {
+        return readers;
+    }
 
-	public void setReaders(List<Reader> readers) {
-		this.readers = readers;
-	}
+    public void setReaders(List<Reader> readers) {
+        this.readers = readers;
+    }
 
-	public List<Writer> getWriters() {
-		return writers;
-	}
+    public List<Writer> getWriters() {
+        return writers;
+    }
 
-	public void setWriters(List<Writer> writers) {
-		this.writers = writers;
-	}
+    public void setWriters(List<Writer> writers) {
+        this.writers = writers;
+    }
 
-	public List<Interceptor> getInterceptors() {
-		return interceptors;
-	}
+    public List<Interceptor> getInterceptors() {
+        return interceptors;
+    }
 
-	public void setInterceptors(List<Interceptor> interceptors) {
-		this.interceptors = interceptors;
-	}
+    public void setInterceptors(List<Interceptor> interceptors) {
+        this.interceptors = interceptors;
+    }
 
-	public List<ControllerConfiguration> getControllerConfigurations() {
-		return controllerConfigurations;
-	}
+    public List<ControllerConfiguration> getControllerConfigurations() {
+        return controllerConfigurations;
+    }
 
-	public void setControllerConfigurations(List<ControllerConfiguration> controllerConfigurations) {
-		this.controllerConfigurations = controllerConfigurations;
-	}
+    public void setControllerConfigurations(List<ControllerConfiguration> controllerConfigurations) {
+        this.controllerConfigurations = controllerConfigurations;
+    }
 
-	public List<ExceptionConfiguration> getExceptionConfigurations() {
-		return exceptionConfigurations;
-	}
+    public List<ExceptionConfiguration> getExceptionConfigurations() {
+        return exceptionConfigurations;
+    }
 
-	public void setExceptionConfigurations(List<ExceptionConfiguration> exceptionConfigurations) {
-		this.exceptionConfigurations = exceptionConfigurations;
-	}
+    public void setExceptionConfigurations(List<ExceptionConfiguration> exceptionConfigurations) {
+        this.exceptionConfigurations = exceptionConfigurations;
+    }
 
-	public void addControllerConfiguration(ControllerConfiguration controllerConfiguration) {
-		requireNonNull(controllerConfiguration, "Created Controller Configuration added to the context references null value.");
-		controllerConfigurations.add(controllerConfiguration);
-	}
+    public void addControllerConfiguration(ControllerConfiguration controllerConfiguration) {
+        requireNonNull(controllerConfiguration, "Created Controller Configuration added to the context references null value.");
+        controllerConfigurations.add(controllerConfiguration);
+    }
 
-	public void addExceptionConfiguration(ExceptionConfiguration exceptionConfiguration) {
-		requireNonNull(exceptionConfiguration, "Created Exception Configuration added to the context references null value.");
-		exceptionConfigurations.add(exceptionConfiguration);
-	}
+    public void addExceptionConfiguration(ExceptionConfiguration exceptionConfiguration) {
+        requireNonNull(exceptionConfiguration, "Created Exception Configuration added to the context references null value.");
+        exceptionConfigurations.add(exceptionConfiguration);
+    }
 
-	public void addReader(Reader reader) {
-		requireNonNull(reader, "Created Reader added to the context references null value.");
-		readers.add(reader);
-	}
+    public void addReader(Reader reader) {
+        requireNonNull(reader, "Created Reader added to the context references null value.");
+        readers.add(reader);
+    }
 
-	public void addWriter(Writer writer) {
-		requireNonNull(writer, "Created Writer added to the context references null value.");
-		writers.add(writer);
-	}
+    public void addWriter(Writer writer) {
+        requireNonNull(writer, "Created Writer added to the context references null value.");
+        writers.add(writer);
+    }
 
-	public void addInterceptor(Interceptor interceptor) {
-		requireNonNull(interceptor, "Created Interceptor added to the context references null value.");
-		interceptors.add(interceptor);
-	}
+    public void addInterceptor(Interceptor interceptor) {
+        requireNonNull(interceptor, "Created Interceptor added to the context references null value.");
+        interceptors.add(interceptor);
+    }
 
-	public void addRoute(InternalRoute route) {
-		requireNonNull(route, "Created Route added to the context references null value.");
-		routes.add(route);
-	}
+    public void addRoute(InternalRoute route) {
+        requireNonNull(route, "Created Route added to the context references null value.");
+        routes.add(route);
+    }
 
-	public void addExceptionHandlers(Class<? extends Exception> clazz, InternalExceptionHandler handler) {
-		requireNonNull(clazz, "Class of the created exception handler cannot be null.");
-		requireNonNull(handler, "Created handler cannot be null.");
-		exceptionHandlers.putIfAbsent(clazz, handler);
-	}
+    public void addExceptionHandlers(Class<? extends Exception> clazz, InternalExceptionHandler handler) {
+        requireNonNull(clazz, "Class of the created exception handler cannot be null.");
+        requireNonNull(handler, "Created handler cannot be null.");
+        exceptionHandlers.putIfAbsent(clazz, handler);
+    }
 
 }

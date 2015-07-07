@@ -27,16 +27,16 @@ import org.joyrest.exception.handler.InternalExceptionHandler;
  */
 public interface ExceptionConfiguration {
 
-	/**
-	 * Method closes and initializes exception handlers registered in this configurer.
-	 */
-	void initialize();
+    /**
+     * Method closes and initializes exception handlers registered in this configurer.
+     */
+    void initialize();
 
-	/**
-	 * Returns all exception handlers registered in this configurer.
-	 *
-	 * @return set of exception handlers
-	 */
-	Set<InternalExceptionHandler> getExceptionHandlers();
+    /**
+     * Returns all exception handlers registered in this configurer.
+     *
+     * @return set of exception handlers
+     */
+    Set<InternalExceptionHandler> getExceptionHandlers();
 
 }

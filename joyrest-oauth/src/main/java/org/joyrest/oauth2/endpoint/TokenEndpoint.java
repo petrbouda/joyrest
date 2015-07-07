@@ -15,19 +15,11 @@
  */
 package org.joyrest.oauth2.endpoint;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static org.joyrest.model.http.MediaType.JSON;
-import static org.joyrest.routing.entity.ResponseType.Resp;
-import static org.springframework.util.StringUtils.hasText;
-import static org.springframework.util.StringUtils.isEmpty;
-
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.joyrest.model.http.MediaType;
 import org.joyrest.model.response.Response;
 import org.joyrest.routing.TypedControllerConfiguration;
 import org.joyrest.utils.MapUtils;
@@ -39,111 +31,139 @@ import org.springframework.security.oauth2.common.exceptions.InvalidGrantExcepti
 import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
 import org.springframework.security.oauth2.common.exceptions.UnsupportedGrantTypeException;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
-import org.springframework.security.oauth2.provider.*;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.OAuth2RequestValidator;
+import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestValidator;
+import static org.joyrest.model.http.MediaType.JSON;
+import static org.joyrest.routing.entity.ResponseType.Resp;
+import static org.springframework.util.StringUtils.hasText;
+import static org.springframework.util.StringUtils.isEmpty;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 public class TokenEndpoint extends TypedControllerConfiguration {
 
-	private ClientDetailsService clientDetailsService;
+    private ClientDetailsService clientDetailsService;
 
-	private TokenGranter tokenGranter;
+    private TokenGranter tokenGranter;
 
-	private OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+    private OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
 
-	private OAuth2RequestValidator requestValidator = new DefaultOAuth2RequestValidator();
+    private OAuth2RequestValidator requestValidator = new DefaultOAuth2RequestValidator();
 
-	@Override
-	protected void configure() {
-		setControllerPath("oauth");
+    private static String getClientId(Principal principal) {
+        Authentication client = (Authentication) principal;
 
-		post("token", (req, resp) -> {
-			Principal principal = req.getPrincipal()
-				.orElseThrow(insufficientAuthenticationExceptionSupplier());
+        String clientId = client.getName();
+        if (client instanceof OAuth2Authentication)
+        // Might be a client and user combined authentication
+        {
+            clientId = ((OAuth2Authentication) client).getOAuth2Request().getClientId();
+        }
 
-			if (!(principal instanceof Authentication))
-				throw insufficientAuthenticationExceptionSupplier().get();
+        return clientId;
+    }
 
-			String clientId = getClientId(principal);
-			ClientDetails authenticatedClient = clientDetailsService.loadClientByClientId(clientId);
+    private static Supplier<InsufficientAuthenticationException> insufficientAuthenticationExceptionSupplier() {
+        return () -> new InsufficientAuthenticationException(
+            "There is no client authentication. Try adding an appropriate authentication filter.");
+    }
 
-			Map<String, String> parameters = MapUtils.createOneDimMap(req.getQueryParams());
-			TokenRequest tokenRequest = requestFactory.createTokenRequest(parameters, authenticatedClient);
-			if (!isEmpty(clientId))
-				// Only validate the client details if a client authenticated during this request.
-				if (!clientId.equals(tokenRequest.getClientId()))
-					throw new InvalidClientException("Given client ID does not match authenticated client");
+    @Override
+    protected void configure() {
+        setControllerPath("oauth");
 
-			if (nonNull(authenticatedClient))
-				requestValidator.validateScope(tokenRequest, authenticatedClient);
+        post("token", (req, resp) -> {
+            Principal principal = req.getPrincipal()
+                .orElseThrow(insufficientAuthenticationExceptionSupplier());
 
-			if (!hasText(tokenRequest.getGrantType()))
-				throw new InvalidRequestException("Missing grant type");
+            if (!(principal instanceof Authentication)) {
+                throw insufficientAuthenticationExceptionSupplier().get();
+            }
 
-			if (tokenRequest.getGrantType().equals("implicit"))
-				throw new InvalidGrantException("Implicit grant type not supported from token endpoint");
+            String clientId = getClientId(principal);
+            ClientDetails authenticatedClient = clientDetailsService.loadClientByClientId(clientId);
 
-			if (isAuthCodeRequest(parameters))
-				// The scope was requested or determined during the authorization step
-				if (!tokenRequest.getScope().isEmpty())
-					tokenRequest.setScope(Collections.emptySet());
+            Map<String, String> parameters = MapUtils.createOneDimMap(req.getQueryParams());
+            TokenRequest tokenRequest = requestFactory.createTokenRequest(parameters, authenticatedClient);
+            if (!isEmpty(clientId))
+            // Only validate the client details if a client authenticated during this request.
+            {
+                if (!clientId.equals(tokenRequest.getClientId())) {
+                    throw new InvalidClientException("Given client ID does not match authenticated client");
+                }
+            }
 
-			if (isRefreshTokenRequest(parameters))
-				// A refresh token has its own default scopes, so we should ignore any added by the factory here.
-				tokenRequest.setScope(OAuth2Utils.parseParameterList(parameters.get(OAuth2Utils.SCOPE)));
+            if (nonNull(authenticatedClient)) {
+                requestValidator.validateScope(tokenRequest, authenticatedClient);
+            }
 
-			OAuth2AccessToken token = tokenGranter.grant(tokenRequest.getGrantType(), tokenRequest);
-			if (isNull(token))
-				throw new UnsupportedGrantTypeException("Unsupported grant type: " + tokenRequest.getGrantType());
+            if (!hasText(tokenRequest.getGrantType())) {
+                throw new InvalidRequestException("Missing grant type");
+            }
 
-			createResponse(resp, token);
+            if (tokenRequest.getGrantType().equals("implicit")) {
+                throw new InvalidGrantException("Implicit grant type not supported from token endpoint");
+            }
 
-		}, Resp(OAuth2AccessToken.class)).produces(JSON);
-	}
+            if (isAuthCodeRequest(parameters))
+            // The scope was requested or determined during the authorization step
+            {
+                if (!tokenRequest.getScope().isEmpty()) {
+                    tokenRequest.setScope(Collections.emptySet());
+                }
+            }
 
-	private static String getClientId(Principal principal) {
-		Authentication client = (Authentication) principal;
+            if (isRefreshTokenRequest(parameters))
+            // A refresh token has its own default scopes, so we should ignore any added by the factory here.
+            {
+                tokenRequest.setScope(OAuth2Utils.parseParameterList(parameters.get(OAuth2Utils.SCOPE)));
+            }
 
-		String clientId = client.getName();
-		if (client instanceof OAuth2Authentication)
-			// Might be a client and user combined authentication
-			clientId = ((OAuth2Authentication) client).getOAuth2Request().getClientId();
+            OAuth2AccessToken token = tokenGranter.grant(tokenRequest.getGrantType(), tokenRequest);
+            if (isNull(token)) {
+                throw new UnsupportedGrantTypeException("Unsupported grant type: " + tokenRequest.getGrantType());
+            }
 
-		return clientId;
-	}
+            createResponse(resp, token);
 
-	private void createResponse(Response<OAuth2AccessToken> resp, OAuth2AccessToken accessToken) {
-		resp.header("Cache-Control", "no-store");
-		resp.header("Pragma", "no-cache");
-		resp.entity(accessToken);
-	}
+        }, Resp(OAuth2AccessToken.class)).produces(JSON);
+    }
 
-	private boolean isRefreshTokenRequest(Map<String, String> parameters) {
-		return "refresh_token".equals(parameters.get("grant_type")) && parameters.get("refresh_token") != null;
-	}
+    private void createResponse(Response<OAuth2AccessToken> resp, OAuth2AccessToken accessToken) {
+        resp.header("Cache-Control", "no-store");
+        resp.header("Pragma", "no-cache");
+        resp.entity(accessToken);
+    }
 
-	private boolean isAuthCodeRequest(Map<String, String> parameters) {
-		return "authorization_code".equals(parameters.get("grant_type")) && parameters.get("code") != null;
-	}
+    private boolean isRefreshTokenRequest(Map<String, String> parameters) {
+        return "refresh_token".equals(parameters.get("grant_type")) && parameters.get("refresh_token") != null;
+    }
 
-	private static Supplier<InsufficientAuthenticationException> insufficientAuthenticationExceptionSupplier() {
-		return () -> new InsufficientAuthenticationException(
-			"There is no client authentication. Try adding an appropriate authentication filter.");
-	}
+    private boolean isAuthCodeRequest(Map<String, String> parameters) {
+        return "authorization_code".equals(parameters.get("grant_type")) && parameters.get("code") != null;
+    }
 
-	public void setClientDetailsService(ClientDetailsService clientDetailsService) {
-		this.clientDetailsService = clientDetailsService;
-	}
+    public void setClientDetailsService(ClientDetailsService clientDetailsService) {
+        this.clientDetailsService = clientDetailsService;
+    }
 
-	public void setTokenGranter(TokenGranter tokenGranter) {
-		this.tokenGranter = tokenGranter;
-	}
+    public void setTokenGranter(TokenGranter tokenGranter) {
+        this.tokenGranter = tokenGranter;
+    }
 
-	public void setRequestFactory(OAuth2RequestFactory requestFactory) {
-		this.requestFactory = requestFactory;
-	}
+    public void setRequestFactory(OAuth2RequestFactory requestFactory) {
+        this.requestFactory = requestFactory;
+    }
 
-	public void setRequestValidator(OAuth2RequestValidator requestValidator) {
-		this.requestValidator = requestValidator;
-	}
+    public void setRequestValidator(OAuth2RequestValidator requestValidator) {
+        this.requestValidator = requestValidator;
+    }
 }

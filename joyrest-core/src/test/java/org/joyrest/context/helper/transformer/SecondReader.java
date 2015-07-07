@@ -7,28 +7,29 @@ import org.joyrest.routing.entity.Type;
 import org.joyrest.transform.Reader;
 
 public class SecondReader implements Reader {
-	@Override
-	public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
-		return null;
-	}
 
-	@Override
-	public boolean isReaderCompatible(InternalRoute route) {
-		return route.getRequestType().getType() == String.class;
-	}
+    @Override
+    public <T> T readFrom(InternalRequest<Object> request, Type<T> clazz) {
+        return null;
+    }
 
-	@Override
-	public MediaType getMediaType() {
-		return MediaType.of("reader/SECOND");
-	}
+    @Override
+    public boolean isReaderCompatible(InternalRoute route) {
+        return route.getRequestType().getType() == String.class;
+    }
 
-	@Override
-	public boolean isClassCompatible(Class<?> clazz) {
-		return false;
-	}
+    @Override
+    public MediaType getMediaType() {
+        return MediaType.of("reader/SECOND");
+    }
 
-	@Override
-	public boolean isGeneral() {
-		return false;
-	}
+    @Override
+    public boolean isClassCompatible(Class<?> clazz) {
+        return false;
+    }
+
+    @Override
+    public boolean isGeneral() {
+        return false;
+    }
 }

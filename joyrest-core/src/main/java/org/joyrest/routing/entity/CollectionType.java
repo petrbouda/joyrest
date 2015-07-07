@@ -21,30 +21,30 @@ import java.util.Set;
 
 public class CollectionType<T> extends Type<T> {
 
-	private final Class<?> param;
+    private final Class<?> param;
 
-	public CollectionType(Class<?> type, Class<?> param) {
-		super(type);
-		this.param = param;
-	}
+    public CollectionType(Class<?> type, Class<?> param) {
+        super(type);
+        this.param = param;
+    }
 
-	public static <P> CollectionType<List<P>> List(Class<P> param) {
-		return new CollectionType<>(List.class, param);
-	}
+    public static <P> CollectionType<List<P>> List(Class<P> param) {
+        return new CollectionType<>(List.class, param);
+    }
 
-	public static <P> CollectionType<Set<P>> Set(Class<P> param) {
-		return new CollectionType<>(Set.class, param);
-	}
+    public static <P> CollectionType<Set<P>> Set(Class<P> param) {
+        return new CollectionType<>(Set.class, param);
+    }
 
-	public static <P> CollectionType<Collection<P>> Col(Class<P> param) {
-		return new CollectionType<>(Collection.class, param);
-	}
+    public static <P> CollectionType<Collection<P>> Col(Class<P> param) {
+        return new CollectionType<>(Collection.class, param);
+    }
 
-	public Class<?> getParam() {
-		return param;
-	}
+    public Class<?> getParam() {
+        return param;
+    }
 
-	public String toString() {
-		return getType().getSimpleName() + "<" + param.getSimpleName() + ">";
-	}
+    public String toString() {
+        return getType().getSimpleName() + "<" + param.getSimpleName() + ">";
+    }
 }

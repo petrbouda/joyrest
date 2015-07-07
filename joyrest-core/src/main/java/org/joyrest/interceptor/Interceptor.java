@@ -28,16 +28,17 @@ import org.joyrest.model.response.InternalResponse;
  **/
 public interface Interceptor extends Ordered {
 
-	/**
-	 * Method that wraps an actual route call. This method can swallow the call or can call method
-	 * {@link InterceptorChain#proceed(InternalRequest, InternalResponse)} which automatically calls another interceptor in chain or
-	 * the final step {@link org.joyrest.routing.RouteAction}.
-	 *
-	 * @param chain keeps all information about all aspects which wraps the route's {@link org.joyrest.routing.RouteAction}
-	 * @param req provider injected into interceptor
-	 * @param resp response injected into interceptor
-	 * @return response after the interceptor and route call
-	 */
-	InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp);
+    /**
+     * Method that wraps an actual route call. This method can swallow the call or can call method
+     * {@link InterceptorChain#proceed(InternalRequest, InternalResponse)} which automatically calls another interceptor in
+     * chain or
+     * the final step {@link org.joyrest.routing.RouteAction}.
+     *
+     * @param chain keeps all information about all aspects which wraps the route's {@link org.joyrest.routing.RouteAction}
+     * @param req provider injected into interceptor
+     * @param resp response injected into interceptor
+     * @return response after the interceptor and route call
+     */
+    InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp);
 
 }

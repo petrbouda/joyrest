@@ -22,23 +22,23 @@ import org.springframework.security.config.annotation.ObjectPostProcessor;
 
 public final class InitializedBeanPostProcessor implements ObjectPostProcessor<Object>, DisposableBean {
 
-	private static final JoyLogger log = new JoyLogger(InitializedBeanPostProcessor.class);
+    private static final JoyLogger log = new JoyLogger(InitializedBeanPostProcessor.class);
 
-	public <T> T postProcess(T object) {
-		if (object instanceof InitializingBean) {
-			InitializingBean initializingBean = (InitializingBean) object;
-			try {
-				initializingBean.afterPropertiesSet();
-			} catch (Exception e) {
-				throw new IllegalStateException("An error occurred during initializing bean: " + object, e);
-			}
-		}
+    public <T> T postProcess(T object) {
+        if (object instanceof InitializingBean) {
+            InitializingBean initializingBean = (InitializingBean) object;
+            try {
+                initializingBean.afterPropertiesSet();
+            } catch (Exception e) {
+                throw new IllegalStateException("An error occurred during initializing bean: " + object, e);
+            }
+        }
 
-		return object;
-	}
+        return object;
+    }
 
-	@Override
-	public void destroy() throws Exception {
+    @Override
+    public void destroy() throws Exception {
 
-	}
+    }
 }

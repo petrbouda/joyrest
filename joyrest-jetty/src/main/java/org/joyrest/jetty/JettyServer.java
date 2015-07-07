@@ -10,29 +10,29 @@ import org.joyrest.jetty.handler.JettyApplicationHandler;
 
 public class JettyServer {
 
-	private static Logger LOG = Logger.getLogger(JettyServer.class.getName());
+    private static Logger LOG = Logger.getLogger(JettyServer.class.getName());
 
-	public static void start(final ApplicationContext applicationContext, final int port, String path) {
-		try {
-			Server server = new Server(port);
-			ContextHandler contextHandler = new ContextHandler();
-			contextHandler.setContextPath(path);
-			contextHandler.setHandler(new JettyApplicationHandler(applicationContext));
+    public static void start(final ApplicationContext applicationContext, final int port, String path) {
+        try {
+            Server server = new Server(port);
+            ContextHandler contextHandler = new ContextHandler();
+            contextHandler.setContextPath(path);
+            contextHandler.setHandler(new JettyApplicationHandler(applicationContext));
 
-			server.setHandler(contextHandler);
-			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-				try {
-					server.stop();
-				} catch (Exception e) {
-					LOG.log(Level.SEVERE, null, e);
-				}
-			}));
-			server.start();
+            server.setHandler(contextHandler);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    server.stop();
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, null, e);
+                }
+            }));
+            server.start();
 
-			LOG.info("Jetty Server started. Stop the application using ^C.");
-			Thread.currentThread().join();
-		} catch (Exception e) {
-			LOG.log(Level.SEVERE, null, e);
-		}
-	}
+            LOG.info("Jetty Server started. Stop the application using ^C.");
+            Thread.currentThread().join();
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, null, e);
+        }
+    }
 }

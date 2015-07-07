@@ -7,24 +7,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Error {
-	
-	private String reason;
-	
-	private String description;
 
-	public String getReason() {
-		return reason;
-	}
+    private String reason;
 
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
+    private String description;
 
-	public String getDescription() {
-		return description;
-	}
+    public String getReason() {
+        return reason;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

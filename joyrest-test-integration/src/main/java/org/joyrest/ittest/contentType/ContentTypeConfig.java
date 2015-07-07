@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ContentTypeConfig {
 
-	@Bean
-	ControllerConfiguration contentTypeController() {
-		return new ContentTypeController();
-	}
+    @Bean
+    ControllerConfiguration contentTypeController() {
+        return new ContentTypeController();
+    }
 
 }

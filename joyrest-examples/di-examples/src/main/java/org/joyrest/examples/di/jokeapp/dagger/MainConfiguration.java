@@ -15,8 +15,9 @@
  */
 package org.joyrest.examples.di.jokeapp.dagger;
 
-import dagger.Component;
 import org.joyrest.dagger.template.MainConfigurationTemplate;
+
+import dagger.Component;
 
 @Component(modules = DaggerApplicationModule.class)
 public interface MainConfiguration extends MainConfigurationTemplate {

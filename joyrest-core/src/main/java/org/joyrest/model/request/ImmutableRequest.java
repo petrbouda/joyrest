@@ -24,127 +24,94 @@ import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.model.http.PathParam;
 
-/**
- * {@inheritDoc}
- */
 public final class ImmutableRequest<E> implements Request<E> {
 
-	private final Request<E> request;
+    private final Request<E> request;
 
-	private ImmutableRequest(Request<E> request) {
-		this.request = request;
-	}
+    private ImmutableRequest(Request<E> request) {
+        this.request = request;
+    }
 
-	/**
-	 * Creates immutable version of original {@link Request} object
-	 *
-	 * @param request the original provider object
-	 * @param <T> type of an entity in provider object
-	 * @return immutable provider
-	 */
-	public static <T> ImmutableRequest<T> of(Request<T> request) {
-		return new ImmutableRequest<>(request);
-	}
+    /**
+     * Creates immutable version of original {@link Request} object
+     *
+     * @param request the original provider object
+     * @param <T> type of an entity in provider object
+     * @return immutable provider
+     */
+    public static <T> ImmutableRequest<T> of(Request<T> request) {
+        return new ImmutableRequest<>(request);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Optional<String> getHeader(HeaderName name) {
-		return request.getHeader(name);
-	}
+    @Override
+    public Optional<String> getHeader(HeaderName name) {
+        return request.getHeader(name);
+    }
 
-	@Override
-	public Optional<String> getHeader(String name) {
-		return request.getHeader(name);
-	}
+    @Override
+    public Optional<String> getHeader(String name) {
+        return request.getHeader(name);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Optional<Principal> getPrincipal() {
-		return request.getPrincipal();
-	}
+    @Override
+    public Optional<Principal> getPrincipal() {
+        return request.getPrincipal();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Map<HeaderName, String> getHeaders() {
-		return request.getHeaders();
-	}
+    @Override
+    public Map<HeaderName, String> getHeaders() {
+        return request.getHeaders();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Map<String, PathParam> getPathParams() {
-		return request.getPathParams();
-	}
+    @Override
+    public Map<String, PathParam> getPathParams() {
+        return request.getPathParams();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getPathParam(String name) {
-		return request.getPathParam(name);
-	}
+    @Override
+    public String getPathParam(String name) {
+        return request.getPathParam(name);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Optional<String[]> getQueryParams(String name) {
-		return request.getQueryParams(name);
-	}
+    @Override
+    public Optional<String[]> getQueryParams(String name) {
+        return request.getQueryParams(name);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Map<String, String[]> getQueryParams() {
-		return request.getQueryParams();
-	}
+    @Override
+    public Map<String, String[]> getQueryParams() {
+        return request.getQueryParams();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public HttpMethod getMethod() {
-		return request.getMethod();
-	}
+    @Override
+    public HttpMethod getMethod() {
+        return request.getMethod();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getPath() {
-		return request.getPath();
-	}
+    @Override
+    public String getPath() {
+        return request.getPath();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public E getEntity() {
-		return request.getEntity();
-	}
+    @Override
+    public E getEntity() {
+        return request.getEntity();
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(request);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(request);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		}
-		final ImmutableRequest<?> other = (ImmutableRequest<?>) obj;
-		return Objects.equals(this.request, other.request);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ImmutableRequest<?> other = (ImmutableRequest<?>) obj;
+        return Objects.equals(this.request, other.request);
+    }
 }

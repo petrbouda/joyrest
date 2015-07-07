@@ -25,18 +25,18 @@ import java.util.Set;
  **/
 public interface ControllerConfiguration {
 
-	/**
-	 * Method contains a configurer of {@link Route} classes and other objects which are in a connection with these routes.
-	 *
-	 * This method is considered as a entry point for configurer of routes.
-	 **/
-	void initialize();
+    /**
+     * Method contains a configurer of {@link Route} classes and other objects which are in a connection with these routes.
+     *
+     * This method is considered as a entry point for configurer of routes.
+     **/
+    void initialize();
 
-	/**
-	 * Provides set routes configured in {@link #initialize()} method of the class implementing this interface.
-	 *
-	 * @return set of routes which are configured in {@link #initialize()} method
-	 **/
-	Set<InternalRoute> getRoutes();
+    /**
+     * Provides set routes configured in {@link #initialize()} method of the class implementing this interface.
+     *
+     * @return set of routes which are configured in {@link #initialize()} method
+     **/
+    Set<InternalRoute> getRoutes();
 
 }

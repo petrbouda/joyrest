@@ -33,85 +33,85 @@ import org.joyrest.model.http.PathParam;
  */
 public interface Request<E> {
 
-	/**
-	 * Returns authenticated user
-	 *
-	 * @return authenticated user
-	 **/
-	Optional<Principal> getPrincipal();
+    /**
+     * Returns authenticated user
+     *
+     * @return authenticated user
+     **/
+    Optional<Principal> getPrincipal();
 
-	/**
-	 * Returns all headers in a provider object
-	 *
-	 * @return all headers
-	 */
-	Map<HeaderName, String> getHeaders();
+    /**
+     * Returns all headers in a provider object
+     *
+     * @return all headers
+     */
+    Map<HeaderName, String> getHeaders();
 
-	/**
-	 * Returns a concrete header according to {@code name} value
-	 *
-	 * @param name header's name
-	 * @return header value in {@link Optional} object
-	 */
-	Optional<String> getHeader(HeaderName name);
+    /**
+     * Returns a concrete header according to {@code name} value
+     *
+     * @param name header's name
+     * @return header value in {@link Optional} object
+     */
+    Optional<String> getHeader(HeaderName name);
 
-	/**
-	 * Returns a concrete header according to {@code name} value
-	 *
-	 * @param name header's name
-	 * @return header value in {@link Optional} object
-	 */
-	Optional<String> getHeader(String name);
+    /**
+     * Returns a concrete header according to {@code name} value
+     *
+     * @param name header's name
+     * @return header value in {@link Optional} object
+     */
+    Optional<String> getHeader(String name);
 
-	/**
-	 * Returns all query params in a provider object
-	 *
-	 * @return all query params
-	 */
-	Map<String, String[]> getQueryParams();
+    /**
+     * Returns all query params in a provider object
+     *
+     * @return all query params
+     */
+    Map<String, String[]> getQueryParams();
 
-	/**
-	 * Returns a concrete query param according to {@code name} value
-	 *
-	 * @param name query's param name
-	 * @return query param value in {@link Optional} object
-	 */
-	Optional<String[]> getQueryParams(String name);
+    /**
+     * Returns a concrete query param according to {@code name} value
+     *
+     * @param name query's param name
+     * @return query param value in {@link Optional} object
+     */
+    Optional<String[]> getQueryParams(String name);
 
-	/**
-	 * Returns all path params in a provider object
-	 *
-	 * @return all path params
-	 */
-	Map<String, PathParam> getPathParams();
+    /**
+     * Returns all path params in a provider object
+     *
+     * @return all path params
+     */
+    Map<String, PathParam> getPathParams();
 
-	/**
-	 * Returns a concrete path param according to {@code name} value
-	 *
-	 * @param name path's param name
-	 * @return path param value
-	 */
-	String getPathParam(String name);
+    /**
+     * Returns a concrete path param according to {@code name} value
+     *
+     * @param name path's param name
+     * @return path param value
+     */
+    String getPathParam(String name);
 
-	/**
-	 * Returns an http method value
-	 *
-	 * @return http method
-	 */
-	HttpMethod getMethod();
+    /**
+     * Returns an http method value
+     *
+     * @return http method
+     */
+    HttpMethod getMethod();
 
-	/**
-	 * Returns a provider's path value
-	 *
-	 * @return path value
-	 */
-	String getPath();
+    /**
+     * Returns a provider's path value
+     *
+     * @return path value
+     */
+    String getPath();
 
-	/**
-	 * Returns an incoming entity
-	 *
-	 * @return entity
-	 */
-	E getEntity();
+    /**
+     * Returns an incoming entity
+     *
+     * @return entity
+     */
+    E getEntity();
 
 }

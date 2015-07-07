@@ -15,9 +15,9 @@
  */
 package org.joyrest.transform;
 
-import org.joyrest.routing.InternalRoute;
-
 import java.nio.charset.Charset;
+
+import org.joyrest.routing.InternalRoute;
 
 /**
  * {@inheritDoc}
@@ -28,48 +28,41 @@ import java.nio.charset.Charset;
  */
 public abstract class AbstractReaderWriter implements Reader, Writer {
 
-	protected final Charset DEFAULT_CHARSET = Charset.defaultCharset();
+    protected final Charset DEFAULT_CHARSET = Charset.defaultCharset();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isReaderCompatible(InternalRoute route) {
-		return route.getConsumes().contains(getMediaType());
-	}
+    @Override
+    public boolean isReaderCompatible(InternalRoute route) {
+        return route.getConsumes().contains(getMediaType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isWriterCompatible(InternalRoute route) {
-		return route.getProduces().contains(getMediaType());
-	}
+    @Override
+    public boolean isWriterCompatible(InternalRoute route) {
+        return route.getProduces().contains(getMediaType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isGeneral() {
-		return true;
-	}
+    @Override
+    public boolean isGeneral() {
+        return true;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof AbstractReaderWriter))
-			return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AbstractReaderWriter)) {
+            return false;
+        }
 
-		AbstractReaderWriter that = (AbstractReaderWriter) o;
+        AbstractReaderWriter that = (AbstractReaderWriter) o;
 
-		return !(getMediaType() != null ?
-				!getMediaType().equals(that.getMediaType()) : that.getMediaType() != null);
-	}
+        return !(getMediaType() != null ?
+                     !getMediaType().equals(that.getMediaType()) : that.getMediaType() != null);
+    }
 
-	@Override
-	public int hashCode() {
-		return getMediaType() != null ? getMediaType().hashCode() : 0;
-	}
+    @Override
+    public int hashCode() {
+        return getMediaType() != null ? getMediaType().hashCode() : 0;
+    }
 
 }

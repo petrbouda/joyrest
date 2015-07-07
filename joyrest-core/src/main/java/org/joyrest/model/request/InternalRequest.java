@@ -15,14 +15,6 @@
  */
 package org.joyrest.model.request;
 
-import static java.lang.String.format;
-import static java.util.Collections.singletonList;
-import static java.util.Objects.isNull;
-import static java.util.Objects.requireNonNull;
-import static org.joyrest.model.http.MediaType.WILDCARD;
-import static org.joyrest.utils.CollectionUtils.nonEmpty;
-import static org.joyrest.utils.PathUtils.createPathParts;
-
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.HashMap;
@@ -34,6 +26,14 @@ import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
+import static org.joyrest.model.http.MediaType.WILDCARD;
+import static org.joyrest.utils.CollectionUtils.nonEmpty;
+import static org.joyrest.utils.PathUtils.createPathParts;
+
+import static java.lang.String.format;
+import static java.util.Collections.singletonList;
+import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  *
@@ -44,133 +44,126 @@ import org.joyrest.model.http.PathParam;
  */
 public abstract class InternalRequest<E> implements Request<E> {
 
-	protected Map<String, PathParam> pathParams;
+    protected Map<String, PathParam> pathParams;
 
-	protected MediaType matchedAccept;
+    protected MediaType matchedAccept;
 
-	protected List<String> pathParts;
+    protected List<String> pathParts;
 
-	protected E entity;
+    protected E entity;
 
-	protected MediaType contentType;
+    protected MediaType contentType;
 
-	protected List<MediaType> accept;
+    protected List<MediaType> accept;
 
-	protected Principal principal;
+    protected Principal principal;
 
-	/**
-	 * Returns remote address of an incoming request
-	 *
-	 * @return incoming request's address
-	 */
-	public abstract String getRemoteAddr();
+    /**
+     * Returns remote address of an incoming request
+     *
+     * @return incoming request's address
+     */
+    public abstract String getRemoteAddr();
 
-	/**
-	 * Returns an inputstream object of an incoming entity
-	 *
-	 * @return incoming entity's input stream
-	 */
-	public abstract InputStream getInputStream();
+    /**
+     * Returns an inputstream object of an incoming entity
+     *
+     * @return incoming entity's input stream
+     */
+    public abstract InputStream getInputStream();
 
-	/**
-	 * Returns a concrete header according to {@code name} value
-	 *
-	 * @param name header's name
-	 * @return header value in {@link Optional} object
-	 */
-	public Optional<String> getHeader(String name) {
-		return getHeader(HeaderName.of(name));
-	}
+    /**
+     * Returns a concrete header according to {@code name} value
+     *
+     * @param name header's name
+     * @return header value in {@link Optional} object
+     */
+    public Optional<String> getHeader(String name) {
+        return getHeader(HeaderName.of(name));
+    }
 
-	/**
-	 * Returns a content-type header value
-	 *
-	 * @return content-type header value in {@link Optional} object
-	 */
-	public MediaType getContentType() {
-		if (isNull(this.contentType))
-			contentType = getHeader(HeaderName.CONTENT_TYPE)
-				.map(MediaType::of)
-				.orElse(WILDCARD);
+    /**
+     * Returns a content-type header value
+     *
+     * @return content-type header value in {@link Optional} object
+     */
+    public MediaType getContentType() {
+        if (isNull(this.contentType)) {
+            contentType = getHeader(HeaderName.CONTENT_TYPE)
+                .map(MediaType::of)
+                .orElse(WILDCARD);
+        }
 
-		return contentType;
-	}
+        return contentType;
+    }
 
-	/**
-	 * Returns a accept header value
-	 *
-	 * @return accept header value in {@link Optional} object
-	 */
-	public List<MediaType> getAccept() {
-		if (isNull(accept)) {
-			List<MediaType> accepts = getHeader(HeaderName.ACCEPT)
-				.map(MediaType::list)
-				.get();
+    /**
+     * Returns a accept header value
+     *
+     * @return accept header value in {@link Optional} object
+     */
+    public List<MediaType> getAccept() {
+        if (isNull(accept)) {
+            List<MediaType> accepts = getHeader(HeaderName.ACCEPT)
+                .map(MediaType::list)
+                .get();
 
-			this.accept = nonEmpty(accepts) ? accepts : singletonList(WILDCARD);
-		}
-		return accept;
-	}
+            this.accept = nonEmpty(accepts) ? accepts : singletonList(WILDCARD);
+        }
+        return accept;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Map<String, PathParam> getPathParams() {
-		return pathParams == null ? new HashMap<>() : pathParams;
-	}
+    @Override
+    public Map<String, PathParam> getPathParams() {
+        return pathParams == null ? new HashMap<>() : pathParams;
+    }
 
-	public void setPathParams(Map<String, PathParam> pathParams) {
-		this.pathParams = pathParams;
-	}
+    public void setPathParams(Map<String, PathParam> pathParams) {
+        this.pathParams = pathParams;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getPathParam(String name) {
-		PathParam pathParam = pathParams.get(name);
-		if (isNull(pathParam))
-			throw new InvalidConfigurationException(
-				format("There is no configured path param under the name '%s'", name));
+    @Override
+    public String getPathParam(String name) {
+        PathParam pathParam = pathParams.get(name);
+        if (isNull(pathParam)) {
+            throw new InvalidConfigurationException(
+                format("There is no configured path param under the name '%s'", name));
+        }
 
-		return pathParam.getValue();
-	}
+        return pathParam.getValue();
+    }
 
-	public List<String> getPathParts() {
-		if (isNull(pathParts)) {
-			requireNonNull(getPath(), "Path cannot be null in case of a PathPart's creating");
-			pathParts = createPathParts(getPath());
-		}
-		return pathParts;
-	}
+    public List<String> getPathParts() {
+        if (isNull(pathParts)) {
+            requireNonNull(getPath(), "Path cannot be null in case of a PathPart's creating");
+            pathParts = createPathParts(getPath());
+        }
+        return pathParts;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public E getEntity() {
-		return entity;
-	}
+    @Override
+    public E getEntity() {
+        return entity;
+    }
 
-	public void setEntity(E entity) {
-		this.entity = entity;
-	}
+    public void setEntity(E entity) {
+        this.entity = entity;
+    }
 
-	public MediaType getMatchedAccept() {
-		return matchedAccept;
-	}
+    public MediaType getMatchedAccept() {
+        return matchedAccept;
+    }
 
-	public void setMatchedAccept(MediaType matchedAccept) {
-		this.matchedAccept = matchedAccept;
-	}
+    public void setMatchedAccept(MediaType matchedAccept) {
+        this.matchedAccept = matchedAccept;
+    }
 
-	@Override
-	public Optional<Principal> getPrincipal() {
-		return Optional.ofNullable(principal);
-	}
+    @Override
+    public Optional<Principal> getPrincipal() {
+        return Optional.ofNullable(principal);
+    }
 
-	public void setPrincipal(Principal principal) {
-		this.principal = principal;
-	}
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
+    }
 }

@@ -27,40 +27,40 @@ import com.jayway.restassured.RestAssured;
 @WebAppConfiguration
 @IntegrationTest("server.port=0")
 @TestExecutionListeners(listeners = {
-		IntegrationTestPropertiesListener.class,
-		DependencyInjectionTestExecutionListener.class })
+    IntegrationTestPropertiesListener.class,
+    DependencyInjectionTestExecutionListener.class})
 public abstract class AbstractRestIntegrationTest {
 
-	public static final ObjectMapper mapper = new ObjectMapper();
-	public static String feedEntity = null;
-	private static JoyLogger log = new JoyLogger(AbstractRestIntegrationTest.class);
+    public static final ObjectMapper mapper = new ObjectMapper();
+    public static String feedEntity = null;
+    private static JoyLogger log = new JoyLogger(AbstractRestIntegrationTest.class);
 
-	static {
-		try {
-			FeedEntry f = new FeedEntry();
-			f.setLink("http://localhost:8080");
-			f.setPublishDate(new Date());
-			f.setTitle("My Feed Title");
-			f.setDescription("My Feed Description");
-			feedEntity = mapper.writeValueAsString(f);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException("An error occurred during parsing the testing FeedEntry entity.");
-		}
-	}
+    static {
+        try {
+            FeedEntry f = new FeedEntry();
+            f.setLink("http://localhost:8080");
+            f.setPublishDate(new Date());
+            f.setTitle("My Feed Title");
+            f.setDescription("My Feed Description");
+            feedEntity = mapper.writeValueAsString(f);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("An error occurred during parsing the testing FeedEntry entity.");
+        }
+    }
 
-	@Rule
-	public TestName name = new TestName();
-	@Value("${local.server.port}")
-	protected int port;
+    @Rule
+    public TestName name = new TestName();
+    @Value("${local.server.port}")
+    protected int port;
 
-	@Before
-	public void setUp() {
-		RestAssured.port = port;
+    @Before
+    public void setUp() {
+        RestAssured.port = port;
 
-		log.debug(() ->
-			"\n ------------------------------------------------------ \n " +
-					"# Run test: " + name.getMethodName() +
-					"\n ------------------------------------------------------");
-	}
+        log.debug(() ->
+            "\n ------------------------------------------------------ \n " +
+                "# Run test: " + name.getMethodName() +
+                "\n ------------------------------------------------------");
+    }
 
 }

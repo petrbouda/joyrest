@@ -15,11 +15,6 @@
  */
 package org.joyrest.exception.processor;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
-import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,76 +25,79 @@ import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.transform.Writer;
+import static org.joyrest.exception.type.RestException.internalServerErrorSupplier;
+import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 
-/**
- * {@inheritDoc}
- */
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 public class ExceptionProcessorImpl implements ExceptionProcessor {
 
-	private final Map<Class<? extends Exception>, InternalExceptionHandler> handlers;
+    private final Map<Class<? extends Exception>, InternalExceptionHandler> handlers;
 
-	public ExceptionProcessorImpl(ApplicationContext config) {
-		this.handlers = config.getExceptionHandlers();
-	}
+    public ExceptionProcessorImpl(ApplicationContext config) {
+        this.handlers = config.getExceptionHandlers();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public <T extends Exception> void process(T ex, InternalRequest<Object> request, InternalResponse<Object> response)
-			throws Exception {
-		Class<? extends Exception> clazz = ex.getClass();
-		InternalExceptionHandler handler = handlers.get(clazz);
+    @Override
+    public <T extends Exception> void process(T ex, InternalRequest<Object> request, InternalResponse<Object> response)
+        throws Exception {
+        Class<? extends Exception> clazz = ex.getClass();
+        InternalExceptionHandler handler = handlers.get(clazz);
 
-		if (isNull(handler))
-			handler = getHandlerFromParent(clazz).orElseThrow(() -> ex);
+        if (isNull(handler)) {
+            handler = getHandlerFromParent(clazz).orElseThrow(() -> ex);
+        }
 
-		handler.execute(request, response, ex);
-		writeEntity(handler, request, response);
-	}
+        handler.execute(request, response, ex);
+        writeEntity(handler, request, response);
+    }
 
-	private void writeEntity(InternalExceptionHandler handler, InternalRequest<?> request, InternalResponse<?> response) {
-		if (response.getEntity().isPresent()) {
-			Writer writer = null;
-			if (nonNull(request.getMatchedAccept())) {
-				Optional<Writer> optWriter = handler.getWriter(request.getMatchedAccept());
-				if (optWriter.isPresent())
-					writer = optWriter.get();
-			}
+    private void writeEntity(InternalExceptionHandler handler, InternalRequest<?> request, InternalResponse<?> response) {
+        if (response.getEntity().isPresent()) {
+            Writer writer = null;
+            if (nonNull(request.getMatchedAccept())) {
+                Optional<Writer> optWriter = handler.getWriter(request.getMatchedAccept());
+                if (optWriter.isPresent()) {
+                    writer = optWriter.get();
+                }
+            }
 
-			if (isNull(writer))
-				writer = chooseWriter(handler, request);
+            if (isNull(writer)) {
+                writer = chooseWriter(handler, request);
+            }
 
-			response.header(CONTENT_TYPE, writer.getMediaType().get());
-			writer.writeTo(response, request);
-		}
-	}
+            response.header(CONTENT_TYPE, writer.getMediaType().get());
+            writer.writeTo(response, request);
+        }
+    }
 
-	private Writer chooseWriter(InternalExceptionHandler handler, InternalRequest<?> request) {
-		List<MediaType> acceptMediaTypes = request.getAccept();
-		return acceptMediaTypes.stream()
-			.filter(accept -> handler.getWriter(accept).isPresent())
-			.findFirst()
-			.flatMap(handler::getWriter)
-			.orElseThrow(internalServerErrorSupplier(
-					String.format("No writer registered for Accept%s and Exception Response-Type[%s]",
-							acceptMediaTypes, handler.getExceptionClass())));
-	}
+    private Writer chooseWriter(InternalExceptionHandler handler, InternalRequest<?> request) {
+        List<MediaType> acceptMediaTypes = request.getAccept();
+        return acceptMediaTypes.stream()
+            .filter(accept -> handler.getWriter(accept).isPresent())
+            .findFirst()
+            .flatMap(handler::getWriter)
+            .orElseThrow(internalServerErrorSupplier(
+                String.format("No writer registered for Accept%s and Exception Response-Type[%s]",
+                    acceptMediaTypes, handler.getExceptionClass())));
+    }
 
-	private Optional<InternalExceptionHandler> getHandlerFromParent(Class<? extends Exception> clazz) {
-		if (clazz == Exception.class) {
-			return Optional.empty();
-		}
+    private Optional<InternalExceptionHandler> getHandlerFromParent(Class<? extends Exception> clazz) {
+        if (clazz == Exception.class) {
+            return Optional.empty();
+        }
 
-		Class<?> superClazz = clazz.getSuperclass();
-		while (superClazz != Exception.class) {
-			InternalExceptionHandler handler = handlers.get(superClazz);
-			if (nonNull(handler))
-				return Optional.of(handler);
+        Class<?> superClazz = clazz.getSuperclass();
+        while (superClazz != Exception.class) {
+            InternalExceptionHandler handler = handlers.get(superClazz);
+            if (nonNull(handler)) {
+                return Optional.of(handler);
+            }
 
-			superClazz = superClazz.getSuperclass();
-		}
+            superClazz = superClazz.getSuperclass();
+        }
 
-		return Optional.empty();
-	}
+        return Optional.empty();
+    }
 }

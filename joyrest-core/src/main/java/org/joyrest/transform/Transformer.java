@@ -28,19 +28,19 @@ import org.joyrest.model.http.MediaType;
  */
 public interface Transformer extends General {
 
-	/**
-	 * Returns compatible media-type with this transformer
-	 *
-	 * @return media-type
-	 */
-	MediaType getMediaType();
+    /**
+     * Returns compatible media-type with this transformer
+     *
+     * @return media-type
+     */
+    MediaType getMediaType();
 
-	/**
-	 * Compares whether the class is suitable for this transformer
-	 *
-	 * @param clazz class to compare
-	 * @return returns {@code true} if the class is compatible with the given transformer
-	 */
-	boolean isClassCompatible(Class<?> clazz);
+    /**
+     * Compares whether the class is suitable for this transformer
+     *
+     * @param clazz class to compare
+     * @return returns {@code true} if the class is compatible with the given transformer
+     */
+    boolean isClassCompatible(Class<?> clazz);
 
 }

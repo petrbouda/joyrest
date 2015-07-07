@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RequestResponseDataConfig {
 
-	@Bean
-	ControllerConfiguration requestResponseController() {
-		return new RequestResponseDataController();
-	}
+    @Bean
+    ControllerConfiguration requestResponseController() {
+        return new RequestResponseDataController();
+    }
 }

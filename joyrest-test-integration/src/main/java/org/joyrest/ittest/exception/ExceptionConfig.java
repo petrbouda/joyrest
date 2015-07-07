@@ -11,24 +11,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ExceptionConfig {
 
-	@Bean
-	Writer unknownWriter() {
-		return new UnknownWriter();
-	}
+    @Bean
+    Writer unknownWriter() {
+        return new UnknownWriter();
+    }
 
-	@Bean
-	Writer contactWriter() {
-		return new ContactXmlWriter();
-	}
+    @Bean
+    Writer contactWriter() {
+        return new ContactXmlWriter();
+    }
 
-	@Bean
-	ControllerConfiguration exceptionController() {
-		return new ExceptionController();
-	}
+    @Bean
+    ControllerConfiguration exceptionController() {
+        return new ExceptionController();
+    }
 
-	@Bean
-	ExceptionConfiguration testExceptionConfiguration() {
-		return new TestExceptionConfiguration();
-	}
+    @Bean
+    ExceptionConfiguration testExceptionConfiguration() {
+        return new TestExceptionConfiguration();
+    }
 
 }

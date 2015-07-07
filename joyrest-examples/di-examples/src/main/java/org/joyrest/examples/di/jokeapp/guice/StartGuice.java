@@ -7,10 +7,10 @@ import org.joyrest.guice.GuiceConfigurer;
 
 public class StartGuice {
 
-	public static void main(String... args) throws Exception {
-		Configurer configurer = new GuiceConfigurer();
-		ApplicationContext applicationContext = configurer.initialize(new GuiceApplicationModule());
-		GrizzlyServer.start(applicationContext, 5000, "/services");
-	}
+    public static void main(String... args) throws Exception {
+        Configurer configurer = new GuiceConfigurer();
+        ApplicationContext applicationContext = configurer.initialize(new GuiceApplicationModule());
+        GrizzlyServer.start(applicationContext, 5000, "/services");
+    }
 
 }

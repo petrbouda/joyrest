@@ -11,30 +11,30 @@ import com.sun.syndication.feed.synd.SyndEntry;
 
 /**
  * Factory which creates a new {@link FeedDownloadTask} for purposes of processing.
- * 
+ *
  * @author Petr Bouda
  **/
 public class FeedTaskFactoryImpl implements FeedTaskFactory {
 
-	private final Function<URL, List<SyndEntry>> feedDownloader;
+    private final Function<URL, List<SyndEntry>> feedDownloader;
 
-	private final InMemoryDataStore datastore;
+    private final InMemoryDataStore datastore;
 
-	public FeedTaskFactoryImpl(InMemoryDataStore datastore) {
-		this(new FeedDownloader(), datastore);
-	}
+    public FeedTaskFactoryImpl(InMemoryDataStore datastore) {
+        this(new FeedDownloader(), datastore);
+    }
 
-	public FeedTaskFactoryImpl(Function<URL, List<SyndEntry>> feedDownloader, InMemoryDataStore datastore) {
-		this.feedDownloader = feedDownloader;
-		this.datastore = datastore;
-	}
+    public FeedTaskFactoryImpl(Function<URL, List<SyndEntry>> feedDownloader, InMemoryDataStore datastore) {
+        this.feedDownloader = feedDownloader;
+        this.datastore = datastore;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public FeedDownloadTask get(CombinedFeed feed) {
-		return new FeedDownloadTask(feedDownloader, datastore, feed.getId());
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public FeedDownloadTask get(CombinedFeed feed) {
+        return new FeedDownloadTask(feedDownloader, datastore, feed.getId());
+    }
 
 }

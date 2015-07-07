@@ -27,12 +27,12 @@ import org.joyrest.routing.InternalRoute;
 @FunctionalInterface
 public interface RouteResolver {
 
-	/**
-	 * Find a route definition which corresponds to the incoming provider
-	 * 
-	 * @param request incoming provider object
-	 * @return route definition that matches all conditions defined in a child class
-	 */
-	InternalRoute resolveRoute(InternalRequest<?> request);
+    /**
+     * Find a route definition which corresponds to the incoming provider
+     *
+     * @param request incoming provider object
+     * @return route definition that matches all conditions defined in a child class
+     */
+    InternalRoute resolveRoute(InternalRequest<?> request);
 
 }

@@ -29,27 +29,27 @@ import java.util.Optional;
  */
 public interface VariableType<T> {
 
-	/**
-	 * Method parses and casts from the string value to a concrete value defined in a child class.
-	 *
-	 * @param value string representation of the concrete value
-	 * @return parses optional value
-	 */
-	Optional<T> valueOf(String value);
+    /**
+     * Method parses and casts from the string value to a concrete value defined in a child class.
+     *
+     * @param value string representation of the concrete value
+     * @return parses optional value
+     */
+    Optional<T> valueOf(String value);
 
-	/**
-	 * Name of the path variable
-	 *
-	 * @return path variable name
-	 */
-	String getName();
+    /**
+     * Name of the path variable
+     *
+     * @return path variable name
+     */
+    String getName();
 
-	/**
-	 * Figures out whether is value assignable to the class which is defined in a child class.
-	 *
-	 * @param value value in string representation
-	 * @return returns {@code true} if the value is assignable to a class defined in a child class
-	 */
-	boolean isAssignableFromString(String value);
+    /**
+     * Figures out whether is value assignable to the class which is defined in a child class.
+     *
+     * @param value value in string representation
+     * @return returns {@code true} if the value is assignable to a class defined in a child class
+     */
+    boolean isAssignableFromString(String value);
 
 }

@@ -7,16 +7,16 @@ import org.joyrest.model.response.InternalResponse;
 
 public class ThirdInterceptor implements Interceptor {
 
-	public static final int ORDER = 100;
+    public static final int ORDER = 100;
 
-	@Override
-	public InternalResponse<Object> around(InterceptorChain chain,
-		InternalRequest<Object> request, InternalResponse<Object> response) {
-		return null;
-	}
+    @Override
+    public InternalResponse<Object> around(InterceptorChain chain,
+                                           InternalRequest<Object> request, InternalResponse<Object> response) {
+        return null;
+    }
 
-	@Override
-	public int getOrder() {
-		return ORDER;
-	}
+    @Override
+    public int getOrder() {
+        return ORDER;
+    }
 }

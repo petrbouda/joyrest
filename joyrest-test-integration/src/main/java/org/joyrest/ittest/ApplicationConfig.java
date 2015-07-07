@@ -12,24 +12,23 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan
-@Import({ EmbeddedServletContainerAutoConfiguration.class,  PropertyPlaceholderAutoConfiguration.class })
+@Import({EmbeddedServletContainerAutoConfiguration.class, PropertyPlaceholderAutoConfiguration.class})
 public class ApplicationConfig {
 
-	// @Bean
-	// JacksonReaderWriter jsonReaderRegistrar() {
-	// return new JacksonReaderWriter();
-	// }
+    // @Bean
+    // JacksonReaderWriter jsonReaderRegistrar() {
+    // return new JacksonReaderWriter();
+    // }
 
-	@Bean
-	CommonExceptionConfiguration commonExceptionConfiguration() {
-		return new CommonExceptionConfiguration();
-	}
+    @Bean
+    CommonExceptionConfiguration commonExceptionConfiguration() {
+        return new CommonExceptionConfiguration();
+    }
 
-
-	@Bean
-	public ServletRegistrationBean servletRegistrationBean() {
-		return new ServletRegistrationBean(
-			new ServletApplicationHandler(new SpringJavaConfigurer(), new ApplicationConfig()), "/*");
-	}
+    @Bean
+    public ServletRegistrationBean servletRegistrationBean() {
+        return new ServletRegistrationBean(
+            new ServletApplicationHandler(new SpringJavaConfigurer(), new ApplicationConfig()), "/*");
+    }
 
 }

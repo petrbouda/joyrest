@@ -17,11 +17,11 @@ package org.joyrest.extractor.param;
 
 public class LongVariable extends AbstractVariable<Long> {
 
-	public static final LongVariable INSTANCE = new LongVariable();
-	public static final String NAME = "long";
+    public static final LongVariable INSTANCE = new LongVariable();
+    public static final String NAME = "long";
 
-	private LongVariable() {
-		super(NAME, Long::parseLong);
-	}
+    private LongVariable() {
+        super(NAME, Long::parseLong);
+    }
 
 }

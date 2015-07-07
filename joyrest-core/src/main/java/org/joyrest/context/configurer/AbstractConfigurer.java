@@ -16,7 +16,6 @@
 package org.joyrest.context.configurer;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 import org.joyrest.context.ApplicationContext;
@@ -24,7 +23,6 @@ import org.joyrest.context.ApplicationContextImpl;
 import org.joyrest.context.autoconfigurar.AutoConfigurer;
 import org.joyrest.context.initializer.BeanFactory;
 import org.joyrest.context.initializer.InitContext;
-import org.joyrest.context.initializer.Initializer;
 import org.joyrest.context.initializer.MainInitializer;
 
 /**
@@ -37,27 +35,27 @@ import org.joyrest.context.initializer.MainInitializer;
  */
 public abstract class AbstractConfigurer<T> implements Configurer<T> {
 
-	/**
-	 * Method causes the initialization of the application context using the methods which returns a collection of beans such as
-	 *
-	 * @return initialized {@code application context}
-	 */
-	protected ApplicationContext initializeContext() {
-		Function<Class<Object>, List<Object>> getBeans = this::getBeans;
+    /**
+     * Method causes the initialization of the application context using the methods which returns a collection of beans such as
+     *
+     * @return initialized {@code application context}
+     */
+    protected ApplicationContext initializeContext() {
+        Function<Class<Object>, List<Object>> getBeans = this::getBeans;
 
-		BeanFactory beanFactory = new BeanFactory(getBeans);
-		InitContext context = new InitContext();
+        BeanFactory beanFactory = new BeanFactory(getBeans);
+        InitContext context = new InitContext();
 
-		AutoConfigurer.configureInitializers()
-			.forEach(initializer -> initializer.init(context, beanFactory));
+        AutoConfigurer.configureInitializers()
+            .forEach(initializer -> initializer.init(context, beanFactory));
 
-		MainInitializer mainInitializer = new MainInitializer();
-		mainInitializer.init(context, beanFactory);
+        MainInitializer mainInitializer = new MainInitializer();
+        mainInitializer.init(context, beanFactory);
 
-		ApplicationContextImpl applicationContext = new ApplicationContextImpl();
-		applicationContext.setRoutes(context.getRoutes());
-		applicationContext.setExceptionHandlers(context.getExceptionHandlers());
-		return applicationContext;
-	}
+        ApplicationContextImpl applicationContext = new ApplicationContextImpl();
+        applicationContext.setRoutes(context.getRoutes());
+        applicationContext.setExceptionHandlers(context.getExceptionHandlers());
+        return applicationContext;
+    }
 
 }

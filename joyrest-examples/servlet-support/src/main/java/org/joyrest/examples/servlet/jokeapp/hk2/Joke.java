@@ -11,42 +11,42 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Joke implements Serializable {
 
-	private static final long serialVersionUID = 8612496546494451823L;
+    private static final long serialVersionUID = 8612496546494451823L;
 
-	private String id = UUID.randomUUID().toString();
-	private String content;
-	private String author;
+    private String id = UUID.randomUUID().toString();
+    private String content;
+    private String author;
 
-	public Joke() {
-	}
+    public Joke() {
+    }
 
-	public Joke(String content, String author) {
-		this.content = content;
-		this.author = author;
-	}
+    public Joke(String content, String author) {
+        this.content = content;
+        this.author = author;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public String getAuthor() {
+        return author;
+    }
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
 }

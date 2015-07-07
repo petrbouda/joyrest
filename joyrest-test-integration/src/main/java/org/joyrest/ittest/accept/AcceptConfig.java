@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AcceptConfig {
 
-	@Bean
-	ControllerConfiguration acceptController() {
-		return new AcceptController();
-	}
+    @Bean
+    ControllerConfiguration acceptController() {
+        return new AcceptController();
+    }
 
 }

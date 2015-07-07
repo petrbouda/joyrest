@@ -1,5 +1,9 @@
 package org.joyrest.context.helper;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.joyrest.context.helper.transformer.FirstReader;
 import org.joyrest.context.helper.transformer.GeneralReader;
 import org.joyrest.context.helper.transformer.SecondReader;
@@ -12,48 +16,43 @@ import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.RouteAction;
 import org.joyrest.transform.Reader;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.Collections.emptyMap;
 import static org.joyrest.context.helper.ConfigurationHelper.createTransformers;
 import static org.joyrest.context.helper.PopulateHelper.populateRouteReaders;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import static java.util.Collections.emptyMap;
 
 public class PopulateHelperTest {
-	
-	@Test
-	public void populate_readers_null() throws Exception {
-		List<Reader> readers = Arrays.asList(new FirstReader(), new SecondReader(), new GeneralReader());
-		Map<Boolean, List<Reader>> transformers = createTransformers(readers);
 
-		InternalRoute route = basicRoute();
+    private static InternalRoute basicRoute() {
+        RouteAction<Request<?>, Response<?>> action =
+            (req, resp) -> resp.status(HttpStatus.CONFLICT);
 
-		populateRouteReaders(transformers, route);
-		assertEquals(emptyMap(), route.getReaders());
-	}
+        return new InternalRoute("", HttpMethod.POST, action, null, null);
+    }
 
-	@Test
-	public void populate_readers() throws Exception {
-		List<Reader> readers = Arrays.asList(new FirstReader(), new SecondReader(), new GeneralReader());
-		Map<Boolean, List<Reader>> transformers = createTransformers(readers);
+    @Test
+    public void populate_readers_null() throws Exception {
+        List<Reader> readers = Arrays.asList(new FirstReader(), new SecondReader(), new GeneralReader());
+        Map<Boolean, List<Reader>> transformers = createTransformers(readers);
 
-		InternalRoute route = basicRoute();
+        InternalRoute route = basicRoute();
 
+        populateRouteReaders(transformers, route);
+        assertEquals(emptyMap(), route.getReaders());
+    }
 
-		populateRouteReaders(transformers, route);
-		assertNull(route.getReaders().get(MediaType.of("reader/FIRST")));
-		assertNull(route.getReaders().get(MediaType.of("reader/SECOND")));
-		assertNull(route.getReaders().get(MediaType.of("reader/GENERAL")));
-	}
+    @Test
+    public void populate_readers() throws Exception {
+        List<Reader> readers = Arrays.asList(new FirstReader(), new SecondReader(), new GeneralReader());
+        Map<Boolean, List<Reader>> transformers = createTransformers(readers);
 
-	private static InternalRoute basicRoute() {
-		RouteAction<Request<?>, Response<?>> action =
-			(req, resp) -> resp.status(HttpStatus.CONFLICT);
+        InternalRoute route = basicRoute();
 
-		return new InternalRoute("", HttpMethod.POST, action, null, null);
-	}
+        populateRouteReaders(transformers, route);
+        assertNull(route.getReaders().get(MediaType.of("reader/FIRST")));
+        assertNull(route.getReaders().get(MediaType.of("reader/SECOND")));
+        assertNull(route.getReaders().get(MediaType.of("reader/GENERAL")));
+    }
 }

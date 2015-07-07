@@ -3,8 +3,8 @@ package org.joyrest.examples.di.jokeapp.spring;
 import org.joyrest.examples.di.jokeapp.JokeController;
 import org.joyrest.examples.di.jokeapp.JokeService;
 import org.joyrest.examples.di.jokeapp.JokeServiceImpl;
-import org.joyrest.routing.ControllerConfiguration;
 import org.joyrest.gson.GsonReaderWriter;
+import org.joyrest.routing.ControllerConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfiguration {
 
     @Bean
-    GsonReaderWriter jsonReaderWriter(){
+    GsonReaderWriter jsonReaderWriter() {
         return new GsonReaderWriter();
     }
 

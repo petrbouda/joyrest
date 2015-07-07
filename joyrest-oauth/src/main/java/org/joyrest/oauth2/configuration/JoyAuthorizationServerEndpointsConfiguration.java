@@ -27,56 +27,57 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 
 public class JoyAuthorizationServerEndpointsConfiguration {
 
-	private final AuthorizationServerEndpointsConfigurer endpoints = new AuthorizationServerEndpointsConfigurer();
+    private final AuthorizationServerEndpointsConfigurer endpoints = new AuthorizationServerEndpointsConfigurer();
 
-	public JoyAuthorizationServerEndpointsConfiguration(AuthorizationServerConfiguration configuration) {
-		endpoints.setClientDetailsService(configuration.getClientDetailsService());
-		endpoints.tokenStore(configuration.getTokenStore());
+    public JoyAuthorizationServerEndpointsConfiguration(AuthorizationServerConfiguration configuration) {
+        endpoints.setClientDetailsService(configuration.getClientDetailsService());
+        endpoints.userDetailsService(configuration.getUserDetailsService());
+        endpoints.tokenStore(configuration.getTokenStore());
+    }
 
-	}
+    public TokenEndpoint tokenEndpoint() {
+        try {
+            TokenEndpoint tokenEndpoint = new TokenEndpoint();
+            tokenEndpoint.setClientDetailsService(clientDetailsService());
+            tokenEndpoint.setTokenGranter(tokenGranter());
+            tokenEndpoint.setRequestFactory(oauth2RequestFactory());
+            tokenEndpoint.setRequestValidator(oauth2RequestValidator());
+            return tokenEndpoint;
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot configure token endpoint.", e);
+        }
+    }
 
-	public TokenEndpoint tokenEndpoint() {
-		try {
-			TokenEndpoint tokenEndpoint = new TokenEndpoint();
-			tokenEndpoint.setClientDetailsService(clientDetailsService());
-			tokenEndpoint.setTokenGranter(tokenGranter());
-			tokenEndpoint.setRequestFactory(oauth2RequestFactory());
-			tokenEndpoint.setRequestValidator(oauth2RequestValidator());
-			return tokenEndpoint;
-		} catch (Exception e) {
-			throw new IllegalStateException("Cannot configure token endpoint.", e);
-		}
-	}
+    public AuthorizationServerEndpointsConfigurer getEndpointsConfigurer() {
+        if (!endpoints.isTokenServicesOverride()) {
+            endpoints.tokenServices(defaultAuthorizationServerTokenServices());
+        }
 
-	public AuthorizationServerEndpointsConfigurer getEndpointsConfigurer() {
-		if (!endpoints.isTokenServicesOverride())
-			endpoints.tokenServices(defaultAuthorizationServerTokenServices());
+        return endpoints;
+    }
 
-		return endpoints;
-	}
+    public AuthorizationServerTokenServices defaultAuthorizationServerTokenServices() {
+        return endpoints.getDefaultAuthorizationServerTokenServices();
+    }
 
-	public AuthorizationServerTokenServices defaultAuthorizationServerTokenServices() {
-		return endpoints.getDefaultAuthorizationServerTokenServices();
-	}
+    public FrameworkEndpointHandlerMapping oauth2EndpointHandlerMapping() throws Exception {
+        return getEndpointsConfigurer().getFrameworkEndpointHandlerMapping();
+    }
 
-	public FrameworkEndpointHandlerMapping oauth2EndpointHandlerMapping() throws Exception {
-		return getEndpointsConfigurer().getFrameworkEndpointHandlerMapping();
-	}
+    private OAuth2RequestFactory oauth2RequestFactory() throws Exception {
+        return getEndpointsConfigurer().getOAuth2RequestFactory();
+    }
 
-	private OAuth2RequestFactory oauth2RequestFactory() throws Exception {
-		return getEndpointsConfigurer().getOAuth2RequestFactory();
-	}
+    private ClientDetailsService clientDetailsService() throws Exception {
+        return getEndpointsConfigurer().getClientDetailsService();
+    }
 
-	private ClientDetailsService clientDetailsService() throws Exception {
-		return getEndpointsConfigurer().getClientDetailsService();
-	}
+    private OAuth2RequestValidator oauth2RequestValidator() throws Exception {
+        return getEndpointsConfigurer().getOAuth2RequestValidator();
+    }
 
-	private OAuth2RequestValidator oauth2RequestValidator() throws Exception {
-		return getEndpointsConfigurer().getOAuth2RequestValidator();
-	}
-
-	private TokenGranter tokenGranter() throws Exception {
-		return getEndpointsConfigurer().getTokenGranter();
-	}
+    private TokenGranter tokenGranter() throws Exception {
+        return getEndpointsConfigurer().getTokenGranter();
+    }
 
 }

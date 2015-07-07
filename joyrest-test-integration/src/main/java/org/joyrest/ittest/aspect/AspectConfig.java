@@ -7,24 +7,24 @@ import org.springframework.context.annotation.Bean;
 //@Configuration
 public class AspectConfig {
 
-	@Bean
-	ControllerConfiguration aspectController() {
-		return new AspectController();
-	}
+    @Bean
+    ControllerConfiguration aspectController() {
+        return new AspectController();
+    }
 
-	@Bean
-	Interceptor firstAspect() {
-		return new FirstInterceptor();
-	}
+    @Bean
+    Interceptor firstAspect() {
+        return new FirstInterceptor();
+    }
 
-	@Bean
-	Interceptor secondAspect() {
-		return new SecondInterceptor();
-	}
+    @Bean
+    Interceptor secondAspect() {
+        return new SecondInterceptor();
+    }
 
-	@Bean
-	Interceptor thirdAspect() {
-		return new ThirdInterceptor();
-	}
+    @Bean
+    Interceptor thirdAspect() {
+        return new ThirdInterceptor();
+    }
 
 }

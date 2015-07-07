@@ -5,10 +5,10 @@ import org.joyrest.routing.TypedControllerConfiguration;
 
 public class AspectController extends TypedControllerConfiguration {
 
-	@Override
-	protected void configure() {
-		setControllerPath("/ittest/interceptor");
+    @Override
+    protected void configure() {
+        setControllerPath("/ittest/interceptor");
 
-		get((req, resp) -> resp.status(HttpStatus.OK));
-	}
+        get((req, resp) -> resp.status(HttpStatus.OK));
+    }
 }

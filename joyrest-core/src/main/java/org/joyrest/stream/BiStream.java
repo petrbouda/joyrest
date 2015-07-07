@@ -34,83 +34,84 @@ import java.util.stream.StreamSupport;
  */
 public class BiStream<T, U> {
 
-	private final Stream<T> stream;
+    private final Stream<T> stream;
 
-	private final U object;
+    private final U object;
 
-	public BiStream(Stream<T> stream, U object) {
-		this.stream = stream;
-		this.object = object;
-	}
+    public BiStream(Stream<T> stream, U object) {
+        this.stream = stream;
+        this.object = object;
+    }
 
-	/**
-	 * Factory method {@link BiStream} class
-	 *
-	 * @param stream stream objects
-	 * @param obj object which is compared to objects from stream
-	 * @param <T> type of the objects in stream
-	 * @param <U> type of the compared object
-	 * @return BiStream object
-	 */
-	public static <T, U> BiStream<T, U> of(Stream<T> stream, U obj) {
-		return new BiStream<>(stream, obj);
-	}
+    /**
+     * Factory method {@link BiStream} class
+     *
+     * @param stream stream objects
+     * @param obj object which is compared to objects from stream
+     * @param <T> type of the objects in stream
+     * @param <U> type of the compared object
+     * @return BiStream object
+     */
+    public static <T, U> BiStream<T, U> of(Stream<T> stream, U obj) {
+        return new BiStream<>(stream, obj);
+    }
 
-	/**
-	 * Compares the objects from stream to the injected object. If the rest of the stream equals null so exception is thrown.
-	 *
-	 * @param biPredicate which compare objects from stream and injected object
-	 * @param e exception which will be thrown if the stream equals {@code null}
-	 * @return BiStream object
-	 */
-	public BiStream<T, U> throwIfNull(BiPredicate<? super T, ? super U> biPredicate, Supplier<? extends RuntimeException> e) {
-		Predicate<T> predicate = (t) -> biPredicate.test(t, object);
-		return nonEmptyStream(stream.filter(predicate), e);
-	}
+    /**
+     * Compares the objects from stream to the injected object. If the rest of the stream equals null so exception is thrown.
+     *
+     * @param biPredicate which compare objects from stream and injected object
+     * @param e exception which will be thrown if the stream equals {@code null}
+     * @return BiStream object
+     */
+    public BiStream<T, U> throwIfNull(BiPredicate<? super T, ? super U> biPredicate, Supplier<? extends RuntimeException> e) {
+        Predicate<T> predicate = (t) -> biPredicate.test(t, object);
+        return nonEmptyStream(stream.filter(predicate), e);
+    }
 
-	public Optional<T> findAny() {
-		return stream.findAny();
-	}
+    public Optional<T> findAny() {
+        return stream.findAny();
+    }
 
-	private BiStream<T, U> nonEmptyStream(Stream<T> stream, Supplier<? extends RuntimeException> e) {
-		Spliterator<T> spliterator = stream.spliterator();
-		Stream<T> localStream = StreamSupport.stream(new BiStreamSpliterator<>(spliterator, e), false);
-		return of(localStream, object);
-	}
+    private BiStream<T, U> nonEmptyStream(Stream<T> stream, Supplier<? extends RuntimeException> e) {
+        Spliterator<T> spliterator = stream.spliterator();
+        Stream<T> localStream = StreamSupport.stream(new BiStreamSpliterator<>(spliterator, e), false);
+        return of(localStream, object);
+    }
 
-	private static final class BiStreamSpliterator<T> implements Spliterator<T> {
+    private static final class BiStreamSpliterator<T> implements Spliterator<T> {
 
-		private final Spliterator<T> it;
-		private final Supplier<? extends RuntimeException> e;
-		boolean seen;
+        private final Spliterator<T> it;
+        private final Supplier<? extends RuntimeException> e;
+        boolean seen;
 
-		private BiStreamSpliterator(Spliterator<T> it, Supplier<? extends RuntimeException> e) {
-			this.it = it;
-			this.e = e;
-		}
+        private BiStreamSpliterator(Spliterator<T> it, Supplier<? extends RuntimeException> e) {
+            this.it = it;
+            this.e = e;
+        }
 
-		@Override
-		public boolean tryAdvance(Consumer<? super T> action) {
-			boolean r = it.tryAdvance(action);
-			if (!seen && !r)
-				throw e.get();
-			seen = true;
-			return r;
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super T> action) {
+            boolean r = it.tryAdvance(action);
+            if (!seen && !r) {
+                throw e.get();
+            }
+            seen = true;
+            return r;
+        }
 
-		@Override
-		public Spliterator<T> trySplit() {
-			return null;
-		}
+        @Override
+        public Spliterator<T> trySplit() {
+            return null;
+        }
 
-		@Override
-		public long estimateSize() {
-			return it.estimateSize();
-		}
+        @Override
+        public long estimateSize() {
+            return it.estimateSize();
+        }
 
-		@Override
-		public int characteristics() {
-			return it.characteristics();
-		}
-	}
+        @Override
+        public int characteristics() {
+            return it.characteristics();
+        }
+    }
 }

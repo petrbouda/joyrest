@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class StatusConfig {
 
-	@Bean
-	ControllerConfiguration statusController() {
-		return new StatusController();
-	}
+    @Bean
+    ControllerConfiguration statusController() {
+        return new StatusController();
+    }
 
 }

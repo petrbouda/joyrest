@@ -15,15 +15,15 @@
  */
 package org.joyrest.utils;
 
-import static java.util.stream.Collectors.toMap;
-
 import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
 
 public class MapUtils {
 
-	public static <K, V> Map<K, V> createOneDimMap(Map<K, V[]> multiValueMap) {
-		return multiValueMap.entrySet().stream()
-			.collect(toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
-	}
+    public static <K, V> Map<K, V> createOneDimMap(Map<K, V[]> multiValueMap) {
+        return multiValueMap.entrySet().stream()
+            .collect(toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
+    }
 
 }

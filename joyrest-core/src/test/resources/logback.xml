@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-       <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-       <logger name="org.springframework.web" level="ERROR"/>
-       <logger name="org.springframework.test" level="ERROR"/>
+    <logger name="org.springframework.web" level="ERROR"/>
+    <logger name="org.springframework.test" level="ERROR"/>
 
-       <logger name="org.apache.http.headers" level="DEBUG"/>
-       <logger name="org.apache.http.wire" level="DEBUG"/>
+    <logger name="org.apache.http.headers" level="DEBUG"/>
+    <logger name="org.apache.http.wire" level="DEBUG"/>
 
-       <logger name="org.joyrest" level="DEBUG"/>
+    <logger name="org.joyrest" level="DEBUG"/>
 </configuration>

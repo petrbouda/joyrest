@@ -15,9 +15,6 @@
  */
 package org.joyrest.interceptor;
 
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -25,40 +22,35 @@ import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
 
-/**
- * {@inheritDoc}
- */
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
+
 public class InterceptorChainImpl implements InterceptorChain {
 
-	private final Queue<Interceptor> interceptors = new ArrayDeque<>();
+    private final Queue<Interceptor> interceptors = new ArrayDeque<>();
 
-	private final InternalRoute route;
+    private final InternalRoute route;
 
-	public InterceptorChainImpl(InternalRoute route) {
-		requireNonNull(route);
-		this.route = route;
-		this.interceptors.addAll(route.getInterceptors());
-	}
+    public InterceptorChainImpl(InternalRoute route) {
+        requireNonNull(route);
+        this.route = route;
+        this.interceptors.addAll(route.getInterceptors());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response) {
-		requireNonNull(request);
-		Interceptor interceptor = interceptors.poll();
+    @Override
+    public InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response) {
+        requireNonNull(request);
+        Interceptor interceptor = interceptors.poll();
 
-		if (nonNull(interceptor))
-			return interceptor.around(this, request, response);
+        if (nonNull(interceptor)) {
+            return interceptor.around(this, request, response);
+        }
 
-		return route.execute(request, response);
-	}
+        return route.execute(request, response);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public InternalRoute getRoute() {
-		return route;
-	}
+    @Override
+    public InternalRoute getRoute() {
+        return route;
+    }
 }

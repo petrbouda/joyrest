@@ -6,10 +6,10 @@ import org.joyrest.spring.SpringJavaConfigurer;
 
 public class StartSpring {
 
-	public static void main(String... args) throws Exception {
-		SpringJavaConfigurer configurer = new SpringJavaConfigurer();
-		ApplicationContext applicationContext = configurer.initialize(new ApplicationConfiguration());
-		GrizzlyServer.start(applicationContext, 5000, "/services");
-	}
+    public static void main(String... args) throws Exception {
+        SpringJavaConfigurer configurer = new SpringJavaConfigurer();
+        ApplicationContext applicationContext = configurer.initialize(new ApplicationConfiguration());
+        GrizzlyServer.start(applicationContext, 5000, "/services");
+    }
 
 }

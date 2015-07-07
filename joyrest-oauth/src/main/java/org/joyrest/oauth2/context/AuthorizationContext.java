@@ -21,28 +21,28 @@ import org.springframework.beans.BeansException;
 
 public class AuthorizationContext extends ApplicationContextAdapter {
 
-	private final ConcurrentHashMap<Class<?>, Object> beanFactory = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class<?>, Object> beanFactory = new ConcurrentHashMap<>();
 
-	private AuthorizationContext() {
-	}
+    private AuthorizationContext() {
+    }
 
-	public static AuthorizationContext getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
+    public static AuthorizationContext getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
-	public void putBean(Class<?> clazz, Object object) {
-		beanFactory.put(clazz, object);
-	}
+    public void putBean(Class<?> clazz, Object object) {
+        beanFactory.put(clazz, object);
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getBean(Class<T> type) throws BeansException {
-		return (T) beanFactory.get(type);
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getBean(Class<T> type) throws BeansException {
+        return (T) beanFactory.get(type);
+    }
 
-	private static class SingletonHolder {
+    private static class SingletonHolder {
 
-		private static final AuthorizationContext INSTANCE = new AuthorizationContext();
-	}
+        private static final AuthorizationContext INSTANCE = new AuthorizationContext();
+    }
 
 }

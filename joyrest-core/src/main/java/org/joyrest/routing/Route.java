@@ -27,28 +27,28 @@ import org.joyrest.model.http.MediaType;
  */
 public interface Route {
 
-	/**
-	 * Adds an interceptor to the route definition
-	 *
-	 * @param interceptor added interceptor
-	 * @return current route
-	 */
-	Route interceptor(Interceptor... interceptor);
+    /**
+     * Adds an interceptor to the route definition
+     *
+     * @param interceptor added interceptor
+     * @return current route
+     */
+    Route interceptor(Interceptor... interceptor);
 
-	/**
-	 * Adds a consumed Media-Type to the route definition
-	 *
-	 * @param consumes media-type
-	 * @return current route
-	 */
-	Route consumes(MediaType... consumes);
+    /**
+     * Adds a consumed Media-Type to the route definition
+     *
+     * @param consumes media-type
+     * @return current route
+     */
+    Route consumes(MediaType... consumes);
 
-	/**
-	 * Adds a produced Media-Type to the route definition
-	 *
-	 * @param produces media type
-	 * @return current route
-	 */
-	Route produces(MediaType... produces);
+    /**
+     * Adds a produced Media-Type to the route definition
+     *
+     * @param produces media type
+     * @return current route
+     */
+    Route produces(MediaType... produces);
 
 }

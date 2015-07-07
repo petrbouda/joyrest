@@ -15,44 +15,45 @@
  */
 package org.joyrest.common.collection;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+
 import org.joyrest.utils.CollectionUtils;
 
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-
 public class MultiValueHashMap<K, V> extends HashMap<K, List<V>> implements MultiValueMap<K, V> {
 
-	public MultiValueHashMap() {
-		super(new HashMap<>());
-	}
+    public MultiValueHashMap() {
+        super(new HashMap<>());
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void addAll(K key, V... value) {
-		addAll(key, asList(value));
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addAll(K key, V... value) {
+        addAll(key, asList(value));
+    }
 
-	@Override
-	public void addAll(K key, List<V> values) {
-		requireNonNull(values);
+    @Override
+    public void addAll(K key, List<V> values) {
+        requireNonNull(values);
 
-		if(CollectionUtils.isEmpty(values))
-			return;
+        if (CollectionUtils.isEmpty(values)) {
+            return;
+        }
 
-		List<V> curValues = get(key);
-		values.stream()
-			.filter(Objects::nonNull)
-			.forEach(curValues::add);
-	}
+        List<V> curValues = get(key);
+        values.stream()
+            .filter(Objects::nonNull)
+            .forEach(curValues::add);
+    }
 
-	@Override
-	public void add(K key, V value) {
-		requireNonNull(value);
+    @Override
+    public void add(K key, V value) {
+        requireNonNull(value);
 
-		get(key).add(value);
-	}
+        get(key).add(value);
+    }
 }

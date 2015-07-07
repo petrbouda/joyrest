@@ -15,7 +15,11 @@
  */
 package org.joyrest.common.collection;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -33,78 +37,63 @@ import java.util.stream.Collector;
  */
 public class UnmodifiableMapCollector<T, K, V> implements Collector<T, Map<K, V>, Map<K, V>> {
 
-	private final BiConsumer<Map<K, V>, T> accumulator;
+    private final BiConsumer<Map<K, V>, T> accumulator;
 
-	public UnmodifiableMapCollector(BiConsumer<Map<K, V>, T> accumulator) {
-		this.accumulator = accumulator;
-	}
+    public UnmodifiableMapCollector(BiConsumer<Map<K, V>, T> accumulator) {
+        this.accumulator = accumulator;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Supplier<Map<K, V>> supplier() {
-		return HashMap::new;
-	}
+    /**
+     * Method creates {@link UnmodifiableMapCollector} according to the {@code keyMapper} and {@code valueMapper}
+     *
+     * @param keyMapper {@link Function} that defines how to map a key in the map
+     * @param valueMapper {@link Function} that defines how to map a value in the map
+     * @param <T> the type of input elements to the reduction operation
+     * @param <K> the mutable accumulation type of the reduction operation (often hidden as an implementation detail)
+     * @param <V> the result type of the reduction operation
+     * @return unmodifiable-map collector
+     */
+    public static <T, K, V> Collector<T, Map<K, V>, Map<K, V>> toUnmodifiableMap(
+        Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public BiConsumer<Map<K, V>, T> accumulator() {
-		return accumulator;
-	}
+        BiConsumer<Map<K, V>, T> accumulator = (map, element) ->
+            map.merge(keyMapper.apply(element), valueMapper.apply(element),
+                throwingMerger());
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public BinaryOperator<Map<K, V>> combiner() {
-		return (left, right) -> {
-			left.putAll(right);
-			return left;
-		};
-	}
+        return new UnmodifiableMapCollector<>(accumulator);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Function<Map<K, V>, Map<K, V>> finisher() {
-		return Collections::unmodifiableMap;
-	}
+    private static <T> BinaryOperator<T> throwingMerger() {
+        return (u, v) -> {
+            throw new IllegalStateException(String.format("Duplicate key %s", u));
+        };
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<Characteristics> characteristics() {
-		return EnumSet.of(Characteristics.UNORDERED);
-	}
+    @Override
+    public Supplier<Map<K, V>> supplier() {
+        return HashMap::new;
+    }
 
-	/**
-	 * Method creates {@link UnmodifiableMapCollector} according to the {@code keyMapper} and {@code valueMapper}
-	 *
-	 * @param keyMapper {@link Function} that defines how to map a key in the map
-	 * @param valueMapper {@link Function} that defines how to map a value in the map
-	 * @param <T> the type of input elements to the reduction operation
-	 * @param <K> the mutable accumulation type of the reduction operation (often hidden as an implementation detail)
-	 * @param <V> the result type of the reduction operation
-	 * @return unmodifiable-map collector
-	 */
-	public static <T, K, V> Collector<T, Map<K, V>, Map<K, V>> toUnmodifiableMap(
-			Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper) {
+    @Override
+    public BiConsumer<Map<K, V>, T> accumulator() {
+        return accumulator;
+    }
 
-		BiConsumer<Map<K, V>, T> accumulator = (map, element) ->
-				map.merge(keyMapper.apply(element), valueMapper.apply(element),
-						throwingMerger());
+    @Override
+    public BinaryOperator<Map<K, V>> combiner() {
+        return (left, right) -> {
+            left.putAll(right);
+            return left;
+        };
+    }
 
-		return new UnmodifiableMapCollector<>(accumulator);
-	}
+    @Override
+    public Function<Map<K, V>, Map<K, V>> finisher() {
+        return Collections::unmodifiableMap;
+    }
 
-	private static <T> BinaryOperator<T> throwingMerger() {
-		return (u, v) -> {
-			throw new IllegalStateException(String.format("Duplicate key %s", u));
-		};
-	}
+    @Override
+    public Set<Characteristics> characteristics() {
+        return EnumSet.of(Characteristics.UNORDERED);
+    }
 }

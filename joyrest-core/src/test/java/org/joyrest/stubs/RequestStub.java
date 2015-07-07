@@ -13,81 +13,81 @@ import org.joyrest.model.request.InternalRequest;
 
 public class RequestStub extends InternalRequest<Object> {
 
-	private HttpMethod method;
+    private HttpMethod method;
 
-	private String path;
+    private String path;
 
-	private Map<HeaderName, String> headers = new HashMap<>();
+    private Map<HeaderName, String> headers = new HashMap<>();
 
-	private InputStream inputStream;
+    private InputStream inputStream;
 
-	private Map<String, String[]> queryParams = new HashMap<>();
+    private Map<String, String[]> queryParams = new HashMap<>();
 
-	@Override
-	public String getRemoteAddr() {
-		return "localhost";
-	}
+    @Override
+    public String getRemoteAddr() {
+        return "localhost";
+    }
 
-	@Override
-	public InputStream getInputStream() {
-		return inputStream;
-	}
+    @Override
+    public InputStream getInputStream() {
+        return inputStream;
+    }
 
-	@Override
-	public Map<HeaderName, String> getHeaders() {
-		return headers;
-	}
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
 
-	@Override
-	public Optional<String> getHeader(HeaderName name) {
-		return Optional.ofNullable(headers.get(name));
-	}
+    @Override
+    public Map<HeaderName, String> getHeaders() {
+        return headers;
+    }
 
-	@Override
-	public Map<String, String[]> getQueryParams() {
-		return queryParams;
-	}
+    public void setHeaders(Map<HeaderName, String> headers) {
+        this.headers = headers;
+    }
 
-	@Override
-	public Optional<String[]> getQueryParams(String name) {
-		return Optional.ofNullable(queryParams.get(name));
-	}
+    @Override
+    public Optional<String> getHeader(HeaderName name) {
+        return Optional.ofNullable(headers.get(name));
+    }
 
-	@Override
-	public HttpMethod getMethod() {
-		return method;
-	}
+    @Override
+    public Map<String, String[]> getQueryParams() {
+        return queryParams;
+    }
 
-	@Override
-	public String getPath() {
-		return path;
-	}
+    public void setQueryParams(Map<String, String[]> queryParams) {
+        this.queryParams = queryParams;
+    }
 
-	public void setMethod(HttpMethod method) {
-		this.method = method;
-	}
+    @Override
+    public Optional<String[]> getQueryParams(String name) {
+        return Optional.ofNullable(queryParams.get(name));
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    @Override
+    public HttpMethod getMethod() {
+        return method;
+    }
 
-	public void setHeaders(Map<HeaderName, String> headers) {
-		this.headers = headers;
-	}
+    public void setMethod(HttpMethod method) {
+        this.method = method;
+    }
 
-	public void setContentType(MediaType contentType) {
-		this.contentType = contentType;
-	}
+    @Override
+    public String getPath() {
+        return path;
+    }
 
-	public void setAccept(List<MediaType> accept) {
-		this.accept = accept;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-	public void setInputStream(InputStream inputStream) {
-		this.inputStream = inputStream;
-	}
+    public void setContentType(MediaType contentType) {
+        this.contentType = contentType;
+    }
 
-	public void setQueryParams(Map<String, String[]> queryParams) {
-		this.queryParams = queryParams;
-	}
+    public void setAccept(List<MediaType> accept) {
+        this.accept = accept;
+    }
 }

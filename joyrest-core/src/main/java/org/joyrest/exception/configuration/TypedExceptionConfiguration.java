@@ -28,48 +28,50 @@ import org.joyrest.routing.entity.ResponseType;
  */
 public abstract class TypedExceptionConfiguration extends AbstractExceptionConfiguration {
 
-	/**
-	 * Method registers a new handler to some type of exception.
-	 *
-	 * @param clazz type of the exception to which is handler registered
-	 * @param action action that is performed when the proper exception is thrown
-	 * @param <T> type of the thrown exception
-	 * @param <RESP> type of the returned object
-	 * @return registered exception handler
-	 */
-	protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
-			ExceptionHandlerAction<RESP, T> action) {
-		return putHandler(clazz, action, null);
-	}
+    /**
+     * Method registers a new handler to some type of exception.
+     *
+     * @param clazz type of the exception to which is handler registered
+     * @param action action that is performed when the proper exception is thrown
+     * @param <T> type of the thrown exception
+     * @param <RESP> type of the returned object
+     * @return registered exception handler
+     */
+    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
+                                                                        ExceptionHandlerAction<RESP, T> action) {
+        return putHandler(clazz, action, null);
+    }
 
-	/**
-	 * Method registers a new handler to some type of exception.
-	 *
-	 * @param clazz type of the exception to which is handler registered
-	 * @param action action that is performed when the proper exception is thrown
-	 * @param <T> type of the thrown exception
-	 * @param <RESP> type of the returned object
-	 * @param resp type of the response object - single object
-	 * @return registered exception handler
-	 */
-	protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
-			ExceptionHandlerAction<RESP, T> action, ResponseType<RESP> resp) {
-		return putHandler(clazz, action, resp);
-	}
+    /**
+     * Method registers a new handler to some type of exception.
+     *
+     * @param clazz type of the exception to which is handler registered
+     * @param action action that is performed when the proper exception is thrown
+     * @param <T> type of the thrown exception
+     * @param <RESP> type of the returned object
+     * @param resp type of the response object - single object
+     * @return registered exception handler
+     */
+    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
+                                                                        ExceptionHandlerAction<RESP, T> action,
+                                                                        ResponseType<RESP> resp) {
+        return putHandler(clazz, action, resp);
+    }
 
-	/**
-	 * Method registers a new handler to some type of exception.
-	 *
-	 * @param clazz type of the exception to which is handler registered
-	 * @param action action that is performed when the proper exception is thrown
-	 * @param <T> type of the thrown exception
-	 * @param <RESP> type of the returned object
-	 * @param resp type of the response object - collection
-	 * @return registered exception handler
-	 */
-	protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
-			ExceptionHandlerAction<RESP, T> action, ResponseCollectionType<RESP> resp) {
-		return putHandler(clazz, action, resp);
-	}
+    /**
+     * Method registers a new handler to some type of exception.
+     *
+     * @param clazz type of the exception to which is handler registered
+     * @param action action that is performed when the proper exception is thrown
+     * @param <T> type of the thrown exception
+     * @param <RESP> type of the returned object
+     * @param resp type of the response object - collection
+     * @return registered exception handler
+     */
+    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
+                                                                        ExceptionHandlerAction<RESP, T> action,
+                                                                        ResponseCollectionType<RESP> resp) {
+        return putHandler(clazz, action, resp);
+    }
 
 }

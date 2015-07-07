@@ -31,51 +31,46 @@ import org.joyrest.routing.entity.Type;
  */
 public abstract class AbstractExceptionConfiguration implements ExceptionConfiguration {
 
-	/* Set of handlers which are configured in an inherited class */
-	private final Set<InternalExceptionHandler> handlers = new HashSet<>();
+    /* Set of handlers which are configured in an inherited class */
+    private final Set<InternalExceptionHandler> handlers = new HashSet<>();
 
-	/* ExceptionConfiguration's initialization should be executed only once */
-	private boolean isInitialized = false;
+    /* ExceptionConfiguration's initialization should be executed only once */
+    private boolean isInitialized = false;
 
-	/**
-	 * Method in which are registered handlers for exceptions.
-	 */
-	protected abstract void configure();
+    /**
+     * Method in which are registered handlers for exceptions.
+     */
+    protected abstract void configure();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void initialize() {
-		if (!this.isInitialized) {
-			configure();
+    @Override
+    public final void initialize() {
+        if (!this.isInitialized) {
+            configure();
 
-			this.isInitialized = true;
-		}
-	}
+            this.isInitialized = true;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<InternalExceptionHandler> getExceptionHandlers() {
-		return handlers;
-	}
+    @Override
+    public Set<InternalExceptionHandler> getExceptionHandlers() {
+        return handlers;
+    }
 
-	/**
-	 * Method registers a new handler to some type of exception.
-	 *
-	 * @param clazz type of the exception to which is handler registered
-	 * @param action action that is performed when the proper exception is thrown
-	 * @param ex thrown exception
-	 * @param <T> type of the thrown exception
-	 * @param <RESP> type of the returned object
-	 * @return registered exception handler
-	 */
-	public <T extends Exception, RESP> InternalExceptionHandler putHandler(Class<T> clazz,
-			ExceptionHandlerAction<RESP, T> action, Type<RESP> ex) {
-		final InternalExceptionHandler handler = new InternalExceptionHandler(clazz, action, ex);
-		handlers.add(handler);
-		return handler;
-	}
+    /**
+     * Method registers a new handler to some type of exception.
+     *
+     * @param clazz type of the exception to which is handler registered
+     * @param action action that is performed when the proper exception is thrown
+     * @param ex thrown exception
+     * @param <T> type of the thrown exception
+     * @param <RESP> type of the returned object
+     * @return registered exception handler
+     */
+    public <T extends Exception, RESP> InternalExceptionHandler putHandler(Class<T> clazz,
+                                                                           ExceptionHandlerAction<RESP, T> action,
+                                                                           Type<RESP> ex) {
+        final InternalExceptionHandler handler = new InternalExceptionHandler(clazz, action, ex);
+        handlers.add(handler);
+        return handler;
+    }
 }

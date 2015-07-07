@@ -7,15 +7,15 @@ import org.joyrest.model.response.InternalResponse;
 
 public class DuplicatedInterceptor implements Interceptor {
 
-	@Override
-	public InternalResponse<Object> around(InterceptorChain chain,
-			InternalRequest<Object> request, InternalResponse<Object> response) {
+    @Override
+    public InternalResponse<Object> around(InterceptorChain chain,
+                                           InternalRequest<Object> request, InternalResponse<Object> response) {
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public int getOrder() {
-		return -50;
-	}
+    @Override
+    public int getOrder() {
+        return -50;
+    }
 }

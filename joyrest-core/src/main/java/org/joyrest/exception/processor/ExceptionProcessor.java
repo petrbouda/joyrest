@@ -28,15 +28,15 @@ import org.joyrest.model.response.InternalResponse;
 @FunctionalInterface
 public interface ExceptionProcessor {
 
-	/**
-	 * Method processes a handled exception.
-	 *
-	 * @param ex injected object of handled exception
-	 * @param request injected provider object
-	 * @param response injected response object
-	 * @param <T> type of the handled exception
-	 * @throws Exception exception occurred during exception processing in framework
-	 */
-	<T extends Exception> void process(T ex, InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;
+    /**
+     * Method processes a handled exception.
+     *
+     * @param ex injected object of handled exception
+     * @param request injected provider object
+     * @param response injected response object
+     * @param <T> type of the handled exception
+     * @throws Exception exception occurred during exception processing in framework
+     */
+    <T extends Exception> void process(T ex, InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;
 
 }

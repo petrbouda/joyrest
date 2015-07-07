@@ -5,13 +5,13 @@ import org.joyrest.routing.TypedControllerConfiguration;
 
 public class PathRouteController2 extends TypedControllerConfiguration {
 
-	@Override
-	protected void configure() {
-		setControllerPath("/ittest/path2");
+    @Override
+    protected void configure() {
+        setControllerPath("/ittest/path2");
 
-		post("/", (req, resp) -> {
-			resp.status(HttpStatus.NO_CONTENT);
-		});
+        post("/", (req, resp) -> {
+            resp.status(HttpStatus.NO_CONTENT);
+        });
 
-	}
+    }
 }

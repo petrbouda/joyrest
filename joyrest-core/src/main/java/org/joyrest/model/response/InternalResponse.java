@@ -24,27 +24,27 @@ import org.joyrest.model.http.HttpStatus;
 
 public abstract class InternalResponse<E> implements Response<E> {
 
-	private E entity;
+    private E entity;
 
-	public abstract OutputStream getOutputStream();
+    public abstract OutputStream getOutputStream();
 
-	public abstract Map<HeaderName, String> getHeaders();
+    public abstract Map<HeaderName, String> getHeaders();
 
-	public abstract HttpStatus getStatus();
+    public abstract HttpStatus getStatus();
 
-	@Override
-	public Response<E> header(String name, String value) {
-		return header(HeaderName.of(name), value);
-	}
+    @Override
+    public Response<E> header(String name, String value) {
+        return header(HeaderName.of(name), value);
+    }
 
-	@Override
-	public InternalResponse<E> entity(E entity) {
-		this.entity = entity;
-		return this;
-	}
+    @Override
+    public InternalResponse<E> entity(E entity) {
+        this.entity = entity;
+        return this;
+    }
 
-	public Optional<E> getEntity() {
-		return Optional.ofNullable(entity);
-	}
+    public Optional<E> getEntity() {
+        return Optional.ofNullable(entity);
+    }
 
 }

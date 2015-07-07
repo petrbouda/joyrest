@@ -10,28 +10,28 @@ import org.joyrest.transform.Writer;
 
 public class UnknownWriter implements Writer {
 
-	@Override
-	public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
-		throw new RuntimeException("Should never be thrown");
-	}
+    @Override
+    public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
+        throw new RuntimeException("Should never be thrown");
+    }
 
-	@Override
-	public boolean isWriterCompatible(InternalRoute route) {
-		return false;
-	}
+    @Override
+    public boolean isWriterCompatible(InternalRoute route) {
+        return false;
+    }
 
-	@Override
-	public boolean isClassCompatible(Class<?> clazz) {
-		return Objects.equals(clazz, Object.class);
-	}
+    @Override
+    public boolean isClassCompatible(Class<?> clazz) {
+        return Objects.equals(clazz, Object.class);
+    }
 
-	@Override
-	public MediaType getMediaType() {
-		return MediaType.HTML;
-	}
+    @Override
+    public MediaType getMediaType() {
+        return MediaType.HTML;
+    }
 
-	@Override
-	public boolean isGeneral() {
-		return false;
-	}
+    @Override
+    public boolean isGeneral() {
+        return false;
+    }
 }

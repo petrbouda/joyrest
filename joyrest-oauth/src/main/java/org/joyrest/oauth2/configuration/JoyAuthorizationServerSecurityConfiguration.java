@@ -24,10 +24,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
-import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -36,66 +32,66 @@ import org.springframework.security.web.session.SessionManagementFilter;
 
 public class JoyAuthorizationServerSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private final AuthorizationServerSecurityConfigurer securityConfigurer = new AuthorizationServerSecurityConfigurer();
+    private final AuthorizationServerSecurityConfigurer securityConfigurer = new AuthorizationServerSecurityConfigurer();
 
-	private final AuthorizationServerEndpointsConfigurer endpointsConfigurer;
+    private final AuthorizationServerEndpointsConfigurer endpointsConfigurer;
 
-	private final JoyAuthorizationServerEndpointsConfiguration endpoints;
+    private final JoyAuthorizationServerEndpointsConfiguration endpoints;
 
-	private final ClientDetailsService clientDetailsService;
+    private final ClientDetailsService clientDetailsService;
 
-	private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-	public JoyAuthorizationServerSecurityConfiguration(AuthorizationServerConfiguration configuration,
-		JoyAuthorizationServerEndpointsConfiguration endpoints) {
-		try {
-			setApplicationContext(AuthorizationContext.getInstance());
-			setObjectPostProcessor(new InitializedBeanPostProcessor());
+    public JoyAuthorizationServerSecurityConfiguration(AuthorizationServerConfiguration configuration,
+                                                       JoyAuthorizationServerEndpointsConfiguration endpoints) {
+        try {
+            setApplicationContext(AuthorizationContext.getInstance());
+            setObjectPostProcessor(new InitializedBeanPostProcessor());
 
-			this.endpoints = endpoints;
-			this.endpointsConfigurer = endpoints.getEndpointsConfigurer();
-			this.clientDetailsService = configuration.getClientDetailsService();
-			this.userDetailsService = configuration.getUserDetailsService();
+            this.endpoints = endpoints;
+            this.endpointsConfigurer = endpoints.getEndpointsConfigurer();
+            this.clientDetailsService = configuration.getClientDetailsService();
+            this.userDetailsService = configuration.getUserDetailsService();
 
-			endpointsConfigurer.setClientDetailsService(clientDetailsService);
-			endpointsConfigurer.authenticationManager(authenticationManager());
-		} catch (Exception e) {
-			throw new IllegalStateException("Cannot configure server security", e);
-		}
-	}
+            endpointsConfigurer.setClientDetailsService(clientDetailsService);
+            endpointsConfigurer.authenticationManager(authenticationManager());
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot configure server security", e);
+        }
+    }
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
-		AuthorizationContext.getInstance().putBean(AuthenticationManagerBuilder.class, auth);
-	}
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
+        AuthorizationContext.getInstance().putBean(AuthenticationManagerBuilder.class, auth);
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		FrameworkEndpointHandlerMapping handlerMapping = endpoints.oauth2EndpointHandlerMapping();
-		String tokenEndpointPath = handlerMapping.getServletPath("/oauth/token");
-		String tokenKeyPath = handlerMapping.getServletPath("/oauth/token_key");
-		String checkTokenPath = handlerMapping.getServletPath("/oauth/check_token");
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        FrameworkEndpointHandlerMapping handlerMapping = endpoints.oauth2EndpointHandlerMapping();
+        String tokenEndpointPath = handlerMapping.getServletPath("/oauth/token");
+        String tokenKeyPath = handlerMapping.getServletPath("/oauth/token_key");
+        String checkTokenPath = handlerMapping.getServletPath("/oauth/check_token");
 
-		http.setSharedObject(FrameworkEndpointHandlerMapping.class, handlerMapping);
-		http.apply(securityConfigurer);
-		http.addFilterBefore(new PrincipalPersistenceFilter(), SessionManagementFilter.class);
+        http.setSharedObject(FrameworkEndpointHandlerMapping.class, handlerMapping);
+        http.apply(securityConfigurer);
+        http.addFilterBefore(new PrincipalPersistenceFilter(), SessionManagementFilter.class);
 
-		if (!endpointsConfigurer.isUserDetailsServiceOverride()) {
-			UserDetailsService userDetailsService = http.getSharedObject(UserDetailsService.class);
-			endpointsConfigurer.userDetailsService(userDetailsService);
-		}
+        if (!endpointsConfigurer.isUserDetailsServiceOverride()) {
+            UserDetailsService userDetailsService = http.getSharedObject(UserDetailsService.class);
+            endpointsConfigurer.userDetailsService(userDetailsService);
+        }
 
-		http.authorizeRequests()
-				.antMatchers(tokenEndpointPath).fullyAuthenticated()
-				.antMatchers(tokenKeyPath).access(securityConfigurer.getTokenKeyAccess())
-				.antMatchers(checkTokenPath).access(securityConfigurer.getCheckTokenAccess())
-			.and()
-				.requestMatchers()
-				.antMatchers(tokenEndpointPath, tokenKeyPath, checkTokenPath)
-			.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
+        http.authorizeRequests()
+            .antMatchers(tokenEndpointPath).fullyAuthenticated()
+            .antMatchers(tokenKeyPath).access(securityConfigurer.getTokenKeyAccess())
+            .antMatchers(checkTokenPath).access(securityConfigurer.getCheckTokenAccess())
+            .and()
+            .requestMatchers()
+            .antMatchers(tokenEndpointPath, tokenKeyPath, checkTokenPath)
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
 
-		http.setSharedObject(ClientDetailsService.class, clientDetailsService);
-	}
+        http.setSharedObject(ClientDetailsService.class, clientDetailsService);
+    }
 }
