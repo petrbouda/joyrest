@@ -19,25 +19,26 @@ import java.util.Objects;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
 public class AuthorizationServerConfiguration {
 
-    private final TokenStore tokenStore;
-
     private final UserDetailsService userDetailsService;
-
     private final ClientDetailsService clientDetailsService;
+    private TokenStore tokenStore;
+    private AuthorizationCodeServices authorizationCodeServices;
 
     public AuthorizationServerConfiguration(UserDetailsService userDetailsService, ClientDetailsService clientDetailsService) {
-        this(new InMemoryTokenStore(), userDetailsService, clientDetailsService);
+        this(new InMemoryTokenStore(), new InMemoryAuthorizationCodeServices(), userDetailsService, clientDetailsService);
     }
 
-    public AuthorizationServerConfiguration(TokenStore tokenStore,
+    public AuthorizationServerConfiguration(TokenStore tokenStore, AuthorizationCodeServices authorizationCodeServices,
                                             UserDetailsService userDetailsService, ClientDetailsService clientDetailsService) {
-
         this.tokenStore = tokenStore;
+        this.authorizationCodeServices = authorizationCodeServices;
         this.userDetailsService = userDetailsService;
         this.clientDetailsService = clientDetailsService;
     }
@@ -46,12 +47,24 @@ public class AuthorizationServerConfiguration {
         return tokenStore;
     }
 
+    public void setTokenStore(final TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
+    }
+
     public UserDetailsService getUserDetailsService() {
         return userDetailsService;
     }
 
     public ClientDetailsService getClientDetailsService() {
         return clientDetailsService;
+    }
+
+    public AuthorizationCodeServices getAuthorizationCodeServices() {
+        return authorizationCodeServices;
+    }
+
+    public void setAuthorizationCodeServices(final AuthorizationCodeServices authorizationCodeServices) {
+        this.authorizationCodeServices = authorizationCodeServices;
     }
 
     @Override

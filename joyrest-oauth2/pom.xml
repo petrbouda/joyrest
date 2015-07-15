@@ -22,6 +22,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-jackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
             <version>${spring-oauth2.version}</version>

@@ -15,13 +15,33 @@
  */
 package org.joyrest.oauth2.initializer;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.joyrest.context.initializer.BeanFactory;
 import org.joyrest.context.initializer.InitContext;
 import org.joyrest.context.initializer.Initializer;
-import org.joyrest.oauth2.configuration.JoyAuthorizationServerEndpointsConfiguration;
-import org.joyrest.oauth2.configuration.JoyAuthorizationServerSecurityConfiguration;
-import org.joyrest.oauth2.configuration.JoyWebSecurityConfiguration;
-import org.joyrest.oauth2.interceptor.SpringSecurityChainInterceptor;
+import org.joyrest.oauth2.endpoint.TokenEndpoint;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.token.TokenService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
+import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
+import org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService;
+import org.springframework.security.oauth2.provider.client.InMemoryClientDetailsService;
+import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
+import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
+import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import static java.util.Collections.singletonList;
 
@@ -30,20 +50,40 @@ public class OAuth2Initializer implements Initializer {
     @Override
     public void init(InitContext context, BeanFactory beanFactory) {
         AuthorizationServerConfiguration authServerConfig = beanFactory.get(AuthorizationServerConfiguration.class);
+        TokenStore tokenStore = authServerConfig.getTokenStore();
+        UserDetailsService userService = authServerConfig.getUserDetailsService();
+        ClientDetailsService clientService = authServerConfig.getClientDetailsService();
 
-        JoyAuthorizationServerEndpointsConfiguration endpointConfiguration =
-            new JoyAuthorizationServerEndpointsConfiguration(authServerConfig);
+        DaoAuthenticationProvider clientAuthProvider = new DaoAuthenticationProvider();
+        clientAuthProvider.setUserDetailsService(new ClientDetailsUserDetailsService(clientService));
 
-        JoyAuthorizationServerSecurityConfiguration securityConfiguration =
-            new JoyAuthorizationServerSecurityConfiguration(authServerConfig, endpointConfiguration);
+        DaoAuthenticationProvider userAuthProvider = new DaoAuthenticationProvider();
+        userAuthProvider.setUserDetailsService(userService);
 
-        JoyWebSecurityConfiguration webSecurityConfiguration =
-            new JoyWebSecurityConfiguration(singletonList(securityConfiguration));
+        ProviderManager clientProviderManager = new ProviderManager(singletonList(clientAuthProvider));
+        ProviderManager userProviderManager = new ProviderManager(singletonList(userAuthProvider));
 
-        SpringSecurityChainInterceptor securityChainInterceptor =
-            new SpringSecurityChainInterceptor(webSecurityConfiguration.springSecurityFilterChain());
+        TokenEndpoint tokenEndpoint = new TokenEndpoint(clientProviderManager, clientService,
+            compositeTokenGranter(clientService, userProviderManager, tokenStore));
 
-        context.addControllerConfiguration(endpointConfiguration.tokenEndpoint());
-        context.addInterceptor(securityChainInterceptor);
+        context.addControllerConfiguration(tokenEndpoint);
+        //        context.addControllerConfiguration(endpointConfiguration.authorizationEndpoint());
+    }
+
+    private TokenGranter compositeTokenGranter(ClientDetailsService clientService, AuthenticationManager manager,
+                                               TokenStore tokenStore) {
+        DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientService);
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setClientDetailsService(clientService);
+        tokenServices.setAuthenticationManager(manager);
+        tokenServices.setTokenStore(tokenStore);
+
+        List<TokenGranter> granters = new ArrayList<>();
+        granters.add(new ClientCredentialsTokenGranter(tokenServices, clientService, requestFactory));
+        granters.add(new ImplicitTokenGranter(tokenServices, clientService, requestFactory));
+        granters.add(new ResourceOwnerPasswordTokenGranter(manager, tokenServices, clientService, requestFactory));
+        granters.add(new RefreshTokenGranter(tokenServices, clientService, requestFactory));
+        //        granters.add(new AuthorizationCodeTokenGranter());
+        return new CompositeTokenGranter(granters);
     }
 }

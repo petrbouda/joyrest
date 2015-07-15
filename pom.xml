@@ -50,7 +50,7 @@
         <module>joyrest-gson</module>
         <module>joyrest-hessian</module>
         <module>joyrest-jackson</module>
-        <module>joyrest-oauth</module>
+        <module>joyrest-oauth2</module>
     </modules>
 
     <properties>
