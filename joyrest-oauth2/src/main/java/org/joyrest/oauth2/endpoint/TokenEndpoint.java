@@ -45,8 +45,7 @@ import org.springframework.security.oauth2.provider.request.DefaultOAuth2Request
 import static org.joyrest.model.http.MediaType.JSON;
 import static org.joyrest.routing.entity.ResponseType.Resp;
 import static org.joyrest.utils.CollectionUtils.nonEmpty;
-import static org.springframework.util.StringUtils.hasText;
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.joyrest.utils.StringUtils.isEmpty;
 
 import static java.util.Collections.emptySet;
 import static java.util.Objects.isNull;
@@ -118,7 +117,7 @@ public class TokenEndpoint extends TypedControllerConfiguration {
                 requestValidator.validateScope(tokenRequest, authenticatedClient);
             }
 
-            if (!hasText(tokenRequest.getGrantType())) {
+            if (!isEmpty(tokenRequest.getGrantType())) {
                 throw new InvalidRequestException("Missing grant type");
             }
 

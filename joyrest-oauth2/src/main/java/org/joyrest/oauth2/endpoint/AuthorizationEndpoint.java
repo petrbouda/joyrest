@@ -15,7 +15,6 @@
  */
 package org.joyrest.oauth2.endpoint;
 
-
 import java.net.URI;
 import java.security.Principal;
 import java.util.Date;
@@ -58,9 +57,9 @@ import org.springframework.security.oauth2.provider.endpoint.RedirectResolver;
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenRequest;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestValidator;
-import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import static org.joyrest.utils.StringUtils.isEmpty;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -126,7 +125,7 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
 
             String redirectUriParameter = authorizationRequest.getRequestParameters().get(OAuth2Utils.REDIRECT_URI);
             String resolvedRedirect = redirectResolver.resolveRedirect(redirectUriParameter, client);
-            if (!StringUtils.hasText(resolvedRedirect)) {
+            if (isEmpty(resolvedRedirect)) {
                 throw new RedirectMismatchException(
                     "A redirectUri must be either supplied or preconfigured in the ClientDetails");
             }
