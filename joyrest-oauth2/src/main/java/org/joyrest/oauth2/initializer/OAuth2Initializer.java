@@ -22,6 +22,7 @@ import java.util.List;
 import org.joyrest.context.initializer.BeanFactory;
 import org.joyrest.context.initializer.InitContext;
 import org.joyrest.context.initializer.Initializer;
+import org.joyrest.oauth2.endpoint.AuthorizationEndpoint;
 import org.joyrest.oauth2.endpoint.TokenEndpoint;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -30,9 +31,14 @@ import org.springframework.security.core.userdetails.UserDetailsByNameServiceWra
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
+import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
@@ -66,16 +72,29 @@ public class OAuth2Initializer implements Initializer {
         ProviderManager clientProviderManager = new ProviderManager(singletonList(clientAuthProvider));
         ProviderManager userProviderManager = new ProviderManager(asList(userAuthProvider, preProvider));
 
-        TokenEndpoint tokenEndpoint = new TokenEndpoint(clientProviderManager, clientService,
-            compositeTokenGranter(clientService, userProviderManager, tokenStore));
+	    AuthorizationCodeServices authorizationCodeServices = new InMemoryAuthorizationCodeServices();
+	    OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientService);
+
+	    TokenGranter tokenGranter = compositeTokenGranter(clientService, userProviderManager, tokenStore,
+		    requestFactory, authorizationCodeServices);
+
+	    TokenEndpoint tokenEndpoint = new TokenEndpoint(clientProviderManager, clientService, tokenGranter);
+
+	    TokenStoreUserApprovalHandler userApprovalHandler = new TokenStoreUserApprovalHandler();
+	    userApprovalHandler.setClientDetailsService(clientService);
+	    userApprovalHandler.setRequestFactory(requestFactory);
+	    userApprovalHandler.setTokenStore(tokenStore);
+
+	    AuthorizationEndpoint authorizationEndpoint = new AuthorizationEndpoint(
+		    authorizationCodeServices, clientService, tokenGranter, userApprovalHandler, requestFactory);
 
         context.addControllerConfiguration(tokenEndpoint);
-        //        context.addControllerConfiguration(endpointConfiguration.authorizationEndpoint());
+        context.addControllerConfiguration(authorizationEndpoint);
     }
 
     private TokenGranter compositeTokenGranter(ClientDetailsService clientService, AuthenticationManager manager,
-                                               TokenStore tokenStore) {
-        DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientService);
+                                               TokenStore tokenStore, OAuth2RequestFactory requestFactory,
+	                                           AuthorizationCodeServices authorizationCodeServices) {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(clientService);
@@ -87,7 +106,8 @@ public class OAuth2Initializer implements Initializer {
         granters.add(new ImplicitTokenGranter(tokenServices, clientService, requestFactory));
         granters.add(new ResourceOwnerPasswordTokenGranter(manager, tokenServices, clientService, requestFactory));
         granters.add(new RefreshTokenGranter(tokenServices, clientService, requestFactory));
-        //        granters.add(new AuthorizationCodeTokenGranter());
+        granters.add(new AuthorizationCodeTokenGranter(
+	        new DefaultTokenServices(), authorizationCodeServices, clientService, requestFactory));
         return new CompositeTokenGranter(granters);
     }
 }

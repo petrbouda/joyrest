@@ -50,6 +50,7 @@ import org.springframework.security.oauth2.provider.OAuth2RequestValidator;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.approval.DefaultUserApprovalHandler;
+import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.endpoint.DefaultRedirectResolver;
@@ -57,6 +58,7 @@ import org.springframework.security.oauth2.provider.endpoint.RedirectResolver;
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenRequest;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestValidator;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import static org.joyrest.utils.StringUtils.isEmpty;
@@ -76,25 +78,23 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
 
     private final OAuth2RequestValidator requestValidator = new DefaultOAuth2RequestValidator();
 
-    private final UserApprovalHandler userApprovalHandler = new DefaultUserApprovalHandler();
+    private final TokenStoreUserApprovalHandler userApprovalHandler;
 
     private final TokenGranter tokenGranter;
 
     private final Object implicitLock = new Object();
 
-    public AuthorizationEndpoint(AuthenticationManager authenticationManager,
-                                 AuthorizationCodeServices authorizationCodeServices,
+    public AuthorizationEndpoint(AuthorizationCodeServices authorizationCodeServices,
                                  ClientDetailsService clientDetailsService,
-                                 TokenGranter tokenGranter) {
+                                 TokenGranter tokenGranter,
+	                             TokenStoreUserApprovalHandler userApprovalHandler,
+                                 OAuth2RequestFactory requestFactory) {
+
+	    this.userApprovalHandler = userApprovalHandler;
         this.authorizationCodeServices = authorizationCodeServices;
         this.clientDetailsService = clientDetailsService;
         this.tokenGranter = tokenGranter;
-        this.requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
-    }
-
-    private static Supplier<InsufficientAuthenticationException> insufficientAuthenticationExceptionSupplier() {
-        return () -> new InsufficientAuthenticationException(
-            "There is no client authentication. Try adding an appropriate authentication filter.");
+        this.requestFactory = requestFactory;
     }
 
     @Override
@@ -102,13 +102,6 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
         setControllerPath("oauth");
 
         get("authorize", (req, resp) -> {
-            Principal principal = req.getPrincipal()
-                .orElseThrow(insufficientAuthenticationExceptionSupplier());
-
-            if (!(principal instanceof Authentication) || !((Authentication) principal).isAuthenticated()) {
-                throw insufficientAuthenticationExceptionSupplier().get();
-            }
-
             Map<String, String> parameters = MapUtils.createOneDimMap(req.getQueryParams());
             AuthorizationRequest authorizationRequest = requestFactory.createAuthorizationRequest(parameters);
 
@@ -133,8 +126,8 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
 
             requestValidator.validateScope(authorizationRequest, client);
 
-            authorizationRequest = userApprovalHandler.checkForPreApproval(authorizationRequest, (Authentication) principal);
-            boolean approved = userApprovalHandler.isApproved(authorizationRequest, (Authentication) principal);
+            authorizationRequest = userApprovalHandler.checkForPreApproval(authorizationRequest, null);
+            boolean approved = userApprovalHandler.isApproved(authorizationRequest, null);
             authorizationRequest.setApproved(approved);
 
             if (authorizationRequest.isApproved()) {
@@ -144,7 +137,7 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
                 }
                 if (responseTypes.contains("code")) {
                     resp.status(HttpStatus.FOUND);
-                    resp.header(HeaderName.LOCATION, getAuthorizationCodeResponse(authorizationRequest, principal));
+                    resp.header(HeaderName.LOCATION, getAuthorizationCodeResponse(authorizationRequest));
                 }
             }
         });
@@ -176,9 +169,9 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
         }
     }
 
-    private String getAuthorizationCodeResponse(AuthorizationRequest authorizationRequest, Principal authUser) {
+    private String getAuthorizationCodeResponse(AuthorizationRequest authorizationRequest) {
         try {
-            return getSuccessfulRedirect(authorizationRequest, generateCode(authorizationRequest, (Authentication) authUser));
+            return getSuccessfulRedirect(authorizationRequest, generateCode(authorizationRequest));
         } catch (OAuth2Exception e) {
             return getUnsuccessfulRedirect(authorizationRequest, e, false);
         }
@@ -224,14 +217,11 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
         return append(authorizationRequest.getRedirectUri(), vars, keys, true);
     }
 
-    private String generateCode(AuthorizationRequest authorizationRequest, Authentication authentication)
-        throws AuthenticationException {
-
+    private String generateCode(AuthorizationRequest authorizationRequest) throws AuthenticationException {
         try {
             OAuth2Request storedOAuth2Request = requestFactory.createOAuth2Request(authorizationRequest);
-            OAuth2Authentication combinedAuth = new OAuth2Authentication(storedOAuth2Request, authentication);
-            String code = authorizationCodeServices.createAuthorizationCode(combinedAuth);
-            return code;
+            OAuth2Authentication combinedAuth = new OAuth2Authentication(storedOAuth2Request, null);
+            return authorizationCodeServices.createAuthorizationCode(combinedAuth);
         } catch (OAuth2Exception e) {
             if (authorizationRequest.getState() != null) {
                 e.addAdditionalInformation("state", authorizationRequest.getState());
@@ -241,7 +231,6 @@ public class AuthorizationEndpoint extends TypedControllerConfiguration {
     }
 
     private String getSuccessfulRedirect(AuthorizationRequest authorizationRequest, String authorizationCode) {
-
         if (isNull(authorizationCode)) {
             throw new IllegalStateException("No authorization code found in the current request scope.");
         }
