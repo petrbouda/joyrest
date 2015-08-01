@@ -15,20 +15,17 @@
  */
 package org.joyrest.routing;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.processor.RequestProcessor;
 import org.joyrest.routing.entity.Type;
 import org.joyrest.routing.security.Role;
-import org.joyrest.utils.CollectionUtils;
 import org.joyrest.utils.PathUtils;
 
-import static java.util.Arrays.asList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.joyrest.utils.CollectionUtils.isEmpty;
@@ -61,47 +58,47 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	/* Global settings roles which protects a given resource */
 	private Role[] roles = null;
 
-    /* RoutingConfiguration's initialization should be executed only once */
-    private boolean isInitialized = false;
+	/* RoutingConfiguration's initialization should be executed only once */
+	private boolean isInitialized = false;
 
-    @Override
-    public final void initialize() {
-        if (!this.isInitialized) {
-            configure();
+	@Override
+	public final void initialize() {
+		if (!this.isInitialized) {
+			configure();
 
-            List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(controllerPath);
-            if (nonNull(controllerPath)) {
-                this.routes.forEach(route -> route.addControllerPath(globalParts));
-            }
+			List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(controllerPath);
+			if (nonNull(controllerPath)) {
+				this.routes.forEach(route -> route.addControllerPath(globalParts));
+			}
 
-	        if (nonNull(roles)) {
-	            this.routes.stream()
-		            .filter(route -> isEmpty(route.getRoles()))
-		            .forEach(route -> route.roles(this.roles));
-	        }
+			if (nonNull(roles)) {
+				this.routes.stream()
+					.filter(route -> isEmpty(route.getRoles()))
+					.forEach(route -> route.roles(this.roles));
+			}
 
-		    this.isInitialized = true;
-        }
-    }
+			this.isInitialized = true;
+		}
+	}
 
-    /**
-     * Convenient place where is possible to configure new routes for this instance of {@link ControllerConfiguration}
-     */
-    abstract protected void configure();
+	/**
+	 * Convenient place where is possible to configure new routes for this instance of {@link ControllerConfiguration}
+	 */
+	abstract protected void configure();
 
-    /**
-     * Creates a resource part of the path unified for all routes defined in the inherited class
-     *
-     * @param path resource path of all defined class
-     * @throws NullPointerException whether {@code path} is {@code null}
-     */
-    protected final void setControllerPath(String path) {
-        requireNonNull(path, "Global path cannot be change to 'null'");
+	/**
+	 * Creates a resource part of the path unified for all routes defined in the inherited class
+	 *
+	 * @param path resource path of all defined class
+	 * @throws NullPointerException whether {@code path} is {@code null}
+	 */
+	protected final void setControllerPath(String path) {
+		requireNonNull(path, "Global path cannot be change to 'null'");
 
-        if (!"".equals(path) && !"/".equals(path)) {
-            this.controllerPath = pathCorrector.apply(path);
-        }
-    }
+		if (!"".equals(path) && !"/".equals(path)) {
+			this.controllerPath = pathCorrector.apply(path);
+		}
+	}
 
 	/**
 	 * Sets roles which are allowed for a given controller
@@ -114,18 +111,18 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 		this.roles = roles;
 	}
 
-    @Override
-    public Set<InternalRoute> getRoutes() {
-        return routes;
-    }
+	@Override
+	public Set<InternalRoute> getRoutes() {
+		return routes;
+	}
 
-    protected InternalRoute createEntityRoute(HttpMethod method, String path, RouteAction action,
-                                              Type<?> reqClazz, Type<?> respClazz) {
-        requireNonNull(path, "Route path cannot be null.");
+	protected InternalRoute createEntityRoute(HttpMethod method, String path, RouteAction action,
+		Type<?> reqClazz, Type<?> respClazz) {
+		requireNonNull(path, "Route path cannot be null.");
 
-        final String correctPath = pathCorrector.apply(path);
-        final InternalRoute route = new InternalRoute(correctPath, method, action, reqClazz, respClazz);
-        routes.add(route);
-        return route;
-    }
+		final String correctPath = pathCorrector.apply(path);
+		final InternalRoute route = new InternalRoute(correctPath, method, action, reqClazz, respClazz);
+		routes.add(route);
+		return route;
+	}
 }
