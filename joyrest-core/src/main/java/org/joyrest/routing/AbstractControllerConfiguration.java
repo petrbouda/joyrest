@@ -15,6 +15,7 @@
  */
 package org.joyrest.routing;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,10 +24,14 @@ import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.processor.RequestProcessor;
 import org.joyrest.routing.entity.Type;
+import org.joyrest.routing.security.Role;
+import org.joyrest.utils.CollectionUtils;
 import org.joyrest.utils.PathUtils;
 
+import static java.util.Arrays.asList;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
+import static org.joyrest.utils.CollectionUtils.isEmpty;
 
 /**
  * <p>
@@ -44,14 +49,17 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractControllerConfiguration implements ControllerConfiguration {
 
-    /* Set of routes which are configured in an inherited class */
-    private final Set<InternalRoute> routes = new HashSet<>();
+	/* Set of routes which are configured in an inherited class */
+	private final Set<InternalRoute> routes = new HashSet<>();
 
-    /* Class validates and customized given path */
-    private final PathCorrector pathCorrector = new PathCorrector();
+	/* Class validates and customized given path */
+	private final PathCorrector pathCorrector = new PathCorrector();
 
-    /* Resource path that will be added to the beginning of all routes defined in the inherited class */
-    private String controllerPath = null;
+	/* Resource path that will be added to the beginning of all routes defined in the inherited class */
+	private String controllerPath = null;
+
+	/* Global settings roles which protects a given resource */
+	private Role[] roles = null;
 
     /* RoutingConfiguration's initialization should be executed only once */
     private boolean isInitialized = false;
@@ -63,11 +71,16 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 
             List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(controllerPath);
             if (nonNull(controllerPath)) {
-                this.routes.stream()
-                    .forEach(route -> route.addControllerPath(globalParts));
+                this.routes.forEach(route -> route.addControllerPath(globalParts));
             }
 
-            this.isInitialized = true;
+	        if (nonNull(roles)) {
+	            this.routes.stream()
+		            .filter(route -> isEmpty(route.getRoles()))
+		            .forEach(route -> route.roles(this.roles));
+	        }
+
+		    this.isInitialized = true;
         }
     }
 
@@ -89,6 +102,17 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
             this.controllerPath = pathCorrector.apply(path);
         }
     }
+
+	/**
+	 * Sets roles which are allowed for a given controller
+	 *
+	 * @param roles allowed roles
+	 * @throws NullPointerException whether {@code path} is {@code null}
+	 */
+	protected final void setRoles(Role... roles) {
+		requireNonNull(roles, "Roles cannot be change to 'null'");
+		this.roles = roles;
+	}
 
     @Override
     public Set<InternalRoute> getRoutes() {

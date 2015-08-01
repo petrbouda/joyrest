@@ -31,6 +31,7 @@ import org.joyrest.model.request.ImmutableRequest;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.entity.Type;
+import org.joyrest.routing.security.Role;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
 import static org.joyrest.model.http.MediaType.WILDCARD;
@@ -82,6 +83,9 @@ public class InternalRoute implements Route {
 
     /* Collection of interceptors which will be applied with execution of this route */
     private List<Interceptor> interceptors = new ArrayList<>();
+
+	/* Collection of roles which protect this route */
+	private List<Role> roles = new ArrayList<>();
 
     @SuppressWarnings("rawtypes")
     private RouteAction action;
@@ -166,7 +170,6 @@ public class InternalRoute implements Route {
 
     @Override
     public Route interceptor(Interceptor... interceptor) {
-        requireNonNull(interceptor, "An added interceptor cannot be null.");
         interceptors.addAll(asList(interceptor));
         return this;
     }
@@ -229,7 +232,17 @@ public class InternalRoute implements Route {
         this.writers.put(writer.getMediaType(), writer);
     }
 
-    @Override
+	@Override
+	public Route roles(Role... roles) {
+		this.roles = asList(roles);
+		return this;
+	}
+
+	public List<Role> getRoles() {
+		return unmodifiableList(roles);
+	}
+
+	@Override
     public int hashCode() {
         return Objects.hash(httpMethod, path);
     }
