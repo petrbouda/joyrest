@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.utils;
+package org.joyrest.routing.security;
 
-public class StringUtils {
-
-    public static boolean isEmpty(String str) {
-        return str == null || str.isEmpty();
-    }
-
-    public static boolean isNotEmpty(String str) {
-        return !isEmpty(str);
-    }
-
+/**
+ * Interface which indicates roles which allows access to protected resources
+ *
+ * @author pbouda
+ * @see org.joyrest.routing.AbstractControllerConfiguration
+ */
+public interface Role {
 }

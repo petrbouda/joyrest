@@ -15,18 +15,20 @@
  */
 package org.joyrest.routing;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.joyrest.model.RoutePart;
 import org.joyrest.model.http.HttpMethod;
 import org.joyrest.processor.RequestProcessor;
 import org.joyrest.routing.entity.Type;
+import org.joyrest.routing.security.Role;
 import org.joyrest.utils.PathUtils;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
+import static org.joyrest.utils.CollectionUtils.isEmpty;
 
 /**
  * <p>
@@ -44,64 +46,83 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractControllerConfiguration implements ControllerConfiguration {
 
-    /* Set of routes which are configured in an inherited class */
-    private final Set<InternalRoute> routes = new HashSet<>();
+	/* Set of routes which are configured in an inherited class */
+	private final Set<InternalRoute> routes = new HashSet<>();
 
-    /* Class validates and customized given path */
-    private final PathCorrector pathCorrector = new PathCorrector();
+	/* Class validates and customized given path */
+	private final PathCorrector pathCorrector = new PathCorrector();
 
-    /* Resource path that will be added to the beginning of all routes defined in the inherited class */
-    private String controllerPath = null;
+	/* Resource path that will be added to the beginning of all routes defined in the inherited class */
+	private String controllerPath = null;
 
-    /* RoutingConfiguration's initialization should be executed only once */
-    private boolean isInitialized = false;
+	/* Global settings roles which protects a given resource */
+	private Role[] roles = null;
 
-    @Override
-    public final void initialize() {
-        if (!this.isInitialized) {
-            configure();
+	/* RoutingConfiguration's initialization should be executed only once */
+	private boolean isInitialized = false;
 
-            List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(controllerPath);
-            if (nonNull(controllerPath)) {
-                this.routes.stream()
-                    .forEach(route -> route.addControllerPath(globalParts));
-            }
+	@Override
+	public final void initialize() {
+		if (!this.isInitialized) {
+			configure();
 
-            this.isInitialized = true;
-        }
-    }
+			List<RoutePart<String>> globalParts = PathUtils.createRoutePathParts(controllerPath);
+			if (nonNull(controllerPath)) {
+				this.routes.forEach(route -> route.addControllerPath(globalParts));
+			}
 
-    /**
-     * Convenient place where is possible to configure new routes for this instance of {@link ControllerConfiguration}
-     */
-    abstract protected void configure();
+			if (nonNull(roles)) {
+				this.routes.stream()
+					.filter(route -> isEmpty(route.getRoles()))
+					.forEach(route -> route.roles(this.roles));
+			}
 
-    /**
-     * Creates a resource part of the path unified for all routes defined in the inherited class
-     *
-     * @param path resource path of all defined class
-     * @throws NullPointerException whether {@code path} is {@code null}
-     */
-    protected final void setControllerPath(String path) {
-        requireNonNull(path, "Global path cannot be change to 'null'");
+			this.isInitialized = true;
+		}
+	}
 
-        if (!"".equals(path) && !"/".equals(path)) {
-            this.controllerPath = pathCorrector.apply(path);
-        }
-    }
+	/**
+	 * Convenient place where is possible to configure new routes for this instance of {@link ControllerConfiguration}
+	 */
+	abstract protected void configure();
 
-    @Override
-    public Set<InternalRoute> getRoutes() {
-        return routes;
-    }
+	/**
+	 * Creates a resource part of the path unified for all routes defined in the inherited class
+	 *
+	 * @param path resource path of all defined class
+	 * @throws NullPointerException whether {@code path} is {@code null}
+	 */
+	protected final void setControllerPath(String path) {
+		requireNonNull(path, "Global path cannot be change to 'null'");
 
-    protected InternalRoute createEntityRoute(HttpMethod method, String path, RouteAction action,
-                                              Type<?> reqClazz, Type<?> respClazz) {
-        requireNonNull(path, "Route path cannot be null.");
+		if (!"".equals(path) && !"/".equals(path)) {
+			this.controllerPath = pathCorrector.apply(path);
+		}
+	}
 
-        final String correctPath = pathCorrector.apply(path);
-        final InternalRoute route = new InternalRoute(correctPath, method, action, reqClazz, respClazz);
-        routes.add(route);
-        return route;
-    }
+	/**
+	 * Sets roles which are allowed for a given controller
+	 *
+	 * @param roles allowed roles
+	 * @throws NullPointerException whether {@code path} is {@code null}
+	 */
+	protected final void setRoles(Role... roles) {
+		requireNonNull(roles, "Roles cannot be change to 'null'");
+		this.roles = roles;
+	}
+
+	@Override
+	public Set<InternalRoute> getRoutes() {
+		return routes;
+	}
+
+	protected InternalRoute createEntityRoute(HttpMethod method, String path, RouteAction action,
+		Type<?> reqClazz, Type<?> respClazz) {
+		requireNonNull(path, "Route path cannot be null.");
+
+		final String correctPath = pathCorrector.apply(path);
+		final InternalRoute route = new InternalRoute(correctPath, method, action, reqClazz, respClazz);
+		routes.add(route);
+		return route;
+	}
 }

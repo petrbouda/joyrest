@@ -17,6 +17,7 @@ package org.joyrest.routing;
 
 import org.joyrest.interceptor.Interceptor;
 import org.joyrest.model.http.MediaType;
+import org.joyrest.routing.security.Role;
 
 /**
  * Route definition which contains all needed information about processing an incoming provider.
@@ -50,5 +51,13 @@ public interface Route {
      * @return current route
      */
     Route produces(MediaType... produces);
+
+	/**
+	 * Adds roles which protect a given route
+	 *
+	 * @param roles roles which protect a route
+	 * @return current route
+	 */
+	Route roles(Role... roles);
 
 }
