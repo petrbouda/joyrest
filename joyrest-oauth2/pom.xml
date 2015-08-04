@@ -26,10 +26,6 @@
 
     <artifactId>joyrest-oauth2</artifactId>
 
-    <properties>
-        <spring-oauth2.version>2.0.7.RELEASE</spring-oauth2.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.joyrest</groupId>
@@ -47,6 +43,12 @@
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
             <version>${spring-oauth2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
         </dependency>
     </dependencies>
 </project>

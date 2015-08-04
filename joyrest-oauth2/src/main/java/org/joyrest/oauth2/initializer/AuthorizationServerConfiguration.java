@@ -15,74 +15,76 @@
  */
 package org.joyrest.oauth2.initializer;
 
-import java.util.Objects;
+import java.util.ArrayList;
+
+import javax.sql.DataSource;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.client.InMemoryClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import static java.util.Objects.requireNonNull;
 
 public class AuthorizationServerConfiguration {
 
-    private final UserDetailsService userDetailsService;
-    private final ClientDetailsService clientDetailsService;
-    private TokenStore tokenStore;
-    private AuthorizationCodeServices authorizationCodeServices;
+    private UserDetailsService userDetailsService = new InMemoryUserDetailsManager(new ArrayList<>());
+    private ClientDetailsService clientDetailsService = new InMemoryClientDetailsService();
+    private TokenStore tokenStore = new InMemoryTokenStore();
+    private AuthorizationCodeServices authorizationCodeServices = new InMemoryAuthorizationCodeServices();
+    private DataSource dataSource;
 
-    public AuthorizationServerConfiguration(UserDetailsService userDetailsService, ClientDetailsService clientDetailsService) {
-        this(new InMemoryTokenStore(), new InMemoryAuthorizationCodeServices(), userDetailsService, clientDetailsService);
+    public DataSource getDataSource() {
+        return dataSource;
     }
 
-    public AuthorizationServerConfiguration(TokenStore tokenStore, AuthorizationCodeServices authorizationCodeServices,
-                                            UserDetailsService userDetailsService, ClientDetailsService clientDetailsService) {
-        this.tokenStore = tokenStore;
-        this.authorizationCodeServices = authorizationCodeServices;
-        this.userDetailsService = userDetailsService;
-        this.clientDetailsService = clientDetailsService;
-    }
-
-    public TokenStore getTokenStore() {
-        return tokenStore;
-    }
-
-    public void setTokenStore(final TokenStore tokenStore) {
-        this.tokenStore = tokenStore;
+    public AuthorizationServerConfiguration dataSource(final DataSource dataSource) {
+        requireNonNull(dataSource);
+        this.dataSource = dataSource;
+        return this;
     }
 
     public UserDetailsService getUserDetailsService() {
         return userDetailsService;
     }
 
+    public AuthorizationServerConfiguration userDetailsService(final UserDetailsService userDetailsService) {
+        requireNonNull(userDetailsService);
+        this.userDetailsService = userDetailsService;
+        return this;
+    }
+
     public ClientDetailsService getClientDetailsService() {
         return clientDetailsService;
+    }
+
+    public AuthorizationServerConfiguration clientDetailsService(final ClientDetailsService clientDetailsService) {
+        requireNonNull(clientDetailsService);
+        this.clientDetailsService = clientDetailsService;
+        return this;
+    }
+
+    public TokenStore getTokenStore() {
+        return tokenStore;
+    }
+
+    public AuthorizationServerConfiguration tokenStore(final TokenStore tokenStore) {
+        requireNonNull(tokenStore);
+        this.tokenStore = tokenStore;
+        return this;
     }
 
     public AuthorizationCodeServices getAuthorizationCodeServices() {
         return authorizationCodeServices;
     }
 
-    public void setAuthorizationCodeServices(final AuthorizationCodeServices authorizationCodeServices) {
+    public AuthorizationServerConfiguration authorizationCodeServices(final AuthorizationCodeServices authorizationCodeServices) {
+        requireNonNull(authorizationCodeServices);
         this.authorizationCodeServices = authorizationCodeServices;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tokenStore, userDetailsService, clientDetailsService);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final AuthorizationServerConfiguration other = (AuthorizationServerConfiguration) obj;
-        return Objects.equals(this.tokenStore, other.tokenStore)
-            && Objects.equals(this.userDetailsService, other.userDetailsService)
-            && Objects.equals(this.clientDetailsService, other.clientDetailsService);
+        return this;
     }
 }
