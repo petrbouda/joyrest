@@ -20,12 +20,14 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
+import org.joyrest.utils.ArrayUtils;
 import static org.joyrest.model.http.MediaType.WILDCARD;
 import static org.joyrest.utils.CollectionUtils.nonEmpty;
 import static org.joyrest.utils.PathUtils.createPathParts;
@@ -111,6 +113,12 @@ public abstract class InternalRequest<E> implements Request<E> {
             this.accept = nonEmpty(accepts) ? accepts : singletonList(WILDCARD);
         }
         return accept;
+    }
+
+    @Override
+    public Optional<String> getQueryParam(String name) {
+        return getQueryParams(name)
+            .map(ArrayUtils::getFirst);
     }
 
     @Override

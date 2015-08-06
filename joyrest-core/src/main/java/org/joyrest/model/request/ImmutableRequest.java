@@ -74,6 +74,11 @@ public final class ImmutableRequest<E> implements Request<E> {
     }
 
     @Override
+    public Optional<String> getQueryParam(String name) {
+        return request.getQueryParam(name);
+    }
+
+    @Override
     public Optional<String[]> getQueryParams(String name) {
         return request.getQueryParams(name);
     }

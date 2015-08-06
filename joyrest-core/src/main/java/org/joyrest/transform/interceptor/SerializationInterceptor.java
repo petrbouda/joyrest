@@ -35,20 +35,17 @@ import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
  */
 public class SerializationInterceptor implements Interceptor {
 
-    public static final int SERIALIZATION_ASPECT_ORDER = 0;
-
     @Override
-    public InternalResponse<Object> around(InterceptorChain chain,
-                                           InternalRequest<Object> request, InternalResponse<Object> response) {
+    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp) {
         InternalRoute route = chain.getRoute();
         if (route.hasRequestBody()) {
-            Object entity = readEntity(route, request);
-            request.setEntity(entity);
+            Object entity = readEntity(route, req);
+            req.setEntity(entity);
         }
 
-        chain.proceed(request, response);
-        writeEntity(route, request, response);
-        return response;
+        chain.proceed(req, resp);
+        writeEntity(route, req, resp);
+        return resp;
     }
 
     private void writeEntity(InternalRoute route, InternalRequest<?> request, InternalResponse<?> response) {
@@ -72,7 +69,7 @@ public class SerializationInterceptor implements Interceptor {
 
     @Override
     public int getOrder() {
-        return SERIALIZATION_ASPECT_ORDER;
+        return InterceptorInternalOrders.SERIALIZATION;
     }
 
 }

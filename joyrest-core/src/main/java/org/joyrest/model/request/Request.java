@@ -71,12 +71,20 @@ public interface Request<E> {
     Map<String, String[]> getQueryParams();
 
     /**
-     * Returns a concrete query param according to {@code name} value
+     * Returns a concrete query param array according to {@code name} value
      *
      * @param name query's param name
      * @return query param value in {@link Optional} object
      */
     Optional<String[]> getQueryParams(String name);
+
+    /**
+     * Returns a concrete query param according to {@code name} value
+     *
+     * @param name query's param name
+     * @return query param value in {@link Optional} object
+     */
+    Optional<String> getQueryParam(String name);
 
     /**
      * Returns all path params in a provider object
