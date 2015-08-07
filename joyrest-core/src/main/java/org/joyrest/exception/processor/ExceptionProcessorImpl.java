@@ -40,8 +40,9 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
     }
 
     @Override
-    public <T extends Exception> void process(T ex, InternalRequest<Object> request, InternalResponse<Object> response)
-        throws Exception {
+    public <T extends Exception> InternalResponse<Object> process(final T ex,
+                                                                  final InternalRequest<Object> req,
+                                                                  final InternalResponse<Object> resp) throws Exception{
         Class<? extends Exception> clazz = ex.getClass();
         InternalExceptionHandler handler = handlers.get(clazz);
 
@@ -49,8 +50,9 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
             handler = getHandlerFromParent(clazz).orElseThrow(() -> ex);
         }
 
-        handler.execute(request, response, ex);
-        writeEntity(handler, request, response);
+        handler.execute(req, resp, ex);
+        writeEntity(handler, req, resp);
+        return resp;
     }
 
     private void writeEntity(InternalExceptionHandler handler, InternalRequest<?> request, InternalResponse<?> response) {

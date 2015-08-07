@@ -12,7 +12,7 @@ import org.joyrest.interceptor.Interceptor;
 import org.joyrest.interceptor.InterceptorChain;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.transform.interceptor.InterceptorInternalOrders;
+import org.joyrest.interceptor.InterceptorInternalOrders;
 
 public class BeanValidationInterceptor implements Interceptor {
 
@@ -24,7 +24,8 @@ public class BeanValidationInterceptor implements Interceptor {
     }
 
     @Override
-    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp) {
+    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp)
+            throws Exception{
 
         Set<ConstraintViolation<Object>> requestConstraintViolations = validator.validate(req.getEntity());
         if (!requestConstraintViolations.isEmpty()) {

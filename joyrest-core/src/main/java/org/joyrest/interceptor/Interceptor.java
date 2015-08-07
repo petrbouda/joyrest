@@ -39,6 +39,7 @@ public interface Interceptor extends Ordered {
      * @param resp response injected into interceptor
      * @return response after the interceptor and route call
      */
-    InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp);
+    InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp)
+        throws Exception;
 
 }

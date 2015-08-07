@@ -34,7 +34,9 @@ import org.joyrest.routing.entity.Type;
 import org.joyrest.routing.security.Role;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
+import org.joyrest.utils.CollectionUtils;
 import static org.joyrest.model.http.MediaType.WILDCARD;
+import static org.joyrest.utils.CollectionUtils.nonEmpty;
 import static org.joyrest.utils.PathUtils.createPathParts;
 
 import static java.util.Arrays.asList;
@@ -241,6 +243,10 @@ public class InternalRoute implements Route {
 	public List<Role> getRoles() {
 		return unmodifiableList(roles);
 	}
+
+    public boolean isSecured() {
+        return nonEmpty(roles);
+    }
 
 	@Override
     public int hashCode() {

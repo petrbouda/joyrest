@@ -39,8 +39,9 @@ public interface InterceptorChain {
      * @param request provider injected into interceptor
      * @param response response injected into interceptor
      * @return temporal value of response
+     * @throws Exception occurred during processing the request and response
      */
-    InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response);
+    InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;
 
     /**
      * {@link org.joyrest.routing.Route} object which belongs into the given chain

@@ -15,58 +15,56 @@
  */
 package org.joyrest.oauth2.interceptor;
 
-import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.joyrest.interceptor.Interceptor;
 import org.joyrest.interceptor.InterceptorChain;
-import org.joyrest.logging.JoyLogger;
+import org.joyrest.interceptor.InterceptorInternalOrders;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.transform.interceptor.InterceptorInternalOrders;
+import org.joyrest.routing.InternalRoute;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import org.springframework.security.oauth2.provider.authentication.TokenExtractor;
-import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 public class AuthenticationInterceptor implements Interceptor {
 
-    private final static JoyLogger logger = JoyLogger.of(AuthenticationInterceptor.class);
+    private final AuthenticationManager authenticationManager;
 
-    private AuthenticationEntryPoint authenticationEntryPoint = new OAuth2AuthenticationEntryPoint();
-
-    private AuthenticationManager authenticationManager;
+    public AuthenticationInterceptor(final AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
-    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp) {
+    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp)
+            throws Exception{
+        InternalRoute route = chain.getRoute();
 
-        Optional<Authentication> authentication = extract(req);
-        req.setPrincipal(authentication.get());
+        if (route.isSecured()) {
+            Authentication authentication = extractToken(req)
+                .orElseThrow(() -> new InvalidTokenException("There is no access token in headers or in query params"));
+
+            Authentication principal = authenticationManager.authenticate(authentication);
+            req.setPrincipal(principal);
+        }
 
         return chain.proceed(req, resp);
     }
 
     @Override
     public int getOrder() {
-        return InterceptorInternalOrders.AUTHORIZATION;
+        return InterceptorInternalOrders.AUTHENTICATION;
     }
 
-    public Optional<Authentication> extract(InternalRequest<Object> req) {
-        return extractToken(req)
-            .filter(Objects::nonNull)
-            .map(token -> new PreAuthenticatedAuthenticationToken(token, ""));
-    }
-
-    private Optional<String> extractToken(InternalRequest<Object> req) {
+    private Optional<Authentication> extractToken(InternalRequest<Object> req) {
         return extractHeaderToken(req)
             .filter(Objects::isNull)
-            .flatMap(value -> req.getQueryParam(OAuth2AccessToken.ACCESS_TOKEN));
+            .flatMap(value -> req.getQueryParam(OAuth2AccessToken.ACCESS_TOKEN))
+            .filter(Objects::nonNull)
+            .map(token -> new PreAuthenticatedAuthenticationToken(token, ""));
     }
 
     private Optional<String> extractHeaderToken(InternalRequest<Object> req) {

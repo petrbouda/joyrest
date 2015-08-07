@@ -15,19 +15,46 @@
  */
 package org.joyrest.oauth2.interceptor;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.interceptor.Interceptor;
 import org.joyrest.interceptor.InterceptorChain;
+import org.joyrest.interceptor.InterceptorInternalOrders;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
-import org.joyrest.transform.interceptor.InterceptorInternalOrders;
+import org.joyrest.routing.InternalRoute;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
+
+import static java.util.stream.Collectors.toList;
 
 public class AuthrizationInterceptor implements Interceptor {
 
     @Override
-    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp) {
+    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp)
+            throws Exception {
+        InternalRoute route = chain.getRoute();
+        if (!route.isSecured()) {
+            return chain.proceed(req, resp);
+        }
 
-        return null;
+        Authentication authentication = req.getPrincipal()
+            .filter(principal -> principal instanceof Authentication)
+            .map(principal -> (Authentication) principal)
+            .orElseThrow(() -> new InvalidConfigurationException("Principal object is not Authentication type."));
 
+        List<String> authorities = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(toList());
+
+        if (Collections.disjoint(authorities, route.getRoles())) {
+            throw new UserDeniedAuthorizationException("User denied access");
+        }
+
+        return chain.proceed(req, resp);
     }
 
     @Override

@@ -32,11 +32,13 @@ public interface ExceptionProcessor {
      * Method processes a handled exception.
      *
      * @param ex injected object of handled exception
-     * @param request injected provider object
-     * @param response injected response object
+     * @param req injected provider object
+     * @param resp injected response object
      * @param <T> type of the handled exception
+     * @return response object when the processing finished successfully
      * @throws Exception exception occurred during exception processing in framework
      */
-    <T extends Exception> void process(T ex, InternalRequest<Object> request, InternalResponse<Object> response) throws Exception;
+    <T extends Exception> InternalResponse<Object> process(T ex, InternalRequest<Object> req, InternalResponse<Object> resp)
+        throws Exception;
 
 }

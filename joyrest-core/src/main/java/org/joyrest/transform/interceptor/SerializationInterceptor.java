@@ -17,6 +17,7 @@ package org.joyrest.transform.interceptor;
 
 import org.joyrest.interceptor.Interceptor;
 import org.joyrest.interceptor.InterceptorChain;
+import org.joyrest.interceptor.InterceptorInternalOrders;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
@@ -36,7 +37,9 @@ import static org.joyrest.model.http.HeaderName.CONTENT_TYPE;
 public class SerializationInterceptor implements Interceptor {
 
     @Override
-    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp) {
+    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp)
+            throws Exception{
+
         InternalRoute route = chain.getRoute();
         if (route.hasRequestBody()) {
             Object entity = readEntity(route, req);

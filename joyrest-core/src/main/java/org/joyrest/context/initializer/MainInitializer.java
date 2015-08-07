@@ -25,6 +25,7 @@ import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.exception.type.RestException;
 import org.joyrest.interceptor.Interceptor;
 import org.joyrest.routing.ControllerConfiguration;
+import org.joyrest.routing.interceptor.PathParamProcessingInterceptor;
 import org.joyrest.transform.AbstractReaderWriter;
 import org.joyrest.transform.Reader;
 import org.joyrest.transform.Writer;
@@ -39,6 +40,7 @@ import static org.joyrest.context.helper.PopulateHelper.populateRouteReaders;
 import static org.joyrest.context.helper.PopulateHelper.populateRouteWriters;
 import static org.joyrest.utils.CollectionUtils.concat;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.function.Function.identity;
@@ -46,9 +48,11 @@ import static java.util.stream.Collectors.toMap;
 
 public class MainInitializer implements Initializer {
 
-    protected final List<Interceptor> PREDEFINED_INTERCEPTORS = singletonList(new SerializationInterceptor());
+    protected final List<Interceptor> PREDEFINED_INTERCEPTORS = asList(
+        new SerializationInterceptor(), new PathParamProcessingInterceptor());
 
-    protected final List<ExceptionConfiguration> PREDEFINED_HANDLERS = singletonList(new InternalExceptionConfiguration());
+    protected final List<ExceptionConfiguration> PREDEFINED_HANDLERS = singletonList(
+        new InternalExceptionConfiguration());
 
     @Override
     public void init(InitContext context, BeanFactory beanFactory) {
@@ -61,8 +65,7 @@ public class MainInitializer implements Initializer {
         List<Interceptor> interceptors = sort(
             concat(beanFactory.getAll(Interceptor.class), context.getInterceptors(), PREDEFINED_INTERCEPTORS));
         List<ExceptionConfiguration> handlers =
-            concat(beanFactory.getAll(ExceptionConfiguration.class), context.getExceptionConfigurations(),
-                PREDEFINED_HANDLERS);
+            concat(beanFactory.getAll(ExceptionConfiguration.class), context.getExceptionConfigurations(), PREDEFINED_HANDLERS);
         List<ControllerConfiguration> controllers =
             concat(beanFactory.getAll(ControllerConfiguration.class), context.getControllerConfigurations());
 

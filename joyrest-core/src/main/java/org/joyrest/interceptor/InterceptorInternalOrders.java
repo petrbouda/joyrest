@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.transform.interceptor;
+package org.joyrest.interceptor;
 
 public class InterceptorInternalOrders {
 
-    public static int SERIALIZATION = 0;
+    public static final int SERIALIZATION = 50;
 
-    public static int AUTHORIZATION = 50;
+    public static final int AUTHENTICATION = 100;
 
-    public static int VALIDATION = 100;
+    public static final int AUTHORIZATION = 150;
+
+    public static final int PATH_PARAM_PROCESSING = 200;
+
+    public static final int VALIDATION = 250;
 
 }

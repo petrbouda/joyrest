@@ -38,7 +38,7 @@ public class InterceptorChainImpl implements InterceptorChain {
     }
 
     @Override
-    public InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response) {
+    public InternalResponse<Object> proceed(InternalRequest<Object> request, InternalResponse<Object> response) throws Exception {
         requireNonNull(request);
         Interceptor interceptor = interceptors.poll();
 

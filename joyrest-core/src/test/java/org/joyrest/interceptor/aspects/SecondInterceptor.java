@@ -29,7 +29,7 @@ public class SecondInterceptor implements Interceptor {
     @Override
     public InternalResponse<Object> around(InterceptorChain chain,
                                            InternalRequest<Object> request,
-                                           InternalResponse<Object> response) {
+                                           InternalResponse<Object> response) throws Exception {
         Map<HeaderName, String> headers = request.getHeaders();
 
         if (!"YES".equals(headers.get(of("1"))) ||

@@ -31,7 +31,7 @@ public class SecondInterceptor implements Interceptor {
     @Override
     public InternalResponse<Object> around(InterceptorChain chain,
                                            InternalRequest<Object> request,
-                                           InternalResponse<Object> response) {
+                                           InternalResponse<Object> response) throws Exception {
         if (isNull(ContextHolder.get(FIRST_KEY)) ||
             nonNull(ContextHolder.get(SECOND_KEY)) ||
             nonNull(ContextHolder.get(THIRD_KEY))) {

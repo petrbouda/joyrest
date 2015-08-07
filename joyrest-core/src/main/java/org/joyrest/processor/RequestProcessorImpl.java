@@ -59,14 +59,10 @@ public class RequestProcessorImpl implements RequestProcessor {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private InternalResponse<Object> processRequest(final InternalRequest<Object> request,
-                                                    final InternalResponse<Object> response) {
-        final InternalRoute route = defaultRouteResolver.resolveRoute(request);
-
-        request.setPathParams(getPathParams(route, request.getPathParts()));
-
+    private InternalResponse<Object> processRequest(final InternalRequest<Object> req, final InternalResponse<Object> resp)
+            throws Exception{
+        final InternalRoute route = defaultRouteResolver.resolveRoute(req);
         InterceptorChain chain = new InterceptorChainImpl(route);
-        return chain.proceed(request, response);
+        return chain.proceed(req, resp);
     }
 }

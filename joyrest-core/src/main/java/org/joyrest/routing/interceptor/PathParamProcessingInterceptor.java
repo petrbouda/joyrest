@@ -13,31 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.interceptor.aspects;
-
-import java.util.Map;
+package org.joyrest.routing.interceptor;
 
 import org.joyrest.interceptor.Interceptor;
 import org.joyrest.interceptor.InterceptorChain;
-import org.joyrest.model.http.HeaderName;
+import org.joyrest.interceptor.InterceptorInternalOrders;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
+import static org.joyrest.utils.PathUtils.getPathParams;
 
-public class SwallowInterceptor implements Interceptor {
+public class PathParamProcessingInterceptor implements Interceptor {
 
     @Override
-    public InternalResponse<Object> around(InterceptorChain chain,
-                                           InternalRequest<Object> request,
-                                           InternalResponse<Object> response) throws Exception {
-        Map<HeaderName, String> headers = request.getHeaders();
+    public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp)
+            throws Exception {
 
-        headers.put(HeaderName.of("Swallowed"), "YES");
-
-        return response;
+        req.setPathParams(getPathParams(chain.getRoute(), req.getPathParts()));
+        return chain.proceed(req, resp);
     }
 
     @Override
     public int getOrder() {
-        return -50;
+        return InterceptorInternalOrders.PATH_PARAM_PROCESSING;
     }
 }
