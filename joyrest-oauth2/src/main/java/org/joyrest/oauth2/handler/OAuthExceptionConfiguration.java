@@ -17,6 +17,12 @@ package org.joyrest.oauth2.handler;
 
 import org.joyrest.exception.configuration.TypedExceptionConfiguration;
 import org.joyrest.model.http.HttpStatus;
+import org.joyrest.model.request.Request;
+import org.joyrest.model.response.Response;
+import org.joyrest.oauth2.exception.ForbiddenException;
+import org.joyrest.oauth2.exception.UnauthorizedException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InsufficientScopeException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
@@ -29,17 +35,27 @@ public class OAuthExceptionConfiguration extends TypedExceptionConfiguration {
 
     @Override
     protected void configure() {
-        handle(OAuth2Exception.class, (req, resp, ex) -> {
-            resp.entity(ex);
+        handle(OAuth2Exception.class, this::process, Resp(OAuth2Exception.class));
 
-            int status = ex.getHttpErrorCode();
-            resp.status(HttpStatus.of(status));
-
-            resp.header(CACHE_CONTROL, "no-store");
-            resp.header(PRAGMA, "no-cache");
-            if (status == HttpStatus.UNAUTHORIZED.code() || (ex instanceof InsufficientScopeException)) {
-                resp.header(WWW_AUTHENTICATE, String.format("%s %s", OAuth2AccessToken.BEARER_TYPE, ex.getSummary()));
-            }
+        handle(AuthenticationException.class, (req, resp, ex) -> {
+            process(req, resp, new UnauthorizedException(ex.getMessage(), ex));
         }, Resp(OAuth2Exception.class));
+
+        handle(AccessDeniedException.class, (req, resp, ex) -> {
+            process(req, resp, new ForbiddenException(ex.getMessage(), ex));
+        }, Resp(OAuth2Exception.class));
+    }
+
+    private void process(Request<?> req, Response<OAuth2Exception> resp, OAuth2Exception ex) {
+        resp.entity(ex);
+
+        int status = ex.getHttpErrorCode();
+        resp.status(HttpStatus.of(status));
+
+        resp.header(CACHE_CONTROL, "no-store");
+        resp.header(PRAGMA, "no-cache");
+        if (status == HttpStatus.UNAUTHORIZED.code() || (ex instanceof InsufficientScopeException)) {
+            resp.header(WWW_AUTHENTICATE, String.format("%s %s", OAuth2AccessToken.BEARER_TYPE, ex.getSummary()));
+        }
     }
 }

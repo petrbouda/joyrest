@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.interceptor;
+package org.joyrest.oauth2.exception;
 
-public class InterceptorInternalOrders {
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 
-    public static final int SERIALIZATION = 50;
+public class UnauthorizedException extends OAuth2Exception {
 
-    public static final int EXCEPTION_HANDLER = 100;
+    private static final long serialVersionUID = 1001022028598022203L;
 
-    public static final int AUTHENTICATION = 150;
+    public UnauthorizedException(final String msg, final Throwable t) {
+        super(msg, t);
+    }
 
-    public static final int AUTHORIZATION = 200;
+    public String getOAuth2ErrorCode() {
+        return "unauthorized";
+    }
 
-    public static final int PATH_PARAM_PROCESSING = 250;
-
-    public static final int VALIDATION = 300;
-
+    public int getHttpErrorCode() {
+        return 401;
+    }
 }

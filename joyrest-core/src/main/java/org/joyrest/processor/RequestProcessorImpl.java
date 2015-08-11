@@ -15,9 +15,15 @@
  */
 package org.joyrest.processor;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.joyrest.context.ApplicationContext;
+import org.joyrest.exception.InternalExceptionConfiguration;
+import org.joyrest.exception.handler.InternalExceptionHandler;
 import org.joyrest.exception.processor.ExceptionProcessor;
 import org.joyrest.exception.processor.ExceptionProcessorImpl;
+import org.joyrest.exception.type.RestException;
 import org.joyrest.interceptor.InterceptorChain;
 import org.joyrest.interceptor.InterceptorChainImpl;
 import org.joyrest.model.request.InternalRequest;
@@ -42,20 +48,21 @@ public class RequestProcessorImpl implements RequestProcessor {
     /* Classes for route resolving - find the correct route according to the incoming model */
     private final RouteResolver defaultRouteResolver;
 
-    /* Class for a exception processing */
-    private final ExceptionProcessor exceptionProcessor;
+    private final InternalExceptionHandler handler;
 
     public RequestProcessorImpl(ApplicationContext context) {
         this.defaultRouteResolver = new DefaultRouteResolver(context);
-        this.exceptionProcessor = new ExceptionProcessorImpl(context);
+
+        Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers = context.getExceptionHandlers();
+        this.handler = exceptionHandlers.get(RestException.class);
     }
 
     @Override
     public void process(final InternalRequest<Object> request, final InternalResponse<Object> response) throws Exception {
         try {
             processRequest(request, response);
-        } catch (Exception ex) {
-            exceptionProcessor.process(ex, request, response);
+        } catch (RestException ex) {
+            handler.execute(request, response, ex);
         }
     }
 

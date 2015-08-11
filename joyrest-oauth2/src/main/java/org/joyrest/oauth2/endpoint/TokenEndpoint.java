@@ -28,6 +28,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
@@ -83,24 +84,12 @@ public class TokenEndpoint extends TypedControllerConfiguration {
         return clientId;
     }
 
-    private static Supplier<InsufficientAuthenticationException> insufficientAuthenticationExceptionSupplier() {
-        return () -> new InsufficientAuthenticationException(
-            "There is no client authentication. Try adding an appropriate authentication filter.");
-    }
-
     @Override
     protected void configure() {
         setControllerPath("oauth");
 
         post("token", (req, resp) -> {
-            String basicAuthHeader = req.getHeader("Authorization")
-                .orElseThrow(() -> new BadCredentialsException("Failed to decode basic authentication token"));
-
-            Authentication principal = basicAuthenticator.authenticate(basicAuthHeader);
-
-            if (!principal.isAuthenticated()) {
-                throw insufficientAuthenticationExceptionSupplier().get();
-            }
+            Authentication principal = basicAuthenticator.authenticate(req);
 
             String clientId = getClientId(principal);
             ClientDetails authenticatedClient = clientDetailsService.loadClientByClientId(clientId);

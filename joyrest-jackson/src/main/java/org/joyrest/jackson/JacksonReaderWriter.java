@@ -34,6 +34,7 @@ public class JacksonReaderWriter extends AbstractReaderWriter {
     @Override
     public void writeTo(InternalResponse<?> response, InternalRequest<?> request) {
         try {
+            mapper.canSerialize(response.getEntity().get().getClass());
             mapper.writeValue(response.getOutputStream(), response.getEntity().get());
         } catch (IOException e) {
             throw new RuntimeException("An error occurred during marshalling from JSON.");

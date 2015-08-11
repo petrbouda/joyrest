@@ -48,6 +48,12 @@
     <dependencies>
         <dependency>
             <groupId>org.joyrest</groupId>
+            <artifactId>joyrest-oauth2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joyrest</groupId>
             <artifactId>joyrest-spring</artifactId>
             <version>${project.version}</version>
         </dependency>

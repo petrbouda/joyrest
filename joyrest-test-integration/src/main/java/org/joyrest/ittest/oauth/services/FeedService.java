@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.interceptor;
+package org.joyrest.ittest.oauth.services;
 
-public class InterceptorInternalOrders {
+import java.util.List;
 
-    public static final int SERIALIZATION = 50;
+import org.joyrest.ittest.oauth.model.Feed;
 
-    public static final int EXCEPTION_HANDLER = 100;
+public interface FeedService {
 
-    public static final int AUTHENTICATION = 150;
+	Feed save(Feed feed);
 
-    public static final int AUTHORIZATION = 200;
+	Feed get(String feedId);
 
-    public static final int PATH_PARAM_PROCESSING = 250;
-
-    public static final int VALIDATION = 300;
+	List<Feed> getAll();
 
 }

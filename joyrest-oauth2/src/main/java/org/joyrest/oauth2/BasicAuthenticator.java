@@ -18,11 +18,14 @@ package org.joyrest.oauth2;
 import java.io.IOException;
 
 import org.joyrest.logging.JoyLogger;
+import org.joyrest.model.request.InternalRequest;
+import org.joyrest.model.request.Request;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.codec.Base64;
+import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import static java.util.Objects.isNull;
@@ -38,7 +41,10 @@ public class BasicAuthenticator {
         this.authenticationManager = oAuth2AuthenticationManager;
     }
 
-    public Authentication authenticate(String header) {
+    public Authentication authenticate(Request<?> request) {
+        String header = request.getHeader("Authorization")
+            .orElseThrow(() -> new BadCredentialsException("There is no Authorization header"));
+
         if (isNull(header) || !header.startsWith("Basic ")) {
             throw new BadCredentialsException("Failed to decode basic authentication token");
         }

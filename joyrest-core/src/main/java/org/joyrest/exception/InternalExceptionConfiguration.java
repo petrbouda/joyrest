@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.joyrest.interceptor;
+package org.joyrest.exception;
 
-public class InterceptorInternalOrders {
+import org.joyrest.exception.configuration.TypedExceptionConfiguration;
+import org.joyrest.exception.type.RestException;
 
-    public static final int SERIALIZATION = 50;
+public class InternalExceptionConfiguration extends TypedExceptionConfiguration {
 
-    public static final int EXCEPTION_HANDLER = 100;
-
-    public static final int AUTHENTICATION = 150;
-
-    public static final int AUTHORIZATION = 200;
-
-    public static final int PATH_PARAM_PROCESSING = 250;
-
-    public static final int VALIDATION = 300;
-
+    @Override
+    protected void configure() {
+        handle(RestException.class, (req, resp, ex) -> {
+            resp.status(ex.getStatus());
+            ex.getHeaders()
+                .forEach(resp::header);
+        });
+    }
 }
