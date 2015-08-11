@@ -25,6 +25,7 @@ import org.joyrest.context.initializer.InitContext;
 import org.joyrest.context.initializer.Initializer;
 import org.joyrest.oauth2.endpoint.AuthorizationEndpoint;
 import org.joyrest.oauth2.endpoint.TokenEndpoint;
+import org.joyrest.oauth2.handler.OAuthExceptionConfiguration;
 import org.joyrest.oauth2.interceptor.AuthenticationInterceptor;
 import org.joyrest.oauth2.interceptor.AuthrizationInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
@@ -104,7 +105,7 @@ public class OAuth2Initializer implements Initializer {
 
         context.addControllerConfiguration(tokenEndpoint);
         context.addControllerConfiguration(authorizationEndpoint);
-
+        context.addExceptionConfiguration(new OAuthExceptionConfiguration());
         context.addInterceptor(new AuthenticationInterceptor(clientManager));
         context.addInterceptor(new AuthrizationInterceptor());
     }

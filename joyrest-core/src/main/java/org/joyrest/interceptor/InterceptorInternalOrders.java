@@ -17,11 +17,11 @@ package org.joyrest.interceptor;
 
 public class InterceptorInternalOrders {
 
-    public static final int SERIALIZATION = 50;
+    public static final int AUTHENTICATION = 50;
 
-    public static final int AUTHENTICATION = 100;
+    public static final int AUTHORIZATION = 100;
 
-    public static final int AUTHORIZATION = 150;
+    public static final int SERIALIZATION = 150;
 
     public static final int PATH_PARAM_PROCESSING = 200;
 

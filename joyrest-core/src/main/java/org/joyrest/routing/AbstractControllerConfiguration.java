@@ -56,7 +56,7 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	private String controllerPath = null;
 
 	/* Global settings roles which protects a given resource */
-	private Role[] roles = null;
+	private String[] roles = null;
 
 	/* RoutingConfiguration's initialization should be executed only once */
 	private boolean isInitialized = false;
@@ -106,7 +106,7 @@ public abstract class AbstractControllerConfiguration implements ControllerConfi
 	 * @param roles allowed roles
 	 * @throws NullPointerException whether {@code path} is {@code null}
 	 */
-	protected final void setRoles(Role... roles) {
+	protected final void setRoles(String... roles) {
 		requireNonNull(roles, "Roles cannot be change to 'null'");
 		this.roles = roles;
 	}

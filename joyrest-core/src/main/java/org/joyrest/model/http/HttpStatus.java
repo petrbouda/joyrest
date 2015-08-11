@@ -15,6 +15,13 @@
  */
 package org.joyrest.model.http;
 
+import java.util.Objects;
+
+import org.joyrest.exception.type.InvalidConfigurationException;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 public enum HttpStatus {
 
     OK(200, "OK"),
@@ -58,7 +65,18 @@ public enum HttpStatus {
 
     private final int statusCode;
 
-    private final String statusName;
+    private String statusName;
+
+    public static HttpStatus of(int code) {
+        for (HttpStatus status: values()) {
+            if(status.code() == code) {
+                return status;
+            }
+        }
+
+        throw new InvalidConfigurationException("There is no status code " + code);
+    }
+
 
     HttpStatus(int statusCode, String statusName) {
         this.statusCode = statusCode;

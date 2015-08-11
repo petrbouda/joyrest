@@ -87,7 +87,7 @@ public class InternalRoute implements Route {
     private List<Interceptor> interceptors = new ArrayList<>();
 
 	/* Collection of roles which protect this route */
-	private List<Role> roles = new ArrayList<>();
+	private List<String> roles = new ArrayList<>();
 
     @SuppressWarnings("rawtypes")
     private RouteAction action;
@@ -235,12 +235,12 @@ public class InternalRoute implements Route {
     }
 
 	@Override
-	public Route roles(Role... roles) {
+	public Route roles(String... roles) {
 		this.roles = asList(roles);
 		return this;
 	}
 
-	public List<Role> getRoles() {
+	public List<String> getRoles() {
 		return unmodifiableList(roles);
 	}
 

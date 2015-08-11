@@ -58,6 +58,6 @@ public interface Route {
 	 * @param roles roles which protect a route
 	 * @return current route
 	 */
-	Route roles(Role... roles);
+	Route roles(String... roles);
 
 }

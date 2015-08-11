@@ -50,6 +50,7 @@ public final class HeaderName {
     public static final HeaderName IF_UNMODIFIED_SINCE = new HeaderName("if-unmodified-since");
     public static final HeaderName LAST_MODIFIED = new HeaderName("last-modified");
     public static final HeaderName LOCATION = new HeaderName("location");
+    public static final HeaderName PRAGMA = new HeaderName("pragma");
     public static final HeaderName PROXY_AUTHENTICATE = new HeaderName("proxy-authenticate");
     public static final HeaderName PROXY_AUTHORIZATION = new HeaderName("proxy-authorization");
     public static final HeaderName REFERER = new HeaderName("referer");

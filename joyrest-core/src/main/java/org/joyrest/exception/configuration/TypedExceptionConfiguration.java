@@ -37,8 +37,7 @@ public abstract class TypedExceptionConfiguration extends AbstractExceptionConfi
      * @param <RESP> type of the returned object
      * @return registered exception handler
      */
-    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
-                                                                        ExceptionHandlerAction<RESP, T> action) {
+    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz, ExceptionHandlerAction<RESP, T> action) {
         return putHandler(clazz, action, null);
     }
 
@@ -52,8 +51,7 @@ public abstract class TypedExceptionConfiguration extends AbstractExceptionConfi
      * @param resp type of the response object - single object
      * @return registered exception handler
      */
-    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
-                                                                        ExceptionHandlerAction<RESP, T> action,
+    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz, ExceptionHandlerAction<RESP, T> action,
                                                                         ResponseType<RESP> resp) {
         return putHandler(clazz, action, resp);
     }
@@ -68,8 +66,7 @@ public abstract class TypedExceptionConfiguration extends AbstractExceptionConfi
      * @param resp type of the response object - collection
      * @return registered exception handler
      */
-    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz,
-                                                                        ExceptionHandlerAction<RESP, T> action,
+    protected final <T extends Exception, RESP> ExceptionHandler handle(Class<T> clazz, ExceptionHandlerAction<RESP, T> action,
                                                                         ResponseCollectionType<RESP> resp) {
         return putHandler(clazz, action, resp);
     }
