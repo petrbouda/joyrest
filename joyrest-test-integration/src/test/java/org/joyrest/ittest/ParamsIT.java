@@ -83,5 +83,4 @@ public class ParamsIT extends AbstractRestIntegrationTest {
             .body("description", equalTo("For input string: \"d\""))
             .body("reason", equalTo("NumberFormatException"));
     }
-
 }

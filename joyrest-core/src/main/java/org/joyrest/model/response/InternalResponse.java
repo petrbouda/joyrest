@@ -26,6 +26,8 @@ public abstract class InternalResponse<E> implements Response<E> {
 
     private E entity;
 
+    private boolean entityWritten;
+
     public abstract OutputStream getOutputStream();
 
     public abstract Map<HeaderName, String> getHeaders();
@@ -47,4 +49,11 @@ public abstract class InternalResponse<E> implements Response<E> {
         return Optional.ofNullable(entity);
     }
 
+    public boolean isEntityWritten() {
+        return entityWritten;
+    }
+
+    public void setEntityWritten(boolean entityWritten) {
+        this.entityWritten = entityWritten;
+    }
 }

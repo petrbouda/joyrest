@@ -31,7 +31,7 @@ import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthoriza
 
 import static java.util.stream.Collectors.toList;
 
-public class AuthrizationInterceptor implements Interceptor {
+public class AuthorizationInterceptor implements Interceptor {
 
     @Override
     public InternalResponse<Object> around(InterceptorChain chain, InternalRequest<Object> req, InternalResponse<Object> resp)

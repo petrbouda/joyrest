@@ -34,12 +34,9 @@ public class PathComparator implements BiPredicate<InternalRoute, InternalReques
     /**
      * Compares the route part (part which is configured) and the path part (part which is gained from the client).
      *
-     * <p>
      * If it is just string path, so this method will compare the value of the strings.
-     * <p/>
      * <p>
      * If it is param path, so method will find out whether is possible to cast the object or not.
-     * <p/>
      *
      * @param routePart configured part
      * @param pathPart path from a client's call
@@ -73,6 +70,7 @@ public class PathComparator implements BiPredicate<InternalRoute, InternalReques
             return false;
         }
 
+        request.setSelectedRoute(route);
         return StreamUtils.zip(routeParts.stream(), pathParts.stream(), PathComparator::compareParts)
             .allMatch(result -> result);
     }

@@ -16,6 +16,7 @@
 package org.joyrest.processor;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.joyrest.context.ApplicationContext;
@@ -26,11 +27,18 @@ import org.joyrest.exception.processor.ExceptionProcessorImpl;
 import org.joyrest.exception.type.RestException;
 import org.joyrest.interceptor.InterceptorChain;
 import org.joyrest.interceptor.InterceptorChainImpl;
+import org.joyrest.model.http.HeaderName;
+import org.joyrest.model.http.MediaType;
 import org.joyrest.model.request.InternalRequest;
 import org.joyrest.model.response.InternalResponse;
 import org.joyrest.routing.InternalRoute;
 import org.joyrest.routing.resolver.DefaultRouteResolver;
 import org.joyrest.routing.resolver.RouteResolver;
+import org.joyrest.transform.SerializationUtils;
+import org.joyrest.transform.Writer;
+
+import static java.util.Objects.nonNull;
+import static org.joyrest.exception.type.RestException.notAcceptableSupplier;
 import static org.joyrest.utils.PathUtils.getPathParams;
 
 /**
@@ -48,27 +56,31 @@ public class RequestProcessorImpl implements RequestProcessor {
     /* Classes for route resolving - find the correct route according to the incoming model */
     private final RouteResolver defaultRouteResolver;
 
-    private final InternalExceptionHandler handler;
+    private final Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers;
 
     public RequestProcessorImpl(ApplicationContext context) {
         this.defaultRouteResolver = new DefaultRouteResolver(context);
-
-        Map<Class<? extends Exception>, InternalExceptionHandler> exceptionHandlers = context.getExceptionHandlers();
-        this.handler = exceptionHandlers.get(RestException.class);
+        this.exceptionHandlers = context.getExceptionHandlers();
     }
 
     @Override
     public void process(final InternalRequest<Object> request, final InternalResponse<Object> response) throws Exception {
         try {
             processRequest(request, response);
-        } catch (RestException ex) {
-            handler.execute(request, response, ex);
+        } catch (Exception ex) {
+            InternalExceptionHandler internalExceptionHandler = exceptionHandlers.get(ex.getClass());
+            internalExceptionHandler.execute(request, response, ex);
+
+            if (nonNull(request.getSelectedRoute())) {
+                SerializationUtils.writeEntity(request.getSelectedRoute(), request, response, MediaType.JSON);
+            }
         }
     }
 
     private InternalResponse<Object> processRequest(final InternalRequest<Object> req, final InternalResponse<Object> resp)
             throws Exception{
-        final InternalRoute route = defaultRouteResolver.resolveRoute(req);
+        InternalRoute route = defaultRouteResolver.resolveRoute(req);
+        req.setSelectedRoute(route);
         InterceptorChain chain = new InterceptorChainImpl(route);
         return chain.proceed(req, resp);
     }

@@ -71,6 +71,7 @@ public class ExceptionProcessorImpl implements ExceptionProcessor {
 
             response.header(CONTENT_TYPE, writer.getMediaType().get());
             writer.writeTo(response, request);
+            response.setEntityWritten(true);
         }
     }
 

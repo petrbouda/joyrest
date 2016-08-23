@@ -27,6 +27,7 @@ import org.joyrest.exception.type.InvalidConfigurationException;
 import org.joyrest.model.http.HeaderName;
 import org.joyrest.model.http.MediaType;
 import org.joyrest.model.http.PathParam;
+import org.joyrest.routing.InternalRoute;
 import org.joyrest.utils.ArrayUtils;
 import static org.joyrest.model.http.MediaType.WILDCARD;
 import static org.joyrest.utils.CollectionUtils.nonEmpty;
@@ -59,6 +60,8 @@ public abstract class InternalRequest<E> implements Request<E> {
     protected List<MediaType> accept;
 
     protected Principal principal;
+
+    protected InternalRoute selectedRoute;
 
     /**
      * Returns remote address of an incoming request
@@ -173,5 +176,13 @@ public abstract class InternalRequest<E> implements Request<E> {
 
     public void setPrincipal(Principal principal) {
         this.principal = principal;
+    }
+
+    public InternalRoute getSelectedRoute() {
+        return selectedRoute;
+    }
+
+    public void setSelectedRoute(InternalRoute selectedRoute) {
+        this.selectedRoute = selectedRoute;
     }
 }

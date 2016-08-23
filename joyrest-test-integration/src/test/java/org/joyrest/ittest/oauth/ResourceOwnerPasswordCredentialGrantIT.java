@@ -15,10 +15,9 @@
  */
 package org.joyrest.ittest.oauth;
 
-import java.net.URLEncoder;
-
 import org.joyrest.ittest.setup.AbstractRestIntegrationTest;
 import org.joyrest.model.http.HttpStatus;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -30,6 +29,7 @@ public class ResourceOwnerPasswordCredentialGrantIT extends AbstractRestIntegrat
     private static final String BODY = "grant_type=password&username=roy&password=spring";
 
     @Test
+    @Ignore
     public void get_token() {
         given()
             .contentType(ContentType.URLENC)
