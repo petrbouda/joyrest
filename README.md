@@ -1,6 +1,6 @@
 # JoyRest
 ##### Lightweight and Lambda-based REST Framework
-### Official pages - [http://www.joyrest.org](http://www.joyrest.org)
+### Official pages - [http://petrbouda.github.io/joyrest/](http://petrbouda.github.io/joyrest/)
 ### About
 JoyRest is a lightweight and convenient tool for **_creating REST services_** by a concise way. The main intention is to provide framework which is simply extensible for different types of DI and servers. JoyRest is purely developed using **_Java programming language 8 and with lambdas_**. Thank to this technology the framework is able to provide very clear API which allows you to defined your endpoints through a **_functional way_**.
 
